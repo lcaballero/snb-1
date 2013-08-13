@@ -13,3 +13,145 @@ angular.module('phonecat', ['phonecatFilters'])
 				redirectTo:"/phones"
 			})
 	}])
+/*
+angular.module('myApp', [])
+	.config(['$routeProvider', function($routeProvider){
+		$routeProvider
+			.when('/fullView', {
+				templateUrl: 'partials/fullView',
+				controller:FullView
+			})
+			.when('/picView', {
+				templateUrl: 'partials/viewPic',
+				controller:PicView
+			})
+			.otherwise({redirectTo:'/fullView'});
+	}]);
+
+angular.module('myAdmin', [])
+	.config(['$routeProvider', function($routeProvider){
+		$routeProvider
+			.when('/users', {
+				templateUrl: 'partials/usersPartial',
+				controller:UsersCtrl
+			})
+			.when('/gourps', {
+				templateUrl: 'partials/groupsPartial',
+				controller:GroupsCtrl
+			})
+			.otherwise({redirectTo:'/'});
+	}]);
+
+angular.module('login', [])
+	.config(['$routeProvider', function($routeProvider){
+		$routeProvider
+			.when('/login', {
+				templateUrl: 'partials/login.html',
+				controller:Login
+			})
+		}]);
+*/
+
+// ======================= Routes ======================= //
+
+var AdminNavModule = angular.module('adminNavModule', [])
+	.config(['$routeProvider', function($routeProvider){
+		$routeProvider
+			.when('/addUser', {
+				templateUrl: '/views/partials/admin/createUserPartial.html',
+				controller:'CreateUserCtrl'
+			})
+			.when('/findUser', {
+				templateUrl: '/views/partials/admin/findUserPartial.html',
+				controller:'FindUserCtrl'
+			});
+	}]);
+
+// ======================= Controllers ======================= //
+
+AdminNavModule.controller('AdminMainNavCtrl', function($scope) {
+	$scope.navItems = [
+		{
+			label:'Users',
+			href:'/views/pages/admin/userAdmin.html',
+			activeId:'users'
+		},
+		{
+			label:'Groups',
+			href:'/views/pages/admin/groupsAdmin.html',
+			activeId:'groups'
+		},
+		{
+			label: 'Games',
+			href:'javascript:void(0);',
+			activeId:'games'
+		},
+		{
+			label: 'Boards',
+			href:'javascript:void(0);',
+			activeId:'boards'
+		},
+		{
+			label: 'Criteria',
+			href:'javascript:void(0);',
+			activeId:'criteria'
+		}
+	];
+});
+
+AdminNavModule.controller('UserNavCtrl', function($scope, $location) {
+	//$scope.activeClass = 'createUser';
+});
+
+AdminNavModule.controller('CreateUserCtrl', function($scope) {
+	console.log('test');
+	$scope.acitveClass = 'createUser';
+});
+
+AdminNavModule.controller('FindUserCtrl', function($scope){
+	console.log('FindUserCtrl');
+	$scope.acitveClass = 'findUser';
+});
+
+// ======================= Directives ======================= //
+
+AdminNavModule.directive('mainNavDirective', function() {
+	return {
+		restrict: "A",
+		scope: {
+			selected: "@",
+			navitems: "="
+		},
+		templateUrl: "/views/partials/admin/tabNav.html",
+		link: function (scope, elem, attrs) {
+			//console.log('scope', scope);
+		}
+	};
+});
+
+AdminNavModule.directive('usersNavDirective', function() {
+	return {
+		restrict: "A",
+		scope: {
+			selected: "@",
+			navitems: "="
+		},
+		templateUrl: "/views/partials/admin/usersMenuPartial.html",
+		link: function (scope, elem, attrs) {
+			//console.log('scope', scope);
+		}
+	};
+});
+
+
+AdminNavModule.directive('createUserDirective', function() {
+	return {
+		restrict: "A",
+		scope: { },
+		templateUrl: "/views/partials/admin/createUserPartial.html",
+		link: function (scope, elem, attrs) {
+			//console.log('scope', scope);
+		}
+	};
+});
+

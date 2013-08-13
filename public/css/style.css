@@ -1,0 +1,60 @@
+#uploader {
+  display: none;
+}
+.fullView ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fullView ul li {
+  border: 1px solid #f00;
+  float: left;
+  height: 50px;
+  margin: 5px;
+  position: relative;
+  text-align: center;
+  width: 50px;
+}
+.fullView ul li .icon-wrap {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.fullView ul li .my-icon {
+  line-height: 50px;
+  position: absolute;
+  left: 0;
+  opacity: 0.1;
+  right: 0;
+  top: 0;
+}
+.fullView ul li a span.txt {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.form-signin {
+  margin: 0 auto;
+  width: 330px;
+}
+.form-signin input {
+  margin-bottom: 10px;
+}
+.frame-top {
+  margin-top: 10px;
+}
+.bs-sidebar .nav > li > a {
+  display: block;
+  color: #716b7a;
+  padding: 5px 20px;
+}
+.bs-sidebar .nav > .active > a,
+.bs-sidebar .nav > .active:hover > a,
+.bs-sidebar .nav > .active:focus > a {
+  font-weight: bold;
+  color: #563d7c;
+  background-color: transparent;
+  border-right: 1px solid #563d7c;
+}
