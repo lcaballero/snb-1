@@ -42,3 +42,20 @@ Then run web-server.exe found at the root of the directory.
 
 		server.exe
 ```
+
+## Dependencies
+
+So far the project has been written using these tools, and they are listed
+here just for completeness, and are not strict dependencies.
+
+Tools:
+1. Go (Golang distribution).
+1. Redis
+1. Sublime Text 3
+1. Postgres Sql Server
+1. Postgres Admin
+
+Git Packages:
+1. Postgres Sql Driver: gitchub.com/lib/pq
+1. Redis Sql: github.com/garyburd/redigo/redis
+
