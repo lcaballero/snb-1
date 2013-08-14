@@ -1,0 +1,1 @@
+go build -o web-server.exe server/server.go server/headers.go
