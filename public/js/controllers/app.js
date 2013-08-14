@@ -64,6 +64,10 @@ var AdminNavModule = angular.module('adminNavModule', [])
 			.when('/findUser', {
 				templateUrl: '/views/partials/admin/findUserPartial.html',
 				controller:'FindUserCtrl'
+			})
+			.when('/findUser/:username', {
+				templateUrl: '/views/partials/admin/findUserPartial.html',
+				controller:'FindUserCtrl'
 			});
 	}]);
 
@@ -99,6 +103,31 @@ AdminNavModule.controller('AdminMainNavCtrl', function($scope) {
 	];
 });
 
+AdminNavModule.controller('UserInfoNavCtrl', function($scope) {
+	$scope.navItems = [
+		{
+			label:'Groups',
+			href:'/views/pages/admin/groupsAdmin.html',
+			activeId:'groups'
+		},
+		{
+			label:'Games',
+			href:'javascript:void(0);',
+			activeId:'games'
+		},
+		{
+			label:'Boards',
+			href:'javascript:void(0);',
+			activeId:'boards'
+		},
+		{
+			label:'Tags',
+			href:'javascript:void(0);',
+			activeId:'tags'
+		}
+	];
+});
+
 AdminNavModule.controller('UserNavCtrl', function($scope, $location) {
 	//$scope.activeClass = 'createUser';
 });
@@ -108,14 +137,19 @@ AdminNavModule.controller('CreateUserCtrl', function($scope) {
 	$scope.acitveClass = 'createUser';
 });
 
-AdminNavModule.controller('FindUserCtrl', function($scope){
+AdminNavModule.controller('FindUserCtrl', function($scope, $routeParams, $http){
 	console.log('FindUserCtrl');
 	$scope.acitveClass = 'findUser';
+
+	console.log('route params', $routeParams);
+	if($routeParams && $routeParams.username) {
+		$scope.userInfoDisplay = 'show-info';
+	}
 });
 
 // ======================= Directives ======================= //
 
-AdminNavModule.directive('mainNavDirective', function() {
+AdminNavModule.directive('tabNavDirective', function() {
 	return {
 		restrict: "A",
 		scope: {
