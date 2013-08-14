@@ -3,9 +3,22 @@
 		<label for="email">Email</label>
 		<input type="text" value="" ng-model="searchEmail" class="form-control" id="email" />
 		<div>
-			<a href="#/searchEmail/{{searchEmail}}" >
+			<a href="#/findUser/{{searchEmail}}" >
 				<button class="btn btn-primary">Search</button>
 			</a>
 		</div>
 	</form>
+	<div class="user-info-control {{userInfoDisplay}}">
+		<div class="user-info-container">
+			<div>
+				<h3>User Info</h3>
+			</div>
+			<div ng-controller="UserInfoNavCtrl">
+				<div tab-nav-directive selected="groups" navitems="navItems"></div>
+			</div>
+		</div>
+		<div class="no-user-info-container">
+			no info
+		</div>
+</div>
 </div>
