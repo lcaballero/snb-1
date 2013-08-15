@@ -81,7 +81,7 @@ AdminNavModule.controller('UserInfoNavCtrl', function($scope) {
 	//$scope.navItems = [];
 	$scope.init = function(name) {
 		//$scope.username = name;
-		alert('scope' + $scope.username);
+		alert('scope' + $scope.username, name);
 		$scope.navItems = [
 			{
 				label:'Groups',

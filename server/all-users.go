@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
+	_ "github.com/bmizerany/pq"
 	enc "json_helpers"
 	"net/http"
 	"requests"

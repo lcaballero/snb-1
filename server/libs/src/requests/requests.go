@@ -2,7 +2,7 @@ package requests
 
 import (
   "fmt"
-	_ "github.com/lib/pq"
+	_ "github.com/bmizerany/pq"
 	"database/sql"
 	"bytes"
 )
