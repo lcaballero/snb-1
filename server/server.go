@@ -26,6 +26,7 @@ func main() {
 
 	http.HandleFunc("/api/getUser/", getUser)
 
+	http.HandleFunc("/api/all-users/", getAllUser)
 
 	// Start Server on Port
 	port := strconv.FormatInt(8080, 10)

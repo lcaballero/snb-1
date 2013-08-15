@@ -1,11 +1,11 @@
 package main
 
 import (
-  "fmt"
-	_ "github.com/lib/pq"
 	"database/sql"
-	"requests"
+	"fmt"
+	_ "github.com/lib/pq"
 	enc "json_helpers"
+	"requests"
 	"sql_text"
 )
 
@@ -95,7 +95,7 @@ func hasUserTable() bool {
 }
 
 func main() {
-	
+
 	if !hasUserTable() {
 		fmt.Println("Creating Table")
 		createUserTable()
@@ -126,7 +126,7 @@ func main() {
 	fmt.Println()
 	fmt.Println(s)
 
-	ss := sql_text.Default();
+	ss := sql_text.Default()
 
 	fmt.Println()
 	fmt.Println()
