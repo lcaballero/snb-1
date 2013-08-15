@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
 	"database/sql"
-	"requests"
-	enc "json_helpers"
+	"fmt"
 	_ "github.com/lib/pq"
+	enc "json_helpers"
+	"net/http"
+	"requests"
 )
 
 func getConnection() *sql.DB {
@@ -29,9 +29,9 @@ func toJson(rows *sql.Rows) string {
 	return json
 }
 
-func getAllUser(w http.ResponseWriter, r *http.Request){
+func getAllUser(w http.ResponseWriter, r *http.Request) {
 	h := w.Header()
-	h["Content-Type"] = []string { "application/json", "charset-utf-8", }	
+	h["Content-Type"] = []string{"application/json", "charset-utf-8"}
 
 	users := readAllUsers()
 
