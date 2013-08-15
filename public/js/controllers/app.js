@@ -14,33 +14,6 @@ angular.module('phonecat', ['phonecatFilters'])
 			})
 	}])
 /*
-angular.module('myApp', [])
-	.config(['$routeProvider', function($routeProvider){
-		$routeProvider
-			.when('/fullView', {
-				templateUrl: 'partials/fullView',
-				controller:FullView
-			})
-			.when('/picView', {
-				templateUrl: 'partials/viewPic',
-				controller:PicView
-			})
-			.otherwise({redirectTo:'/fullView'});
-	}]);
-
-angular.module('myAdmin', [])
-	.config(['$routeProvider', function($routeProvider){
-		$routeProvider
-			.when('/users', {
-				templateUrl: 'partials/usersPartial',
-				controller:UsersCtrl
-			})
-			.when('/gourps', {
-				templateUrl: 'partials/groupsPartial',
-				controller:GroupsCtrl
-			})
-			.otherwise({redirectTo:'/'});
-	}]);
 
 angular.module('login', [])
 	.config(['$routeProvider', function($routeProvider){
@@ -62,6 +35,10 @@ var AdminNavModule = angular.module('adminNavModule', [])
 				controller:'CreateUserCtrl'
 			})
 			.when('/findUser', {
+				templateUrl: '/views/partials/admin/findUserPartial.html',
+				controller:'FindUserCtrl'
+			})
+			.when('/findUser/:username', {
 				templateUrl: '/views/partials/admin/findUserPartial.html',
 				controller:'FindUserCtrl'
 			});
@@ -99,6 +76,39 @@ AdminNavModule.controller('AdminMainNavCtrl', function($scope) {
 	];
 });
 
+AdminNavModule.controller('UserInfoNavCtrl', function($scope) {
+	console.log('UserInfoNavCtrl', $scope);
+	//$scope.navItems = [];
+	$scope.init = function(name) {
+		//$scope.username = name;
+		alert('scope' + $scope.username);
+		$scope.navItems = [
+			{
+				label:'Groups',
+				href:['#/findUser/', $scope.username,'/groups/'].join(''),
+				activeId:'groups'
+			},
+			{
+				label:'Games',
+				href:'javascript:void(0);',
+				activeId:'games'
+			},
+			{
+				label:'Boards',
+				href:'javascript:void(0);',
+				activeId:'boards'
+			},
+			{
+				label:'Tags',
+				href:'javascript:void(0);',
+				activeId:'tags'
+			}
+		];
+	}
+
+	
+});
+
 AdminNavModule.controller('UserNavCtrl', function($scope, $location) {
 	//$scope.activeClass = 'createUser';
 });
@@ -108,19 +118,99 @@ AdminNavModule.controller('CreateUserCtrl', function($scope) {
 	$scope.acitveClass = 'createUser';
 });
 
-AdminNavModule.controller('FindUserCtrl', function($scope){
-	console.log('FindUserCtrl');
-	$scope.acitveClass = 'findUser';
+AdminNavModule.controller('FindUserCtrl', function($scope, $routeParams, $http){
+	
+	//$scope.acitveClass = 'findUser';
+
+	$scope.userInfoDisplay = "";
+	
+	var testData = {
+		'lucas':{
+			'name':'Lucas',
+			'groups':[
+				{
+					'name':'Digital Lotion',
+					'id':100
+				},
+				{
+					'name':'LoL',
+					'id':101
+				}
+			],
+			'games':[],
+			'boards':[]
+		},
+		'ryan':{
+			'name': 'Crunch time!',
+			'groups':[
+				{
+					'name':'Digital Lotion',
+					'id':100
+				},
+				{
+					'name':'Raiders',
+					'id':102
+				}
+			],
+			'games':[],
+			'boards':[]
+		}
+	};
+
+	if($routeParams && $routeParams.username) {
+		
+		// $.get('/api/getUser')
+		// 	.done(function(r){
+		// 		console.log('done', r);
+		// 		console.log('scope', $scope);
+		// 		$scope.userInfoDisplay = 'show-info';
+		// 		$scope.searchInput = $routeParams.username;
+		// 	})
+		// 	.fail(function(err){
+		// 		console.log('fail', err);
+		// 	});
+		$http.get('/api/getUser').success(function(data) {
+			//console.log('getUser', data);
+			$scope.userInfoDisplay = 'show-info';
+			$scope.searchInput = $routeParams.username;
+			var myData = testData[$routeParams.username];
+
+			if(myData) {
+				$scope.userInfoDisplay = 'show-info';
+				$scope.selectedData = myData;
+				// $scope.userName = myData.name;
+				// $scope.groups = myData.groups;
+				// $scope.games = myData.games;
+				// $scope.groups = myData.boards;
+
+			} else {
+				$scope.userInfoDisplay = 'show-no-info';
+			}
+		});
+	}
+
 });
 
 // ======================= Directives ======================= //
 
-AdminNavModule.directive('mainNavDirective', function() {
+if (!String.prototype.supplant) {
+    String.prototype.supplant = function (o) {
+        return this.replace(/{([^{}]*)}/g,
+            function (a, b) {
+                var r = o[b];
+                return typeof r === 'string' || typeof r === 'number' ? r : a;
+            }
+        );
+    };
+}
+
+AdminNavModule.directive('tabNavDirective', function() {
 	return {
 		restrict: "A",
 		scope: {
 			selected: "@",
-			navitems: "="
+			navitems: "=",
+			supplant: "="
 		},
 		templateUrl: "/views/partials/admin/tabNav.html",
 		link: function (scope, elem, attrs) {
