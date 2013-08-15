@@ -6,7 +6,7 @@ Run `shell\build.bat` or `shell\build.sh`
 
 Then run web-server.exe found at the root of the directory.
 
-```
+````
 	/app-location
 		/public
 			/js
