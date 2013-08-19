@@ -1,0 +1,22 @@
+<div class="user-info-control {{userInfoDisplay}}">
+	<div class="user-info-container">
+		<div>
+			<h3>User Info</h3>
+			<ul>
+				<li><strong>User Name:</strong> {{selectedData.name}}</li>
+				<li><strong># Groups:</strong> {{selectedData.groups.length}}</li>
+				<li><strong># Games:</strong> {{selectedData.games.length}}</li>
+				<li><strong># Boards:</strong> {{selectedData.boards.length}}</li>
+			</ul>
+		</div>
+		<div ng-controller="UserInfoNavCtrl">
+			<div tab-nav-directive selected="groups" navitems="navItems"></div>
+		</div>
+		<div ui-view></div>
+	</div>
+	<div class="no-user-info-container">
+		<div class="alert">
+			<strong>Warning!</strong> User does not exist
+		</div>
+	</div>
+</div>

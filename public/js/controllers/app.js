@@ -27,22 +27,35 @@ angular.module('login', [])
 
 // ======================= Routes ======================= //
 
-var AdminNavModule = angular.module('adminNavModule', [])
-	.config(['$routeProvider', function($routeProvider){
-		$routeProvider
-			.when('/addUser', {
-				templateUrl: '/views/partials/admin/createUserPartial.html',
-				controller:'CreateUserCtrl'
-			})
-			.when('/findUser', {
-				templateUrl: '/views/partials/admin/findUserPartial.html',
-				controller:'FindUserCtrl'
-			})
-			.when('/findUser/:username', {
-				templateUrl: '/views/partials/admin/findUserPartial.html',
-				controller:'FindUserCtrl'
-			});
-	}]);
+var AdminNavModule = angular.module('adminNavModule', ['ui.state']);
+AdminNavModule.config(['$stateProvider', '$routeProvider', '$urlRouterProvider',
+    	function ($stateProvider, $routeProvider, $urlRouterProvider){
+			//$urlRouterProvider.otherwise('/addUser');
+
+			$stateProvider
+				.state('addUser', {
+					url:'/addUser',
+					controller:'CreateUserCtrl',
+					templateUrl:'/views/partials/admin/createUserPartial.html'
+				})
+				.state('findUser', {
+					url:'/findUser',
+					//controller:['$scope', '$state', '$stateParams', '$http', FindUserCtrl],
+					templateUrl: '/views/partials/admin/findUserPartial.html'
+				})
+					.state('findUser.username', {
+						url:'/:username',
+						controller:['$scope', '$state', '$stateParams', '$http', FindUserCtrl],
+						templateUrl: '/views/partials/admin/userInfoPartial.html'
+					})
+						.state('findUser.username.groups', {
+							url:'/groups',
+							//controller:['$scope', '$state', '$http', FindUserCtrl],
+							templateUrl: '/views/partials/admin/userGroupPartial.html'
+						});
+		}
+	]);
+
 
 // ======================= Controllers ======================= //
 
@@ -76,37 +89,29 @@ AdminNavModule.controller('AdminMainNavCtrl', function($scope) {
 	];
 });
 
-AdminNavModule.controller('UserInfoNavCtrl', function($scope) {
-	console.log('UserInfoNavCtrl', $scope);
-	//$scope.navItems = [];
-	$scope.init = function(name) {
-		//$scope.username = name;
-		alert('scope' + $scope.username, name);
-		$scope.navItems = [
-			{
-				label:'Groups',
-				href:['#/findUser/', $scope.username,'/groups/'].join(''),
-				activeId:'groups'
-			},
-			{
-				label:'Games',
-				href:'javascript:void(0);',
-				activeId:'games'
-			},
-			{
-				label:'Boards',
-				href:'javascript:void(0);',
-				activeId:'boards'
-			},
-			{
-				label:'Tags',
-				href:'javascript:void(0);',
-				activeId:'tags'
-			}
-		];
-	}
-
-	
+AdminNavModule.controller('UserInfoNavCtrl', function($scope, $location) {
+	$scope.navItems = [
+		{
+			label:'Groups',
+			href:['#', $location.$$path, '/groups'].join(''),
+			activeId:'groups'
+		},
+		{
+			label:'Games',
+			href:['#', $location.$$path, '/games'].join(''),
+			activeId:'games'
+		},
+		{
+			label:'Boards',
+			href:'javascript:void(0);',
+			activeId:'boards'
+		},
+		{
+			label:'Tags',
+			href:'javascript:void(0);',
+			activeId:'tags'
+		}
+	];
 });
 
 AdminNavModule.controller('UserNavCtrl', function($scope, $location) {
@@ -118,10 +123,9 @@ AdminNavModule.controller('CreateUserCtrl', function($scope) {
 	$scope.acitveClass = 'createUser';
 });
 
-AdminNavModule.controller('FindUserCtrl', function($scope, $routeParams, $http){
-	
-	//$scope.acitveClass = 'findUser';
-
+//AdminNavModule.controller('FindUserCtrl', function($scope, $state){
+var FindUserCtrl = function($scope, $state, $stateParams, $http){	
+	console.log("stateParams", $stateParams);
 	$scope.userInfoDisplay = "";
 	
 	var testData = {
@@ -156,40 +160,27 @@ AdminNavModule.controller('FindUserCtrl', function($scope, $routeParams, $http){
 			'boards':[]
 		}
 	};
-
-	if($routeParams && $routeParams.username) {
+	
+	if($state && $state.params) {
 		
-		// $.get('/api/getUser')
-		// 	.done(function(r){
-		// 		console.log('done', r);
-		// 		console.log('scope', $scope);
-		// 		$scope.userInfoDisplay = 'show-info';
-		// 		$scope.searchInput = $routeParams.username;
-		// 	})
-		// 	.fail(function(err){
-		// 		console.log('fail', err);
-		// 	});
+		var username = $state.params.username;
+
 		$http.get('/api/getUser').success(function(data) {
 			//console.log('getUser', data);
 			$scope.userInfoDisplay = 'show-info';
-			$scope.searchInput = $routeParams.username;
-			var myData = testData[$routeParams.username];
+			$scope.searchInput = username;
+			var myData = testData[username];
 
 			if(myData) {
 				$scope.userInfoDisplay = 'show-info';
 				$scope.selectedData = myData;
-				// $scope.userName = myData.name;
-				// $scope.groups = myData.groups;
-				// $scope.games = myData.games;
-				// $scope.groups = myData.boards;
-
 			} else {
 				$scope.userInfoDisplay = 'show-no-info';
 			}
 		});
 	}
 
-});
+};
 
 // ======================= Directives ======================= //
 
