@@ -1,15 +1,15 @@
 <div class="tab-pane frame-top" id="create">
 	<form id="tab">
 		<label for="email">Email</label>
-		<input type="text" value="" class="form-control" id="email" />
+		<input type="text" value="" class="form-control" id="email" ng-model="email" required />
 		<label for="password">Password</label>
-		<input type="password" value="" class="form-control" id="password" />
+		<input type="password" value="" class="form-control" id="password" ng-model="pw" required />
 		<label for="confirm">Confirm Password</label>
-		<input type="password" value="" class="form-control" id="confirm"/>
+		<input type="password" value="" class="form-control" id="confirm" ng-model="confirm" required />
 		
 
 		<div class="frame-top">
-			<button class="btn btn-primary">Create Account</button>
+			<button id="createAccount" ng-click="submitUser();" class="btn btn-primary">Create Account</button>
 		</div>
 	</form>
 </div>
