@@ -26,7 +26,9 @@ func main() {
 
 	http.HandleFunc("/api/getUser/", getUser)
 
-	http.HandleFunc("/api/all-users/", getAllUser)
+	//http.HandleFunc("/api/all-users/", getAllUser)
+
+	http.HandleFunc("/api/addUser/", addUser)
 
 	// Start Server on Port
 	port := strconv.FormatInt(8080, 10)
@@ -44,3 +46,19 @@ func getUser(w http.ResponseWriter, r *http.Request){
 
 	fmt.Fprint(w, Response{"success":true, "msg":"[{name:'John', email:'John Smith'}]"})
 }
+
+func addUser(w http.ResponseWriter, r *http.Request) {
+
+	r.ParseForm();
+
+	email := r.FormValue("email")
+	pw := r.FormValue("pw")
+
+	fmt.Println(email +": "+ pw)
+
+	CreatUser(email, pw)
+
+	user := ReadUserFromEmail(email)
+	fmt.Fprint(w, user)
+}
+

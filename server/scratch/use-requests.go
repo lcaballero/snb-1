@@ -33,14 +33,14 @@ func readUser(n int) string {
 	return json
 }
 
-func creatUser(id, version, usergroup_id int, password, username string) {
+func creatUser(email, password string) {
 	sql := `
 insert into _user
-	(id, version, usergroup_id, password, username)
+	(email, password, date_added)
 values
-	($1, $2, $3, $4, $5);
+	($1, $2, now());
 `
-	result, err := getConnection().Exec(sql, id, version, usergroup_id, password, username)
+	result, err := getConnection().Exec(sql, email, password)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -50,15 +50,66 @@ values
 func createUserTable() {
 	sql := `
 CREATE TABLE _User (
-	Id int PRIMARY KEY,
-	Version int NOT NULL,
-
-	UserGroup_Id int NOT NULL,
+	id bigserial NOT NULL,
+	Email varchar(255),
 	Password text NOT NULL,
-	UserName text NOT NULL
+	date_added timestamp without time zone,
+	CONSTRAINT _user_pkey PRIMARY KEY (id)
 );
 `
 	result, err := getConnection().Exec(sql)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+}
+
+func createGroupsTable() {
+	sql := `
+CREATE TABLE SocialGroup
+(
+  id bigserial NOT NULL,
+  group_name character varying(40) NOT NULL,
+  group_desc text NOT NULL,
+  date_added timestamp without time zone,
+  CONSTRAINT social_group_pkey PRIMARY KEY (id)
+);
+`
+	result, err := getConnection().Exec(sql)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+}
+
+func createUserToGroupTable() {
+	sql := `
+CREATE TABLE UserToGroup
+(
+  id bigserial NOT NULL,
+  group_id bigserial NOT NULL,
+  user_id bigserial NOT NULL,
+  date_added timestamp without time zone,
+  CONSTRAINT user_to_group_pkey PRIMARY KEY (id)
+);
+`
+	result, err := getConnection().Exec(sql)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+}
+
+func createGroup(group_name, group_desc string) {
+	sql := `
+	insert into SocialGroup
+		(group_name, group_desc, date_added)
+	values
+		($1, $2, now());
+	`
+
+	result, err := getConnection().Exec(sql, group_name, group_desc)
+
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -94,6 +145,17 @@ func hasUserTable() bool {
 	return has_table
 }
 
+func hasGroupTable() bool {
+	has_table := tableExists("Go_Testing", "SocialGroup")
+	return has_table
+}
+
+func hasUserToGroupTable() bool {
+	has_table := tableExists("Go_Testing", "UserToGroup")
+	return has_table
+}
+
+
 func main() {
 
 	if !hasUserTable() {
@@ -101,8 +163,20 @@ func main() {
 		createUserTable()
 	}
 
+	if !hasGroupTable() {
+		fmt.Println("Create Group table")
+		createGroupsTable()
+	}
+
+	if !hasUserToGroupTable() {
+		fmt.Println("Create UserToGroup table")
+		createUserToGroupTable()
+	}
+
+	createGroup("global_group", "group that contains every user")
+
 	for i := 0; i < 5; i++ {
-		creatUser(i, i, 0, fmt.Sprintf("pass-%v", i), fmt.Sprintf("user-%v", i))
+		creatUser(fmt.Sprintf("email-%v", i), fmt.Sprintf("pass-%v", i))
 	}
 
 	fmt.Println()
