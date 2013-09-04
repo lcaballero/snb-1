@@ -6,6 +6,7 @@ import (
 	_ "github.com/bmizerany/pq"
 	enc "json_helpers"
 	"requests"
+	"io/ioutil"
 	//"sql_text"
 )
 
@@ -45,17 +46,19 @@ func ReadUserFromEmail(n string) string {
 }
 
 func CreatUser(email, password string) {
-	sql := `
-insert into _user
-	(email, password, date_added)
-values
-	($1, $2, now());
-`
-	result, err := getConnection().Exec(sql, email, password)
+
+	sql, err := ioutil.ReadFile("sqlQueries/createUser.sql")
+
 	if err != nil {
 		fmt.Println(err)
+	} else {
+		result, err := getConnection().Exec(string(sql), email, password)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println(result)
+		}
 	}
-	fmt.Println(result)
 }
 
 func CreateGroup(group_name, group_desc string) {
