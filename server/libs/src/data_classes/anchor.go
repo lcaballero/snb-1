@@ -2,7 +2,7 @@ package data_classes
 
 import(
 	"fmt"
-	enc "json_helpers"
+	//enc "json_helpers"
 )
 
 /* ---------------------- Anchor Dictionary..ish ---------------------- */
@@ -13,16 +13,11 @@ type Anchor struct {
 
 func (anchor Anchor) SetMap(m map[string]interface{}){
 	anchor.refMap = m;
-
-	fmt.Println("---=================---")
-	fmt.Println(enc.ToIndentedJson(anchor.refMap, "", "  "))
 }
 
 func (anchor Anchor) GetProp(reqField string) interface{} {
 	oField, ok := anchor.refMap[reqField]
 
-	fmt.Println("------")
-	fmt.Println(enc.ToIndentedJson(anchor.refMap, "", "  "))
 	if !ok {
 		fmt.Println("Anchor refMap err: ", ok, reqField)
 		return ""
