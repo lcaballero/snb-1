@@ -46,8 +46,13 @@ func serveFiles(roots ...string) func(http.ResponseWriter, *http.Request) {
 	}
 }
 
-func getContentType(file string) (string, bool) {
+func GetContentType(file string) (string, bool) {
 	ext := path.Ext(file)
+
+	return GetContentTypeByExtension(ext)
+}
+
+func GetContentTypeByExtension(ext string) (string, bool) {
 
 	switch ext {
 	case ".js":
