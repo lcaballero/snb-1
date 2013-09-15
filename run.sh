@@ -5,4 +5,4 @@
 ./build.sh
 
 # Start the web-server
-./web-server
+./web-server.exe
