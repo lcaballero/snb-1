@@ -9,8 +9,6 @@ import (
 	"requests"
 	"io/ioutil"
 	"uuid"
-	"time"
-	"data_classes"
 	"sql_utils"
 	"snap_sql"
 	//"reflect"
@@ -28,77 +26,6 @@ func getConnection() *sql.DB {
 }
 */
 
-
-/* ---------------------- Group Data ---------------------- */
-
-type GroupData struct {
-	data_classes.Anchor
-}
-
-func (group GroupData) GroupId() string {
-	//fmt.Println("--------", group.GetProp("id").(string))
-	return group.GetProp("id").(string)
-}
-
-func (group GroupData) GroupName() string {
-	return group.GetProp("group_name").(string)
-}
-
-func (group GroupData) Description() string {
-	return group.GetProp("group_desc").(string)
-}
-
-func (group GroupData) DateAdded() time.Time {
-	return group.GetProp("date_added").(time.Time)
-}
-
-
-
-
-
-func processGroup(sqlRows *sql.Rows, err error) ([]GroupData, error) {
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	} else {
-
-		mappedRows := toSqlMap(sqlRows)
-
-		groups := make([]GroupData, len(mappedRows))
-
-		for i, v := range mappedRows {
-			anchor := data_classes.Anchor{}
-			anchor.SetMap(v)
-			groups[i] = GroupData{Anchor:anchor}
-		}
-
-		//fmt.Println("group[0]:", groups[0].GetProp("group_name"))
-		return groups, nil
-	}
-}
-
-
-// ---------------------- Read Group Functions ---------------------- //
-
-func readGroup(group_name string) ([]GroupData, error) {
-	//sql := "SELECT * FROM _user WHERE email=$1"
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "readGroup.sql");
-
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	} else {
-
-		rows, err := sql_utils.GetConnection().Query(string(sql), group_name)
-
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		} else {
-			return processGroup(rows, err)
-		}
-	}
-}
 
 // ---------------------- Status Codes ---------------------- //
 
@@ -155,7 +82,7 @@ func createUser(email, password string) (StatusCode, error) {
 			} else {
 				//fmt.Println("Create User result: ", result)
 
-				group, err := readGroup("global_group")
+				group, err := snap_sql.ReadGroup("global_group")
 
 				if err != nil {
 					status = STATUS_CODES[DB_ERR]
@@ -267,7 +194,7 @@ func createUserToGroupTable() {
 
 func createGroup(group_name, group_desc, group_owner string) (StatusCode, error) {
 		
-	has_group, err := hasGroup(group_name)
+	has_group, err := snap_sql.HasGroup(group_name)
 
 	var status StatusCode;
 
@@ -381,19 +308,6 @@ func hasUserId(userId string) (bool, error) {
 	}
 }
 
-func hasGroup(groupName string) (bool, error) {
-	groups, err := readGroup(groupName)
-
-	if err != nil {
-		fmt.Println(err)
-		return true, err // TODO: should this be true or false?
-	} else if len(groups) > 0 {
-		return true, err
-	} else {
-		return false, err
-	}
-}
-
 
 /* ------------------------- Main ------------------------- */
 
@@ -416,7 +330,7 @@ func main() {
 
 	/* ------------------------- Create Group ------------------------- */
 
-	hasGlobalGroup, err := hasGroup("global_group")
+	hasGlobalGroup, err := snap_sql.HasGroup("global_group")
 	if !hasGlobalGroup {
 		globalGroupUuid := uuid.New()
 		group_status, _ := createGroup("global_group", "group that contains every user", globalGroupUuid)
@@ -453,7 +367,7 @@ func main() {
 	fmt.Println()
 
 	for i := 0; i < len(allUsers); i++ {
-		fmt.Println(enc.ToIndentedJson(allUsers[i].PrintAll(), "", "  "));	
+		//fmt.Println(enc.ToIndentedJson(allUsers[i].PrintAll(), "", "  "));	
 	}
 
 	/*
