@@ -1,0 +1,1 @@
+SELECT * FROM SocialGroup WHERE group_name=$1
