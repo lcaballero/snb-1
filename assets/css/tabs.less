@@ -1,0 +1,53 @@
+@base_color: #999;
+@tab_radius: 5px;
+
+.tab_border(@color:@base_color) {
+	border-top:1px solid @color;
+	border-bottom:1px solid @color;
+	border-right:1px solid @color;	
+}
+
+.tab_radius(@radius:5px) {
+	border-radius: 5px 5px 0px 0px;	
+}
+
+nav.top ul {
+	list-style-type: none;
+}
+nav.top li+li {
+	border-top:none;
+}
+nav.top li {
+	.tab_border();
+	padding:12px;
+	cursor: pointer;
+}
+nav.top {
+	width:200px;
+}
+nav.top li a {
+	text-decoration: none;
+	color: @base_color;
+}
+nav.top li:hover {
+	background-color: red;
+	color:white;
+}
+nav.top li:hover a {
+	color:white;	
+}
+
+/**
+ * Search Flyout: 
+ */
+.search {
+	position:relative;
+}
+.search .fly-out {
+	position: absolute;
+	left: 200px;
+	top:0px;
+	background-color:green;
+	padding: 11px;
+	border:1px solid #999;
+}

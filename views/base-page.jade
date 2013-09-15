@@ -1,0 +1,6 @@
+nav.top
+	ul.search
+		each tab in tabs
+			li(data-name=tab.name)
+				a(href=tab.href || "")= tab.text
+
