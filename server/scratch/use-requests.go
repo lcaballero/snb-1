@@ -10,10 +10,14 @@ import (
 	"io/ioutil"
 	"uuid"
 	"time"
+	"data_classes"
+	"sql_utils"
+	"snap_sql"
 	//"reflect"
 	//"sql_text"
 )
 
+/*
 const FilePath = "../sqlQueries/"
 
 func getConnection() *sql.DB {
@@ -22,46 +26,13 @@ func getConnection() *sql.DB {
 		"user=lucascaballero dbname=snb password=Livebig6## sslmode=disable")
 	return database
 }
+*/
 
-/* ---------------------- Anchor Dictionary..ish ---------------------- */
-
-type Anchor struct {
-	refMap map[string]interface{}
-}
-
-func (anchor Anchor) SetMap(m map[string]interface{}){
-	anchor.refMap = m;
-}
-
-func (anchor Anchor) GetProp(reqField string) interface{} {
-	oField, ok := anchor.refMap[reqField]
-
-	//fmt.Println(enc.ToIndentedJson(anchor.refMap, "", "  "))
-	if !ok {
-		fmt.Println("refMap err: ", ok)
-		return ""
-	}
-
-	return oField
-	/*
-	// TODO: need to abstract the type cast so we can use
-	// other type such as int.
-	field, ok := oField.(string)
-	
-	if ok {
-		return field
-	} else {
-		fmt.Println("Error: Unable to convert %v to a string", reqField)
-		return ""
-	}
-	return field, ok
-	*/
-}
 
 /* ---------------------- Group Data ---------------------- */
 
 type GroupData struct {
-	Anchor
+	data_classes.Anchor
 }
 
 func (group GroupData) GroupId() string {
@@ -82,92 +53,8 @@ func (group GroupData) DateAdded() time.Time {
 }
 
 
-/* ---------------------- User Profile ---------------------- */
 
-type UserProfile struct {
-	Anchor
-}
 
-func (userProfile UserProfile) PrintAll() map[string]interface{} {
-	m := make(map[string]interface{})
-
-	m["Email"] = userProfile.Email()
-	m["Date_Added"] = userProfile.DateAdded()
-
-	return m
-}
-
-func (userProfile UserProfile) Email() string {
-	return userProfile.GetProp("email").(string)
-}
-
-func (userProfile UserProfile) DateAdded() time.Time {
-	return userProfile.GetProp("date_added").(time.Time)
-}
-
-// ---------------------- Read User Functions ---------------------- //
-
-func readAllUsers() ([]UserProfile, error) {
-	// "SELECT * FROM _user;"
-	sql, err := ioutil.ReadFile(FilePath + "readAllUsers.sql")
-
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-
-	rows, err := getConnection().Query(string(sql))
-
-	return processUserProfiles(rows, err)
-}
-
-func readUserById(userId string) ([]UserProfile, error) {
-	//sql := "SELECT * FROM _user WHERE id=$1"
-	sql, err := ioutil.ReadFile(FilePath + "readUserById.sql")
-
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-
-	rows, err := getConnection().Query(string(sql), userId)
-	
-	return processUserProfiles(rows, err)
-}
-
-func readUserByEmail(email string) ([]UserProfile, error) {
-	//sql := "SELECT * FROM _user WHERE email=$1"
-	sql, err := ioutil.ReadFile(FilePath + "readUserByEmail.sql");
-
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-
-	rows, err := getConnection().Query(string(sql), email)
-
-	return processUserProfiles(rows, err)
-}
-
-func processUserProfiles(sqlRows *sql.Rows, err error) ([]UserProfile, error) {
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	} else {
-
-		mappedRows := toSqlMap(sqlRows)
-
-		profiles := make([]UserProfile, len(mappedRows))
-
-		for i, v := range mappedRows {
-			//fmt.Println(enc.ToIndentedJson(v, "", "  "))
-			profiles[i] = UserProfile{Anchor:Anchor{refMap:v}}
-		}
-
-		//fmt.Println("email[0]:", profiles[0].GetProp("date_added"))
-		return profiles, nil
-	}
-}
 
 func processGroup(sqlRows *sql.Rows, err error) ([]GroupData, error) {
 	if err != nil {
@@ -180,7 +67,9 @@ func processGroup(sqlRows *sql.Rows, err error) ([]GroupData, error) {
 		groups := make([]GroupData, len(mappedRows))
 
 		for i, v := range mappedRows {
-			groups[i] = GroupData{Anchor:Anchor{refMap:v}}
+			anchor := data_classes.Anchor{}
+			anchor.SetMap(v)
+			groups[i] = GroupData{Anchor:anchor}
 		}
 
 		//fmt.Println("group[0]:", groups[0].GetProp("group_name"))
@@ -193,14 +82,14 @@ func processGroup(sqlRows *sql.Rows, err error) ([]GroupData, error) {
 
 func readGroup(group_name string) ([]GroupData, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
-	sql, err := ioutil.ReadFile(FilePath + "readGroup.sql");
+	sql, err := ioutil.ReadFile(sql_utils.FilePath + "readGroup.sql");
 
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	} else {
 
-		rows, err := getConnection().Query(string(sql), group_name)
+		rows, err := sql_utils.GetConnection().Query(string(sql), group_name)
 
 		if err != nil {
 			fmt.Println(err)
@@ -251,14 +140,14 @@ func createUser(email, password string) (StatusCode, error) {
 		status = STATUS_CODES[USER_EXISTS]
 	} else {
 
-		sql, err := ioutil.ReadFile(FilePath+"createUser.sql")
+		sql, err := ioutil.ReadFile(sql_utils.FilePath+"createUser.sql")
 
 		if err != nil {
 			fmt.Println(1, err)
 			status = STATUS_CODES[FILE_READ_ERR]
 		} else {
 			userUuid := uuid.New()
-			_, err := getConnection().Exec(string(sql), userUuid, email, password)
+			_, err := sql_utils.GetConnection().Exec(string(sql), userUuid, email, password)
 			
 			if err != nil {
 				fmt.Println(2, err)
@@ -301,7 +190,7 @@ func addUserToGroup(userId, groupId string) (StatusCode, error) {
 		// has_user, err := hasUserId(userId)
 
 		//if has_user && err == nil {
-			sql, err := ioutil.ReadFile(FilePath + "addUserToGroup.sql")
+			sql, err := ioutil.ReadFile(sql_utils.FilePath + "addUserToGroup.sql")
 
 			if err != nil {
 				fmt.Println(err)
@@ -310,7 +199,7 @@ func addUserToGroup(userId, groupId string) (StatusCode, error) {
 
 				// add user to the global group
 				rowUuid := uuid.New()
-				_, err := getConnection().Exec(string(sql), rowUuid, groupId, userId)
+				_, err := sql_utils.GetConnection().Exec(string(sql), rowUuid, groupId, userId)
 fmt.Println(3)
 				if err != nil {
 					fmt.Println(err)
@@ -333,12 +222,12 @@ fmt.Println(3)
 
 func createUserTable() {
 
-	sql, err := ioutil.ReadFile(FilePath + "createUserTable.sql")
+	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createUserTable.sql")
 
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		result, err := getConnection().Exec(string(sql))
+		result, err := sql_utils.GetConnection().Exec(string(sql))
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -349,12 +238,12 @@ func createUserTable() {
 // ---------------------- Group Functions ---------------------- //
 
 func createGroupsTable() {
-	sql, err := ioutil.ReadFile(FilePath + "createGroupsTable.sql")
+	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createGroupsTable.sql")
 
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		result, err := getConnection().Exec(string(sql))
+		result, err := sql_utils.GetConnection().Exec(string(sql))
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -363,12 +252,12 @@ func createGroupsTable() {
 }
 
 func createUserToGroupTable() {
-	sql, err := ioutil.ReadFile(FilePath + "createUserToGroupTable.sql")
+	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createUserToGroupTable.sql")
 
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		result, err := getConnection().Exec(string(sql))
+		result, err := sql_utils.GetConnection().Exec(string(sql))
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -376,7 +265,7 @@ func createUserToGroupTable() {
 	}
 }
 
-func createGroup(group_name, group_desc string) (StatusCode, error) {
+func createGroup(group_name, group_desc, group_owner string) (StatusCode, error) {
 		
 	has_group, err := hasGroup(group_name)
 
@@ -388,14 +277,14 @@ func createGroup(group_name, group_desc string) (StatusCode, error) {
 	} else if has_group {
 		status = STATUS_CODES[GROUP_EXISTS]
 	} else {
-		sql, err := ioutil.ReadFile(FilePath + "createGroup.sql")
+		sql, err := ioutil.ReadFile(sql_utils.FilePath + "createGroup.sql")
 
 		if err != nil {
 			fmt.Println(err)
 			status = STATUS_CODES[FILE_READ_ERR]
 		} else {
 			groupUuid := uuid.New()
-			_, err := getConnection().Exec(string(sql), groupUuid, group_name, group_desc)
+			_, err := sql_utils.GetConnection().Exec(string(sql), groupUuid, group_name, group_desc, group_owner)
 
 			if err != nil {
 				fmt.Println(err)
@@ -412,14 +301,14 @@ func createGroup(group_name, group_desc string) (StatusCode, error) {
 
 func tableExists(dbName, tableName string) bool {
 
-	sql, err := ioutil.ReadFile(FilePath + "tableExists.sql")
+	sql, err := ioutil.ReadFile(sql_utils.FilePath + "tableExists.sql")
 
 	if err != nil {
 		fmt.Println(err)
 		return false
 	}
 
-	rows, err := getConnection().Query(string(sql), dbName, tableName)
+	rows, err := sql_utils.GetConnection().Query(string(sql), dbName, tableName)
 	if err != nil {
 		fmt.Println(err)
 		return false
@@ -467,7 +356,7 @@ func hasUserToGroupTable() bool {
 }
 
 func hasUser(userName string) (bool, error) {
-	currentUsers, err := readUserByEmail(userName)
+	currentUsers, err := snap_sql.ReadUserByEmail(userName)
 
 	if err != nil {
 		fmt.Println(err)
@@ -480,7 +369,7 @@ func hasUser(userName string) (bool, error) {
 }
 
 func hasUserId(userId string) (bool, error) {
-	currentUsers, err := readUserById(userId)
+	currentUsers, err := snap_sql.ReadUserById(userId)
 
 	if err != nil {
 		fmt.Println(err)
@@ -527,9 +416,12 @@ func main() {
 
 	/* ------------------------- Create Group ------------------------- */
 
-	group_status, err := createGroup("global_group", "group that contains every user")
-	
-	fmt.Println("Create Group: ", group_status.Msg)
+	hasGlobalGroup, err := hasGroup("global_group")
+	if !hasGlobalGroup {
+		globalGroupUuid := uuid.New()
+		group_status, _ := createGroup("global_group", "group that contains every user", globalGroupUuid)
+		fmt.Println("Create Group: ", group_status.Msg)
+	}
 
 	/* ------------------------- Create User ------------------------- */
 
@@ -551,7 +443,7 @@ func main() {
 	// }
 	
 	/* ------------------------- Read All Users ------------------------- */
-	allUsers, err := readAllUsers()
+	allUsers, err := snap_sql.ReadAllUsers()
 
 	if err != nil {
 		fmt.Println(err)
