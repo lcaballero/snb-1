@@ -10,7 +10,7 @@ type User struct {
 	Id    string
 }
 
-func GetUsers() []User {
+func ReadUsers() []User {
 	a := make([]User, 10)
 
 	for i := 0; i < 10; i++ {
@@ -22,9 +22,9 @@ func GetUsers() []User {
 	return a
 }
 
-func FindUser(accept func(u User) bool) (User, bool) {
+func WhereUser(accept func(u User) bool) (User, bool) {
 	var u User
-	users := GetUsers()
+	users := ReadUsers()
 	for i := 0; i < len(users); i++ {
 		u = users[i]
 		if accept(u) {

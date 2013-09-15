@@ -77,7 +77,7 @@ func GetContentTypeByExtension(ext string) (string, bool) {
 }
 
 func toContentType(file string, w http.ResponseWriter) {
-	contentType, isImage := getContentType(file)
+	contentType, isImage := GetContentType(file)
 	h := w.Header()
 
 	if isImage {

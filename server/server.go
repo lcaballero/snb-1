@@ -29,7 +29,7 @@ func main() {
 		"/assets/")
 
 	// Handle serving the page -- mapping 'urls' to 'views'
-	http.HandleFunc("/app/get-users", GetUsers)
+	http.HandleFunc("/app/get-users", fake_data.GetUsers)
 
 	// Start Server on Port
 	port := strconv.FormatInt(8080, 10)
@@ -61,70 +61,4 @@ func addUser(w http.ResponseWriter, r *http.Request) {
 
 	user := ReadUserFromEmail(email)
 	fmt.Fprint(w, user)
-}
-
-func GetUsers(w http.ResponseWriter, r *http.Request) {
-
-	h := w.Header()
-	h["Content-Type"] = []string{"application/json"}
-
-	a := fake_data.GetUsers()
-
-	j, _ := json.Marshal(a)
-	s := string(j)
-
-	fmt.Fprint(w, s)
-}
-
-type Message struct {
-	Success bool
-	Data    interface{}
-}
-
-func FindUser(w http.ResponseWriter, r *http.Request) {
-
-	r.ParseForm()
-	h := w.Header()
-	h["Content-Type"] = []string{"application/json"}
-
-	name := r.Form.Get("name")
-	email := r.Form.Get("email")
-
-	var accept func(fake_data.User) bool
-
-	if len(name) > 0 {
-		accept = ByUsername(name)
-	} else if len(email) > 0 {
-		accept = ByEmail(email)
-	} else {
-		// return the first user
-		accept = func(fake_data.User) bool { return true }
-	}
-
-	u, found := fake_data.FindUser(accept)
-
-	var msg Message
-
-	if found {
-		msg = Message{found, u}
-	} else {
-		msg = Message{Success: found}
-	}
-
-	j, _ := json.Marshal(msg)
-	s := string(j)
-	fmt.Fprint(w, s)
-
-}
-
-func ByUsername(name string) func(fake_data.User) bool {
-	return func(u fake_data.User) bool {
-		return u.Name == name
-	}
-}
-
-func ByEmail(email string) func(fake_data.User) bool {
-	return func(u fake_data.User) bool {
-		return u.Email == email
-	}
 }
