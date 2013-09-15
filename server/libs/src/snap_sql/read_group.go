@@ -54,13 +54,12 @@ func processGroup(sqlRows *sql.Rows, err error) ([]data_classes.GroupData, error
 		groups := make([]data_classes.GroupData, len(mappedRows))
 
 		for i, v := range mappedRows {
-			// anchor := data_classes.Anchor{}
-			// anchor.SetMap(v)
-			groups[i] = data_classes.GroupData{Anchor:data_classes.Anchor{}}
-			groups[i].SetMap(v)
+			anchor := data_classes.Anchor{}
+			anchor.SetMap(v)
+			groups[i] = data_classes.GroupData{Anchor:anchor}
 		}
 
-		//fmt.Println("group[0]:", groups[0].GetProp("group_name"))
+		fmt.Println("group[0]:", groups[0].Id())
 		return groups, nil
 	}
 }

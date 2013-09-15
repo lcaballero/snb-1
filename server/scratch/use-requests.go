@@ -88,7 +88,7 @@ func createUser(email, password string) (StatusCode, error) {
 					status = STATUS_CODES[DB_ERR]
 				} else {
 
-					status, err := addUserToGroup(userUuid, group[0].GroupId())
+					status, err := addUserToGroup(userUuid, group[0].Id())
 					fmt.Println(status.Msg)
 
 					if err != nil{

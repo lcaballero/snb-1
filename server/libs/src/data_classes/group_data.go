@@ -1,7 +1,9 @@
 package data_classes
 
 import(
+	"fmt"
 	"time"
+	//enc "json_helpers"
 )
 
 /* ---------------------- Group Data ---------------------- */
@@ -10,8 +12,8 @@ type GroupData struct {
 	Anchor
 }
 
-func (group GroupData) GroupId() string {
-	//fmt.Println("--------", group.GetProp("id").(string))
+func (group GroupData) Id() string {
+	fmt.Println("--------", group.GetProp("id").(string))
 	return group.GetProp("id").(string)
 }
 
