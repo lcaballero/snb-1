@@ -9,7 +9,7 @@ TEMP_GOPATH=GOPATH
 GOPATH=$PWD/server/libs/:$GOPATH
 
 # Actual 'build' command that we want to run
-go build -o web-server.exe server/server.go server/headers.go server/admin-requests.go
+go build -o web-server.exe server/server.go server/admin-requests.go
 
 # Restoring the old GOPATH
 GOPATH=TEMP_GOPATH

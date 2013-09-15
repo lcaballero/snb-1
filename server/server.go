@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fake_data"
 	"fmt"
+	"http_handling"
 	"net/http"
 	"strconv"
 )
@@ -23,7 +24,7 @@ func (r Response) String() (s string) {
 func main() {
 
 	// Locations where static files reside.
-	ServeStaticFiles(
+	http_handling.ServeStaticFiles(
 		"/views/",
 		"/assets/")
 
