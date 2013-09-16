@@ -41,7 +41,7 @@ func CreateUser(email, password string) (sql_utils.StatusCode, error) {
 					status = sql_utils.STATUS_CODES[sql_utils.DB_ERR]
 				} else {
 
-					status, err := AddUserToGroup(userUuid, group[0].Id())
+					status, err := AddUserToGroup(userUuid, group[0].Id)
 					fmt.Println(status.Msg)
 
 					if err != nil{

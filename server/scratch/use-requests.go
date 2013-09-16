@@ -110,7 +110,7 @@ func main() {
 	if !hasBreweryGroup {
 		myUser, _ := snap_sql.ReadUserByEmail(usr)
 
-		group_status, _ := snap_sql.CreateGroup(breweryGroup, "Breweries in Boulder", myUser[0].Id())
+		group_status, _ := snap_sql.CreateGroup(breweryGroup, "Breweries in Boulder", myUser[0].Id)
 		fmt.Println("Create Group: ", breweryGroup, group_status.Msg)
 	}
 

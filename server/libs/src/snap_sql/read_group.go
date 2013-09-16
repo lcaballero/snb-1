@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"data_classes"
 	"sql_utils"
+	"time"
+	//enc "json_helpers"
 )
 
 // ---------------------- Read Group Functions ---------------------- //
@@ -54,9 +56,18 @@ func processGroup(sqlRows *sql.Rows, err error) ([]data_classes.GroupData, error
 		groups := make([]data_classes.GroupData, len(mappedRows))
 
 		for i, v := range mappedRows {
-			anchor := data_classes.Anchor{}
-			anchor.SetMap(v)
-			groups[i] = data_classes.GroupData{Anchor:anchor}
+			// anchor := data_classes.Anchor{}
+			// anchor.SetMap(v)
+			//fmt.Println(enc.ToIndentedJson(v, "", "  "))
+			u := data_classes.GroupData{
+				Id: v["id"].(string),
+				GroupName: v["group_name"].(string),
+				Description: v["group_desc"].(string),
+				DateAdded: v["date_added"].(time.Time),
+				//Anchor: anchor
+			}
+
+			groups[i] = u
 		}
 
 		return groups, nil

@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"io/ioutil"
-	"json_helpers"
+	//"json_helpers"
 	"sql_utils"
 	"time"
 )
@@ -69,14 +69,14 @@ func processUserProfiles(sqlRows *sql.Rows, err error) ([]data_classes.UserProfi
 		for i, v := range mappedRows {
 
 			//fmt.Println(enc.ToIndentedJson(v, "", "  "))
-			anchor := data_classes.Anchor{}
-			anchor.SetMap(v)
+			// anchor := data_classes.Anchor{}
+			// anchor.SetMap(v)
 
 			u := data_classes.UserProfile{
 				Id: v["id"].(string),
 				Email: v["email"].(string),
 				DateAdded: v["date_added"].(time.Time),
-				Anchor: anchor
+				//Anchor: anchor
 			}
 
 			profiles[i] = u

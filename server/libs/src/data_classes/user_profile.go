@@ -13,6 +13,7 @@ type UserProfile struct {
 	DateAdded time.Time
 }
 
+/*
 func (userProfile UserProfile) PrintAll() map[string]interface{} {
 	m := make(map[string]interface{})
 
@@ -21,7 +22,7 @@ func (userProfile UserProfile) PrintAll() map[string]interface{} {
 
 	return m
 }
-
+/*
 func (userProfile UserProfile) Id() string {
 	return userProfile.GetProp("id").(string)
 }
@@ -33,3 +34,4 @@ func (userProfile UserProfile) Email() string {
 func (userProfile UserProfile) DateAdded() time.Time {
 	return userProfile.GetProp("date_added").(time.Time)
 }
+*/

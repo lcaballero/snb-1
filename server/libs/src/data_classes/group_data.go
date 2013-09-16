@@ -9,9 +9,12 @@ import(
 /* ---------------------- Group Data ---------------------- */
 
 type GroupData struct {
-	Anchor
-}
+//	Anchor
 
+	Id, GroupName, Description string
+	DateAdded time.Time
+}
+/*
 func (group GroupData) Id() string {
 	return group.GetProp("id").(string)
 }
@@ -27,3 +30,4 @@ func (group GroupData) Description() string {
 func (group GroupData) DateAdded() time.Time {
 	return group.GetProp("date_added").(time.Time)
 }
+*/
