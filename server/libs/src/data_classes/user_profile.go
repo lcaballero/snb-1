@@ -19,6 +19,10 @@ func (userProfile UserProfile) PrintAll() map[string]interface{} {
 	return m
 }
 
+func (userProfile UserProfile) Id() string {
+	return userProfile.GetProp("id").(string)
+}
+
 func (userProfile UserProfile) Email() string {
 	return userProfile.GetProp("email").(string)
 }

@@ -11,11 +11,11 @@ type Anchor struct {
 	refMap map[string]interface{}
 }
 
-func (anchor Anchor) SetMap(m map[string]interface{}){
+func (anchor *Anchor) SetMap(m map[string]interface{}){
 	anchor.refMap = m;
 }
 
-func (anchor Anchor) GetProp(reqField string) interface{} {
+func (anchor *Anchor) GetProp(reqField string) interface{} {
 	oField, ok := anchor.refMap[reqField]
 
 	if !ok {
@@ -24,17 +24,4 @@ func (anchor Anchor) GetProp(reqField string) interface{} {
 	}
 
 	return oField
-	/*
-	// TODO: need to abstract the type cast so we can use
-	// other type such as int.
-	field, ok := oField.(string)
-	
-	if ok {
-		return field
-	} else {
-		fmt.Println("Error: Unable to convert %v to a string", reqField)
-		return ""
-	}
-	return field, ok
-	*/
 }
