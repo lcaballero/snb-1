@@ -15,7 +15,7 @@ func (anchor *Anchor) SetMap(m map[string]interface{}) {
 	anchor.refMap = m
 }
 
-func (anchor Anchor) GetProp(reqField string) interface{} {
+func (anchor *Anchor) GetProp(reqField string) interface{} {
 	oField, ok := anchor.refMap[reqField]
 
 	if !ok {
