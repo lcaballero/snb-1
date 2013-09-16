@@ -1,13 +1,14 @@
 package snap_sql
 
 import (
+	"data_classes"
 	"database/sql"
 	"fmt"
 	"io/ioutil"
-	"data_classes"
+	"json_helpers"
 	"sql_utils"
+	"time"
 )
-
 
 const FilePath = "../sqlQueries/"
 
@@ -37,13 +38,13 @@ func ReadUserById(userId string) ([]data_classes.UserProfile, error) {
 	}
 
 	rows, err := sql_utils.GetConnection().Query(string(sql), userId)
-	
+
 	return processUserProfiles(rows, err)
 }
 
 func ReadUserByEmail(email string) ([]data_classes.UserProfile, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
-	sql, err := ioutil.ReadFile(FilePath + "readUserByEmail.sql");
+	sql, err := ioutil.ReadFile(FilePath + "readUserByEmail.sql")
 
 	if err != nil {
 		fmt.Println(err)
@@ -66,10 +67,19 @@ func processUserProfiles(sqlRows *sql.Rows, err error) ([]data_classes.UserProfi
 		profiles := make([]data_classes.UserProfile, len(mappedRows))
 
 		for i, v := range mappedRows {
+
 			//fmt.Println(enc.ToIndentedJson(v, "", "  "))
 			anchor := data_classes.Anchor{}
 			anchor.SetMap(v)
-			profiles[i] = data_classes.UserProfile{Anchor:anchor}
+
+			u := data_classes.UserProfile{
+				Id: v["id"].(string),
+				Email: v["email"].(string),
+				DateAdded: v["date_added"].(time.Time),
+				Anchor: anchor
+			}
+
+			profiles[i] = u
 		}
 
 		//fmt.Println("email[0]:", profiles[0].GetProp("date_added"))
@@ -102,4 +112,3 @@ func HasUserId(userId string) (bool, error) {
 		return false, err
 	}
 }
-
