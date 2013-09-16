@@ -76,3 +76,30 @@ func processUserProfiles(sqlRows *sql.Rows, err error) ([]data_classes.UserProfi
 		return profiles, nil
 	}
 }
+
+func HasUser(userName string) (bool, error) {
+	currentUsers, err := ReadUserByEmail(userName)
+
+	if err != nil {
+		fmt.Println(err)
+		return true, err // TODO: should this be true or false?
+	} else if len(currentUsers) > 0 {
+		return true, err
+	} else {
+		return false, err
+	}
+}
+
+func HasUserId(userId string) (bool, error) {
+	currentUsers, err := ReadUserById(userId)
+
+	if err != nil {
+		fmt.Println(err)
+		return true, err // TODO: should this be true or false?
+	} else if len(currentUsers) > 0 {
+		return true, err
+	} else {
+		return false, err
+	}
+}
+

@@ -59,7 +59,6 @@ func processGroup(sqlRows *sql.Rows, err error) ([]data_classes.GroupData, error
 			groups[i] = data_classes.GroupData{Anchor:anchor}
 		}
 
-		fmt.Println("group[0]:", groups[0].Id())
 		return groups, nil
 	}
 }
