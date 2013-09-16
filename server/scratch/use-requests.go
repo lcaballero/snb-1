@@ -5,12 +5,12 @@ import (
 	"fmt"
 	//"builtin"
 	_ "github.com/bmizerany/pq"
+	"io/ioutil"
 	enc "json_helpers"
 	"requests"
-	"io/ioutil"
-	"uuid"
-	"sql_utils"
 	"snap_sql"
+	"sql_utils"
+	"uuid"
 	//"reflect"
 	//"sql_text"
 )
@@ -26,12 +26,11 @@ func getConnection() *sql.DB {
 }
 */
 
-
 // ---------------------- Status Codes ---------------------- //
 
 type StatusCode struct {
 	Code int
-	Msg string
+	Msg  string
 }
 
 var SUCCESS = 200
@@ -42,14 +41,14 @@ var GROUP_DOES_NOT_EXISTS = 104
 var FILE_READ_ERR = 501
 var DB_ERR = 502
 
-var STATUS_CODES = map[int]StatusCode {
-	SUCCESS: {SUCCESS, "Success"},
-	USER_EXISTS: {USER_EXISTS, "User already exists"},
-	USER_DOES_NOT_EXISTS: {USER_DOES_NOT_EXISTS, "User Does Not Exists"},
-	GROUP_EXISTS: {GROUP_EXISTS, "Group already exists"},
+var STATUS_CODES = map[int]StatusCode{
+	SUCCESS:               {SUCCESS, "Success"},
+	USER_EXISTS:           {USER_EXISTS, "User already exists"},
+	USER_DOES_NOT_EXISTS:  {USER_DOES_NOT_EXISTS, "User Does Not Exists"},
+	GROUP_EXISTS:          {GROUP_EXISTS, "Group already exists"},
 	GROUP_DOES_NOT_EXISTS: {GROUP_DOES_NOT_EXISTS, "Group Does Not Exists"},
-	FILE_READ_ERR: {FILE_READ_ERR, "File Read Error"},
-	DB_ERR: {DB_ERR, "Database Error"},
+	FILE_READ_ERR:         {FILE_READ_ERR, "File Read Error"},
+	DB_ERR:                {DB_ERR, "Database Error"},
 }
 
 // ---------------------- User Functions ---------------------- //
@@ -58,7 +57,7 @@ func createUser(email, password string) (StatusCode, error) {
 
 	has_user, err := hasUser(email)
 
-	var status StatusCode;
+	var status StatusCode
 
 	if err != nil {
 		fmt.Println(err)
@@ -67,7 +66,7 @@ func createUser(email, password string) (StatusCode, error) {
 		status = STATUS_CODES[USER_EXISTS]
 	} else {
 
-		sql, err := ioutil.ReadFile(sql_utils.FilePath+"createUser.sql")
+		sql, err := ioutil.ReadFile(sql_utils.FilePath + "createUser.sql")
 
 		if err != nil {
 			fmt.Println(1, err)
@@ -75,7 +74,7 @@ func createUser(email, password string) (StatusCode, error) {
 		} else {
 			userUuid := uuid.New()
 			_, err := sql_utils.GetConnection().Exec(string(sql), userUuid, email, password)
-			
+
 			if err != nil {
 				fmt.Println(2, err)
 				status = STATUS_CODES[DB_ERR]
@@ -91,16 +90,16 @@ func createUser(email, password string) (StatusCode, error) {
 					status, err := addUserToGroup(userUuid, group[0].Id())
 					fmt.Println(status.Msg)
 
-					if err != nil{
+					if err != nil {
 						fmt.Println(err)
-						
+
 					} else {
 						status = STATUS_CODES[SUCCESS]
 						return status, err
 					}
 				}
 			}
-		
+
 		}
 	}
 
@@ -109,36 +108,36 @@ func createUser(email, password string) (StatusCode, error) {
 
 func addUserToGroup(userId, groupId string) (StatusCode, error) {
 
-	var status StatusCode;
+	var status StatusCode
 	// has_group, err := hasGroup(groupId)
 
 	// if has_group {
 
-		// has_user, err := hasUserId(userId)
+	// has_user, err := hasUserId(userId)
 
-		//if has_user && err == nil {
-			sql, err := ioutil.ReadFile(sql_utils.FilePath + "addUserToGroup.sql")
+	//if has_user && err == nil {
+	sql, err := ioutil.ReadFile(sql_utils.FilePath + "addUserToGroup.sql")
 
-			if err != nil {
-				fmt.Println(err)
-				status = STATUS_CODES[DB_ERR]
-			} else {
+	if err != nil {
+		fmt.Println(err)
+		status = STATUS_CODES[DB_ERR]
+	} else {
 
-				// add user to the global group
-				rowUuid := uuid.New()
-				_, err := sql_utils.GetConnection().Exec(string(sql), rowUuid, groupId, userId)
-fmt.Println(3)
-				if err != nil {
-					fmt.Println(err)
-					status = STATUS_CODES[DB_ERR]
-				} else {
-					status = STATUS_CODES[SUCCESS]
-					return status, err
-				}
-			}
-		// } else {
-		// 	status = STATUS_CODES[USER_DOES_NOT_EXISTS]
-		// }
+		// add user to the global group
+		rowUuid := uuid.New()
+		_, err := sql_utils.GetConnection().Exec(string(sql), rowUuid, groupId, userId)
+		fmt.Println(3)
+		if err != nil {
+			fmt.Println(err)
+			status = STATUS_CODES[DB_ERR]
+		} else {
+			status = STATUS_CODES[SUCCESS]
+			return status, err
+		}
+	}
+	// } else {
+	// 	status = STATUS_CODES[USER_DOES_NOT_EXISTS]
+	// }
 	// } else {
 	// 	status = STATUS_CODES[GROUP_DOES_NOT_EXISTS]
 	// }
@@ -193,10 +192,10 @@ func createUserToGroupTable() {
 }
 
 func createGroup(group_name, group_desc, group_owner string) (StatusCode, error) {
-		
+
 	has_group, err := snap_sql.HasGroup(group_name)
 
-	var status StatusCode;
+	var status StatusCode
 
 	if err != nil {
 		fmt.Println(err)
@@ -308,7 +307,6 @@ func hasUserId(userId string) (bool, error) {
 	}
 }
 
-
 /* ------------------------- Main ------------------------- */
 
 func main() {
@@ -353,9 +351,9 @@ func main() {
 	fmt.Println()
 
 	// for i := 0; i < len(userByEmail); i++ {
-	// 	fmt.Println(enc.ToIndentedJson(userByEmail[i].PrintAll(), "", "  "));	
+	// 	fmt.Println(enc.ToIndentedJson(userByEmail[i].PrintAll(), "", "  "));
 	// }
-	
+
 	/* ------------------------- Read All Users ------------------------- */
 	allUsers, err := snap_sql.ReadAllUsers()
 
@@ -367,40 +365,40 @@ func main() {
 	fmt.Println()
 
 	for i := 0; i < len(allUsers); i++ {
-		//fmt.Println(enc.ToIndentedJson(allUsers[i].PrintAll(), "", "  "));	
+		//fmt.Println(enc.ToIndentedJson(allUsers[i].PrintAll(), "", "  "));
 	}
 
 	/*
 
-	for i := 0; i < 5; i++ {
-		creatUser(fmt.Sprintf("email-%v", i), fmt.Sprintf("pass-%v", i))
-	}
+		for i := 0; i < 5; i++ {
+			creatUser(fmt.Sprintf("email-%v", i), fmt.Sprintf("pass-%v", i))
+		}
 
-	fmt.Println()
-	fmt.Println("Get User(1)")
+		fmt.Println()
+		fmt.Println("Get User(1)")
 
-	json := readUser(1)
-	fmt.Println()
-	fmt.Println()
-	fmt.Println(json)
+		json := readUser(1)
+		fmt.Println()
+		fmt.Println()
+		fmt.Println(json)
 
-	fmt.Println()
-	fmt.Println("Get All Users")
-	json = readAllUsers()
-	fmt.Println()
-	fmt.Println()
-	fmt.Println(json)
+		fmt.Println()
+		fmt.Println("Get All Users")
+		json = readAllUsers()
+		fmt.Println()
+		fmt.Println()
+		fmt.Println(json)
 
-	s := sql_text.SqlScripts{}
+		s := sql_text.SqlScripts{}
 
-	fmt.Println()
-	fmt.Println()
-	fmt.Println(s)
+		fmt.Println()
+		fmt.Println()
+		fmt.Println(s)
 
-	ss := sql_text.Default()
+		ss := sql_text.Default()
 
-	fmt.Println()
-	fmt.Println()
-	fmt.Println(ss)
+		fmt.Println()
+		fmt.Println()
+		fmt.Println(ss)
 	*/
 }
