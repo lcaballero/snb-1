@@ -1,6 +1,6 @@
 package data_classes
 
-import(
+import (
 	"time"
 )
 
@@ -8,6 +8,9 @@ import(
 
 type UserProfile struct {
 	Anchor
+
+	Email, Id string
+	DateAdded time.Time
 }
 
 func (userProfile UserProfile) PrintAll() map[string]interface{} {
