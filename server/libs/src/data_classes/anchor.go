@@ -1,6 +1,6 @@
 package data_classes
 
-import(
+import (
 	"fmt"
 	//enc "json_helpers"
 )
