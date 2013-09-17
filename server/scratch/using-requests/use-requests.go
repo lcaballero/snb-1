@@ -15,24 +15,6 @@ import (
 
 // ---------------------- User Functions ---------------------- //
 
-func dropTable(tableName string) bool {
-
-	sql := "drop table if exists " + tableName
-
-	fmt.Println(sql)
-
-	result, err := sql_utils.GetConnection().Exec(string(sql))
-
-	if err != nil {
-		fmt.Println("querying err: ", err)
-		return false
-	}
-
-	fmt.Println("result: ", result)
-
-	return true
-}
-
 func tableExists(dbName, tableName string) bool {
 
 	sql, err := ioutil.ReadFile(sql_utils.FilePath + "tableExists.sql")
