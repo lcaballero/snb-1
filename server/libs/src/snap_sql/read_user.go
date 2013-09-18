@@ -67,16 +67,10 @@ func processUserProfiles(sqlRows *sql.Rows, err error) ([]data_classes.UserProfi
 		profiles := make([]data_classes.UserProfile, len(mappedRows))
 
 		for i, v := range mappedRows {
-
-			//fmt.Println(enc.ToIndentedJson(v, "", "  "))
-			// anchor := data_classes.Anchor{}
-			// anchor.SetMap(v)
-
 			u := data_classes.UserProfile{
 				Id: v["id"].(string),
 				Email: v["email"].(string),
 				DateAdded: v["date_added"].(time.Time),
-				//Anchor: anchor
 			}
 
 			profiles[i] = u

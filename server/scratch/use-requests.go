@@ -9,6 +9,8 @@ import (
 	"uuid"
 	"sql_utils"
 	"snap_sql"
+	"data_classes"
+	enc "json_helpers"
 	//"reflect"
 	//"sql_text"
 )
@@ -92,7 +94,7 @@ func main() {
 	hasGlobalGroup, _ := snap_sql.HasGroup("global_group")
 	if !hasGlobalGroup {
 		globalGroupUuid := uuid.New()
-		group_status, _ := snap_sql.CreateGroup("global_group", "group that contains every user", globalGroupUuid)
+		group_status, _ := snap_sql.CreateGroup(globalGroupUuid, "global_group", "group that contains every user", globalGroupUuid)
 		fmt.Println("Create Group: ", group_status.Msg)
 	}
 
@@ -105,16 +107,46 @@ func main() {
 
 	fmt.Println("Create User: ", status.Msg)
 
-	breweryGroup := "Breweries"
-	hasBreweryGroup, _ := snap_sql.HasGroup(breweryGroup)
+	/* ------------------------- Create a Group ------------------------- */
+
+	breweryGroupName := "Breweries"
+	hasBreweryGroup, _ := snap_sql.HasGroup(breweryGroupName)
 	if !hasBreweryGroup {
 		myUser, _ := snap_sql.ReadUserByEmail(usr)
+		groupUuid := uuid.New()
 
-		group_status, _ := snap_sql.CreateGroup(breweryGroup, "Breweries in Boulder", myUser[0].Id)
-		fmt.Println("Create Group: ", breweryGroup, group_status.Msg)
+		group_status, _ := snap_sql.CreateGroup(groupUuid, breweryGroupName, "Breweries in Boulder", myUser[0].Id)
+		fmt.Println("Create Group: ", breweryGroupName, group_status.Msg)
+	}
+
+	/* ------------------------- Create a game ------------------------- */
+
+	// read the group and find its Id
+	hasBreweryGroup, _ = snap_sql.HasGroup(breweryGroupName)
+	var breweryGroup []data_classes.GroupData
+
+	if hasBreweryGroup {
+		breweryGroup, _ = snap_sql.ReadGroup(breweryGroupName)
+
+		// Create a game and assign it to breweryGroup
+		gameUuid := uuid.New()
+		createGame_status, _ := snap_sql.CreateGame(
+			gameUuid, breweryGroup[0].Id, "Boulder Breweries XXX", "Have a brew with a brewer")
+
+		fmt.Println("Create Game: ", "Boulder Breweries", createGame_status)
+	}
+
+
+	// read all games in a group
+
+	allGameInGroup, _ := snap_sql.ReadAllGames(breweryGroup[0].Id)
+
+	for i := 0; i < len(allGameInGroup); i++ {
+		fmt.Println(enc.ToIndentedJson(allGameInGroup[i], "", "  "));	
 	}
 
 	/* ------------------------- Read User By Email ------------------------- */
+	
 	//userByEmail, err := readUserByEmail("Ryan")
 
 	fmt.Println()
