@@ -26,9 +26,7 @@ func (r Response) String() (s string) {
 func main() {
 
 	// Locations where static files reside.
-	http_handling.ServeStaticFiles(
-		"/views/",
-		"/assets/")
+	http_handling.ServeStaticFiles("/assets/")
 
 	// Handle serving the page -- mapping 'urls' to 'views'
 	http.HandleFunc("/app/get-users", fake_data.GetUsers)
