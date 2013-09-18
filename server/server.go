@@ -5,7 +5,9 @@ import (
 	"fake_data"
 	"fmt"
 	"http_handling"
+	enc "json_helpers"
 	"net/http"
+	"snap_sql"
 	"strconv"
 )
 
@@ -57,8 +59,10 @@ func addUser(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(email + ": " + pw)
 
-	CreatUser(email, pw)
+	snap_sql.CreateUser(email, pw)
+	user, _ := snap_sql.ReadUserByEmail(email)
 
-	user := ReadUserFromEmail(email)
-	fmt.Fprint(w, user)
+	json := enc.ToIndentedJson(user, "", "  ")
+
+	fmt.Fprint(w, json)
 }
