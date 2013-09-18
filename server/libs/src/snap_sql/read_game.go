@@ -1,10 +1,10 @@
 package snap_sql
 
 import (
+	"data_classes"
 	"database/sql"
 	"fmt"
 	"io/ioutil"
-	"data_classes"
 	"sql_utils"
 	"time"
 	//enc "json_helpers"
@@ -12,6 +12,7 @@ import (
 
 // ---------------------- Read Group Functions ---------------------- //
 
+/*
 func HasGame(gameName string) (bool, error) {
 	games, err := ReadGame(gameName)
 
@@ -24,10 +25,31 @@ func HasGame(gameName string) (bool, error) {
 		return false, err
 	}
 }
+*/
 
-func ReadGame(gameName string) ([]data_classes.GameData, error) {
+func ReadGameFromId(gameId string) ([]data_classes.GameData, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "readGame.sql");
+	sql, err := ioutil.ReadFile(sql_utils.FilePath + "readGameFromId.sql")
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	} else {
+
+		rows, err := sql_utils.GetConnection().Query(string(sql), gameId)
+
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		} else {
+			return processGames(rows, err)
+		}
+	}
+}
+
+func ReadGameFromName(gameName string) ([]data_classes.GameData, error) {
+	//sql := "SELECT * FROM _user WHERE email=$1"
+	sql, err := ioutil.ReadFile(sql_utils.FilePath + "readGameFromName.sql")
 
 	if err != nil {
 		fmt.Println(err)
@@ -47,7 +69,7 @@ func ReadGame(gameName string) ([]data_classes.GameData, error) {
 
 func ReadAllGames(groupId string) ([]data_classes.GameData, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "readAllGamesInGroup.sql");
+	sql, err := ioutil.ReadFile(sql_utils.FilePath + "readAllGamesInGroup.sql")
 
 	if err != nil {
 		fmt.Println(err)
@@ -77,13 +99,13 @@ func processGames(sqlRows *sql.Rows, err error) ([]data_classes.GameData, error)
 
 		for i, v := range mappedRows {
 			u := data_classes.GameData{
-				Id: v["id"].(string),				
-				DateAdded: v["date_added"].(time.Time),
-				Description: v["description"].(string),
-				GroupId: v["group_id"].(string),
-				Name: v["name"].(string),
-				State: v["state"].(int64),
-				WinningBoardId: v["winning_board_id"].(string),
+				Id:             v["id"].(string),
+				DateAdded:      v["date_added"].(time.Time),
+				Description:    v["description"].(string),
+				GroupId:        v["group_id"].(string),
+				Name:           v["name"].(string),
+				State:          v["state"].(int64),
+				WinningBoardId: sql_utils.ObjToString("winning_board_id", v),
 			}
 
 			games[i] = u

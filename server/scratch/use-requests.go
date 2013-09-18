@@ -3,14 +3,14 @@ package main
 import (
 	"fmt"
 	//"builtin"
-	_ "github.com/bmizerany/pq"
-	"requests"
-	"io/ioutil"
-	"uuid"
-	"sql_utils"
-	"snap_sql"
 	"data_classes"
+	_ "github.com/bmizerany/pq"
+	"io/ioutil"
 	enc "json_helpers"
+	"requests"
+	"snap_sql"
+	"sql_utils"
+	"uuid"
 	//"reflect"
 	//"sql_text"
 )
@@ -149,22 +149,30 @@ func main() {
 		// Create a game and assign it to breweryGroup
 		gameUuid := uuid.New()
 		createGame_status, _ := snap_sql.CreateGame(
-			gameUuid, breweryGroup[0].Id, "Boulder Breweries XXX", "Have a brew with a brewer")
+			gameUuid, breweryGroup[0].Id, "Boulder Breweries", "Have a brew with a brewer")
 
 		fmt.Println("Create Game: ", "Boulder Breweries", createGame_status)
-	}
 
+		fmt.Println("Read Game from Id: ...")
+		readGameFromId, _ := snap_sql.ReadGameFromId(gameUuid)
+		fmt.Println(enc.ToIndentedJson(readGameFromId, "", "  "))
+
+		fmt.Println("Read Game from Name: ...")
+		readGameFromName, _ := snap_sql.ReadGameFromName("Boulder Breweries")
+		fmt.Println(enc.ToIndentedJson(readGameFromName, "", "  "))
+	}
 
 	// read all games in a group
 
+	fmt.Println("Read all games in group: ...")
 	allGameInGroup, _ := snap_sql.ReadAllGames(breweryGroup[0].Id)
 
 	for i := 0; i < len(allGameInGroup); i++ {
-		fmt.Println(enc.ToIndentedJson(allGameInGroup[i], "", "  "));	
+		fmt.Println(enc.ToIndentedJson(allGameInGroup[i], "", "  "))
 	}
 
 	/* ------------------------- Read User By Email ------------------------- */
-	
+
 	//userByEmail, err := readUserByEmail("Ryan")
 
 	fmt.Println()
