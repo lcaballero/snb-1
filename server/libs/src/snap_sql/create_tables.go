@@ -15,11 +15,11 @@ func CreateGameTable() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		result, err := sql_utils.GetConnection().Exec(string(sql))
+		_, err := sql_utils.GetConnection().Exec(string(sql))
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(result)
+		//fmt.Println(result)
 	}
 }
 
@@ -31,11 +31,11 @@ func CreateUserTable() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		result, err := sql_utils.GetConnection().Exec(string(sql))
+		_, err := sql_utils.GetConnection().Exec(string(sql))
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(result)
+		//fmt.Println(result)
 	}
 }
 
@@ -47,11 +47,11 @@ func CreateGroupsTable() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		result, err := sql_utils.GetConnection().Exec(string(sql))
+		_, err := sql_utils.GetConnection().Exec(string(sql))
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(result)
+		//fmt.Println(result)
 	}
 }
 
@@ -63,10 +63,10 @@ func CreateUserToGroupTable() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		result, err := sql_utils.GetConnection().Exec(string(sql))
+		_, err := sql_utils.GetConnection().Exec(string(sql))
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(result)
+		//fmt.Println(result)
 	}
 }

@@ -8,8 +8,12 @@ import(
 
 type GameData struct {
 	Anchor
-}
 
+	Id, GroupId, WinningBoardId, Name, Description string
+	State int64
+	DateAdded time.Time
+}
+/*
 func (game GameData) Id() string {
 	return game.GetProp("id").(string)
 }
@@ -36,4 +40,4 @@ func (game GameData) Active() bool {
 
 func (game GameData) DateAdded() time.Time {
 	return game.GetProp("date_added").(time.Time)
-}
+}*/

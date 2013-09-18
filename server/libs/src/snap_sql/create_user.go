@@ -23,14 +23,14 @@ func CreateUser(email, password string) (sql_utils.StatusCode, error) {
 		sql, err := ioutil.ReadFile(sql_utils.FilePath+"createUser.sql")
 
 		if err != nil {
-			fmt.Println(1, err)
+			fmt.Println(err)
 			status = sql_utils.STATUS_CODES[sql_utils.FILE_READ_ERR]
 		} else {
 			userUuid := uuid.New()
 			_, err := sql_utils.GetConnection().Exec(string(sql), userUuid, email, password)
 			
 			if err != nil {
-				fmt.Println(2, err)
+				fmt.Println(err)
 				status = sql_utils.STATUS_CODES[sql_utils.DB_ERR]
 			} else {
 				//fmt.Println("Create User result: ", result)
