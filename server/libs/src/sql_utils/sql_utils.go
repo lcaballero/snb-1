@@ -2,6 +2,9 @@ package sql_utils
 
 import (
 	"database/sql"
+	"fmt"
+	"io/ioutil"
+	"path"
 	"requests"
 )
 
@@ -32,6 +35,45 @@ var STATUS_CODES = map[int]StatusCode{
 	GROUP_DOES_NOT_EXISTS: {GROUP_DOES_NOT_EXISTS, "Group Does Not Exists"},
 	FILE_READ_ERR:         {FILE_READ_ERR, "File Read Error"},
 	DB_ERR:                {DB_ERR, "Database Error"},
+}
+
+type CacheEntry struct {
+	Path, Script string
+	Err          error
+}
+
+type Entries struct {
+	TableExists, CreateGame *CacheEntry
+}
+
+var CacheEntries *Entries = nil
+
+func init() {
+	CacheEntries = &Entries{
+		TableExists: NewEntry(path.Join(FilePath, "tableExists.sql")),
+		CreateGame:  NewEntry(path.Join(FilePath, "createGame.sql")),
+	}
+}
+
+func NewEntry(path string) (c *CacheEntry) {
+	script, err := ioutil.ReadFile(path)
+
+	if err != nil {
+		fmt.Println(err)
+		c = &CacheEntry{
+			Path: path,
+			Err:  nil,
+		}
+		return c
+	}
+
+	c = &CacheEntry{
+		Path:   path,
+		Script: string(script),
+		Err:    nil,
+	}
+
+	return c
 }
 
 func GetConnection() *sql.DB {

@@ -1,17 +1,17 @@
 package snap_sql
 
-import(
+import (
 	"fmt"
-	"uuid"
 	"io/ioutil"
 	"sql_utils"
+	"uuid"
 )
 
 func CreateUser(email, password string) (sql_utils.StatusCode, error) {
 
 	has_user, err := HasUser(email)
 
-	var status sql_utils.StatusCode;
+	var status sql_utils.StatusCode
 
 	if err != nil {
 		fmt.Println(err)
@@ -20,7 +20,7 @@ func CreateUser(email, password string) (sql_utils.StatusCode, error) {
 		status = sql_utils.STATUS_CODES[sql_utils.USER_EXISTS]
 	} else {
 
-		sql, err := ioutil.ReadFile(sql_utils.FilePath+"createUser.sql")
+		sql, err := ioutil.ReadFile(sql_utils.FilePath + "createUser.sql")
 
 		if err != nil {
 			fmt.Println(err)
@@ -28,7 +28,7 @@ func CreateUser(email, password string) (sql_utils.StatusCode, error) {
 		} else {
 			userUuid := uuid.New()
 			_, err := sql_utils.GetConnection().Exec(string(sql), userUuid, email, password)
-			
+
 			if err != nil {
 				fmt.Println(err)
 				status = sql_utils.STATUS_CODES[sql_utils.DB_ERR]
@@ -44,16 +44,16 @@ func CreateUser(email, password string) (sql_utils.StatusCode, error) {
 					status, err := AddUserToGroup(userUuid, group[0].Id)
 					fmt.Println(status.Msg)
 
-					if err != nil{
+					if err != nil {
 						fmt.Println(err)
-						
+
 					} else {
 						status = sql_utils.STATUS_CODES[sql_utils.SUCCESS]
 						return status, err
 					}
 				}
 			}
-		
+
 		}
 	}
 

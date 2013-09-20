@@ -5,7 +5,6 @@ import (
 	//"builtin"
 	"data_classes"
 	_ "github.com/bmizerany/pq"
-	"io/ioutil"
 	enc "json_helpers"
 	"requests"
 	"snap_sql"
@@ -37,14 +36,14 @@ func dropTable(tableName string) bool {
 
 func tableExists(dbName, tableName string) bool {
 
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "tableExists.sql")
+	sql := sql_utils.CacheEntries.TableExists
 
-	if err != nil {
-		fmt.Println(err)
+	if sql.Err != nil {
+		fmt.Println(sql.Err)
 		return false
 	}
 
-	rows, err := sql_utils.GetConnection().Query(string(sql), dbName, tableName)
+	rows, err := sql_utils.GetConnection().Query(sql.Script, dbName, tableName)
 	if err != nil {
 		fmt.Println(err)
 		return false
