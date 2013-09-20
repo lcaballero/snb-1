@@ -1,9 +1,15 @@
+UpdateStream
+	state (int)
+	active (bool) // simulate deleted
+	last-updated-by (fk)
+	last-updated-on (time-stamp)
+
 User
 	id (pk)
 	username
 	password
 
-UserInfo
+UserInfo : UpdateStream
 	id (pk)
 	first-name
 	last-name
@@ -17,7 +23,7 @@ UserToGroup
 
 SocialGroup
 	id (pk)
-	owner-id
+	owner-id (fk)
 	name
 
 Board
@@ -25,3 +31,35 @@ Board
 	game-id
 	user-id
 	name
+
+Game
+	id (pk)
+	winning-board-id
+	group-id
+	sponsor-id
+	active-state
+
+GameTile
+	id (pk)
+	board-id
+	criteria-id
+	tile-position
+
+Criteria : UpdateStream
+	id (pk)
+	description
+
+Tags
+	id (pk)
+	asset-id (fk)
+	description
+
+Criteria Results
+	id (pk)
+	criteria-id
+	user-id
+	photo-id
+	state // review, accepted, rejected
+
+
+
