@@ -1,10 +1,26 @@
 package snap_sql
 
-import(
+import (
 	"fmt"
 	"io/ioutil"
 	"sql_utils"
 )
+
+// ---------------------- Create Board Table ---------------------- //
+
+func CreateBoardTable() {
+	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createBoardTable.sql")
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		_, err := sql_utils.GetConnection().Exec(string(sql))
+
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+}
 
 // ---------------------- Create Game Table ---------------------- //
 
