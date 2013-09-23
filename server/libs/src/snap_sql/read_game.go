@@ -67,6 +67,26 @@ func ReadGameFromName(gameName string) ([]data_classes.GameData, error) {
 	}
 }
 
+func ReadGameInGroupFromName(groupId, gameName string) ([]data_classes.GameData, error) {
+	//sql := "SELECT * FROM _user WHERE email=$1"
+	sql, err := ioutil.ReadFile(sql_utils.FilePath + "readGameInGroupFromName.sql")
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	} else {
+
+		rows, err := sql_utils.GetConnection().Query(string(sql), groupId, gameName)
+
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		} else {
+			return processGames(rows, err)
+		}
+	}
+}
+
 func ReadAllGames(groupId string) ([]data_classes.GameData, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
 	sql, err := ioutil.ReadFile(sql_utils.FilePath + "readAllGamesInGroup.sql")
