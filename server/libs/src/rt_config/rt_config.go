@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	enc "json_helpers"
+	"path"
 )
 
 type EnvironmentConfig struct {
@@ -14,14 +15,23 @@ type EnvironmentConfig struct {
 type RuntimeConfig struct {
 	ConnectionString string
 	SqlScripts       string
+	WebServerPort    string
+	DbServerPort     string
 }
 
 var config *EnvironmentConfig = nil
+var default_config_file string = "config.js"
 
 func init() {
-	fmt.Println("rt_config.init()")
 
-	config = loadConfig("../../../config.js")
+	cfg_file := path.Join("../../../", default_config_file)
+
+	fmt.Println("Loading configuration file: ", cfg_file)
+
+	config = loadConfig(cfg_file)
+}
+
+func DumpConfigFile() {
 
 	js := enc.ToIndentedJson(config, "", "   ")
 
