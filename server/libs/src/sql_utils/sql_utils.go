@@ -49,8 +49,9 @@ func ToSqlMap(rows *sql.Rows) []map[string]interface{} {
 func ObjToString(ref string, o map[string]interface{}) string {
 	v, ok := o[ref]
 
-	if ok && v != nil {
-		return v.(string)
+	val, isString := v.(string)
+	if ok && isString {
+		return val
 	} else {
 		return ""
 	}
