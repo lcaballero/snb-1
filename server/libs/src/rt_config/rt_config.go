@@ -19,26 +19,34 @@ type RuntimeConfig struct {
 	DbServerPort     string
 }
 
+type ConfigPathProvider func() string
+
 var config *EnvironmentConfig = nil
-var default_config_file string = "config.js"
+var default_config_name string = "config.js"
+var default_config_root string = "../../../"
 
-func init() {
+var PathProvider ConfigPathProvider = defaultPathProvider
 
-	cfg_file := path.Join("../../../", default_config_file)
+func CurrentConfiguration() *EnvironmentConfig {
+	if config == nil {
+		config = LoadConfig(PathProvider())
+	}
+	return config
+}
 
-	fmt.Println("Loading configuration file: ", cfg_file)
-
-	config = loadConfig(cfg_file)
+func defaultPathProvider() string {
+	return path.Join(default_config_root, default_config_name)
 }
 
 func DumpConfigFile() {
 
-	js := enc.ToIndentedJson(config, "", "   ")
+	cf := CurrentConfiguration()
+	js := enc.ToIndentedJson(cf, "", "   ")
 
 	fmt.Println(js)
 }
 
-func loadConfig(path string) *EnvironmentConfig {
+func LoadConfig(path string) *EnvironmentConfig {
 	bytes, err := ioutil.ReadFile(path)
 
 	if err != nil {
