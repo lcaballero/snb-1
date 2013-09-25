@@ -1,20 +1,22 @@
+function findAppRoot()
+{
 
+	directory="."
+	app_root="$directory/server/libs/"
+	cwd=$(pwd)
+	abs=""
 
-directory="."
-d="$directory/server/libs/"
-cwd=$(pwd)
-abs=""
+	while [ ! -d "$app_root" ]; do 
+		directory="$directory/.."
+		app_root="$directory/server/libs/"
+		cd $directory
+		abs=$(pwd)
+		cd $cwd
+	done
 
-echo "cwd: $cwd"
-echo "d: $d"
+	echo "${directory}"
+}
 
-while [ ! -d "$d" ]; do 
-	directory="$directory/.."
-	d="$directory/server/libs/"
-	echo $directory
-	echo $d
-	cd $directory
-	abs=$(pwd)
-	echo "abs: $abs"
-	cd $cwd
-done
+a="$(findAppRoot)"
+
+cd "$a"

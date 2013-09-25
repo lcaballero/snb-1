@@ -2,9 +2,11 @@ package rt_config
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	enc "json_helpers"
+	"os"
 	"path"
 )
 
@@ -19,13 +21,65 @@ type RuntimeConfig struct {
 	DbServerPort     string
 }
 
-type ConfigPathProvider func() string
+type ConfigFileProvider func() string
+
+type CommandFlags struct {
+	config_file     string
+	help            bool
+	show_parameters bool
+}
 
 var config *EnvironmentConfig = nil
-var default_config_name string = "config.js"
-var default_config_root string = "../../../"
 
-var PathProvider ConfigPathProvider = defaultPathProvider
+const (
+	default_config_name = "config.js"
+	default_config_root = "./"
+)
+
+var PathProvider ConfigFileProvider = defaultFileProvider
+
+func (r *RuntimeConfig) String() string {
+	return enc.ToIndentedJson(r, "", "   ")
+}
+
+func LoadFromCommandLine() *EnvironmentConfig {
+
+	cf := readFlags()
+
+	fmt.Println("config_file: ", cf.config_file)
+
+	if cf.help {
+		flag.Usage()
+		return &EnvironmentConfig{}
+	}
+
+	_, err := os.Stat(cf.config_file)
+
+	configFileExists := !os.IsNotExist(err)
+
+	if cf.config_file != "" && configFileExists {
+		PathProvider = func() string {
+			return cf.config_file
+		}
+		return CurrentConfiguration()
+	} else {
+		fmt.Println("Configuration doesn't exist: ", cf.config_file)
+	}
+
+	return &EnvironmentConfig{}
+}
+
+func readFlags() *CommandFlags {
+
+	cf := &CommandFlags{}
+
+	flag.StringVar(&cf.config_file, "config-file", "", "Absolute path to the root of the application where the config.js should reside.")
+	flag.BoolVar(&cf.help, "help", false, "Show this help message.")
+
+	flag.Parse()
+
+	return cf
+}
 
 func CurrentConfiguration() *EnvironmentConfig {
 	if config == nil {
@@ -34,7 +88,7 @@ func CurrentConfiguration() *EnvironmentConfig {
 	return config
 }
 
-func defaultPathProvider() string {
+func defaultFileProvider() string {
 	return path.Join(default_config_root, default_config_name)
 }
 
