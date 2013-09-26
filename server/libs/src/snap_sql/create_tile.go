@@ -6,24 +6,19 @@ import (
 	"sql_utils"
 )
 
-func CreateBoard(boardUuid, gameId, userId, name string, state int) (sql_utils.StatusCode, error) {
+func CreateTile(tileUuid, boardId, criteriaId string, position, active int) (sql_utils.StatusCode, error) {
 
 	var status sql_utils.StatusCode
 
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createBoard.sql")
+	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createTile.sql")
 
 	if err != nil {
 		fmt.Println(err)
 		status = sql_utils.STATUS_CODES[sql_utils.FILE_READ_ERR]
 	} else {
-		//gameUuid := uuid.New()
-
-		// ?? should we assume groupId is valid or should
-		// we run a db query to ensure it's valid?
-
 		_, err := sql_utils.GetConnection().Exec(
 			string(sql),
-			boardUuid, gameId, userId, name, state)
+			tileUuid, boardId, criteriaId, position, 1)
 
 		if err != nil {
 			fmt.Println(err)

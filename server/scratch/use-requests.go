@@ -86,6 +86,10 @@ func hasBoardTable() bool {
 	return tableExists("snb", "board")
 }
 
+func hasCriteriaTable() bool {
+	return tableExists("snb", "criteria")
+}
+
 /* ------------------------- Main ------------------------- */
 
 func main() {
@@ -114,6 +118,12 @@ func main() {
 		fmt.Println("Create Board table...")
 		snap_sql.CreateBoardTable()
 	}
+
+	if !hasCriteriaTable() {
+		fmt.Println("Create Criteria table...")
+		snap_sql.CreateCriteriaTable()
+	}
+
 	/* ------------------------- Create Group ------------------------- */
 
 	hasGlobalGroup, _ := snap_sql.HasGroup("global_group")
@@ -175,7 +185,7 @@ func main() {
 			breweryGroup[0].Id, "Boulder Breweries")
 		fmt.Println(enc.ToIndentedJson(readGameInGroupFromName, "", "  "))
 
-		createNewBoard := true
+		createNewBoard := false
 
 		if createNewBoard {
 			boardUuid := uuid.New()
@@ -185,8 +195,17 @@ func main() {
 				boardUuid,
 				readGameInGroupFromName[0].Id,
 				myUser[0].Id,
-				boardName)
+				boardName,
+				1)
 
+			// for i := 0; i < 25; i++ {
+			// 	criteriaUuid := uuid.New()
+
+			// 	_, _ := snap_sql.CreateCriteria(
+			// 		criteriaUuid,
+			// 		"crit_" + i
+			// 	)
+			// }
 			fmt.Println("Create Board: ", boardName, board_status)
 		}
 	}

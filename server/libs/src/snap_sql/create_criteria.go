@@ -6,11 +6,11 @@ import (
 	"sql_utils"
 )
 
-func CreateBoard(boardUuid, gameId, userId, name string, state int) (sql_utils.StatusCode, error) {
+func CreateCriteria(criteriaUuid, description string) (sql_utils.StatusCode, error) {
 
 	var status sql_utils.StatusCode
 
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createBoard.sql")
+	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createCriteria.sql")
 
 	if err != nil {
 		fmt.Println(err)
@@ -23,7 +23,7 @@ func CreateBoard(boardUuid, gameId, userId, name string, state int) (sql_utils.S
 
 		_, err := sql_utils.GetConnection().Exec(
 			string(sql),
-			boardUuid, gameId, userId, name, state)
+			criteriaUuid, description, 1)
 
 		if err != nil {
 			fmt.Println(err)

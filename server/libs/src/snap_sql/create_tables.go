@@ -6,6 +6,38 @@ import (
 	"sql_utils"
 )
 
+// ---------------------- Create Tile Table ---------------------- //
+
+func CreateTileTable() {
+	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createTileTable.sql")
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		_, err := sql_utils.GetConnection().Exec(string(sql))
+
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+}
+
+// ---------------------- Create Criteria Table ---------------------- //
+
+func CreateCriteriaTable() {
+	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createCriteriaTable.sql")
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		_, err := sql_utils.GetConnection().Exec(string(sql))
+
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+}
+
 // ---------------------- Create Board Table ---------------------- //
 
 func CreateBoardTable() {
