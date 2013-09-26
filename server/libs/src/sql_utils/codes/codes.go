@@ -43,3 +43,7 @@ func newCode(code int, msg string) StatusCode {
 
 	return c
 }
+
+func (c *StatusCode) String() string {
+	return c.msg
+}

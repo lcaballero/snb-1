@@ -1,11 +1,11 @@
 package snap_sql
 
 import (
+	"data_classes"
 	"database/sql"
 	"fmt"
-	"io/ioutil"
-	"data_classes"
 	"sql_utils"
+	"sql_utils/caching"
 	"time"
 	//enc "json_helpers"
 )
@@ -27,21 +27,16 @@ func HasGroup(groupName string) (bool, error) {
 
 func ReadGroup(group_name string) ([]data_classes.GroupData, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "readGroup.sql");
+
+	sql := caching.CacheEntries.ReadGroup.Script
+
+	rows, err := sql_utils.GetConnection().Query(string(sql), group_name)
 
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	} else {
-
-		rows, err := sql_utils.GetConnection().Query(string(sql), group_name)
-
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		} else {
-			return processGroup(rows, err)
-		}
+		return processGroup(rows, err)
 	}
 }
 
@@ -57,10 +52,10 @@ func processGroup(sqlRows *sql.Rows, err error) ([]data_classes.GroupData, error
 
 		for i, v := range mappedRows {
 			u := data_classes.GroupData{
-				Id: v["id"].(string),
-				GroupName: v["group_name"].(string),
+				Id:          v["id"].(string),
+				GroupName:   v["group_name"].(string),
 				Description: v["group_desc"].(string),
-				DateAdded: v["date_added"].(time.Time),
+				DateAdded:   v["date_added"].(time.Time),
 			}
 
 			groups[i] = u

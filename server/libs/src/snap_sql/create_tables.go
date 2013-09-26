@@ -2,55 +2,46 @@ package snap_sql
 
 import (
 	"fmt"
-	"io/ioutil"
 	"sql_utils"
+	"sql_utils/caching"
 )
 
 // ---------------------- Create Tile Table ---------------------- //
 
 func CreateTileTable() {
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createTileTable.sql")
+
+	sql := caching.CacheEntries.CreateTileTable.Script
+
+	_, err := sql_utils.GetConnection().Exec(string(sql))
 
 	if err != nil {
 		fmt.Println(err)
-	} else {
-		_, err := sql_utils.GetConnection().Exec(string(sql))
-
-		if err != nil {
-			fmt.Println(err)
-		}
 	}
 }
 
 // ---------------------- Create Criteria Table ---------------------- //
 
 func CreateCriteriaTable() {
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createCriteriaTable.sql")
+
+	sql := caching.CacheEntries.CreateCriteriaTable.Script
+
+	_, err := sql_utils.GetConnection().Exec(string(sql))
 
 	if err != nil {
 		fmt.Println(err)
-	} else {
-		_, err := sql_utils.GetConnection().Exec(string(sql))
-
-		if err != nil {
-			fmt.Println(err)
-		}
 	}
 }
 
 // ---------------------- Create Board Table ---------------------- //
 
 func CreateBoardTable() (err error) {
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createBoardTable.sql")
+
+	sql := caching.CacheEntries.CreateBoardTable.Script
+
+	_, err = sql_utils.GetConnection().Exec(string(sql))
 
 	if err != nil {
 		fmt.Println(err)
-	} else {
-		_, err := sql_utils.GetConnection().Exec(string(sql))
-
-		if err != nil {
-			fmt.Println(err)
-		}
 	}
 
 	return err
@@ -60,16 +51,12 @@ func CreateBoardTable() (err error) {
 
 func CreateGameTable() (err error) {
 
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createGameTable.sql")
+	sql := caching.CacheEntries.CreateGameTable.Script
+
+	_, err = sql_utils.GetConnection().Exec(string(sql))
 
 	if err != nil {
 		fmt.Println(err)
-	} else {
-		_, err := sql_utils.GetConnection().Exec(string(sql))
-		if err != nil {
-			fmt.Println(err)
-		}
-		//fmt.Println(result)
 	}
 
 	return err
@@ -78,16 +65,12 @@ func CreateGameTable() (err error) {
 // ---------------------- Create User Table ---------------------- //
 func CreateUserTable() (err error) {
 
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createUserTable.sql")
+	sql := caching.CacheEntries.CreateUserTable.Script
+
+	_, err = sql_utils.GetConnection().Exec(string(sql))
 
 	if err != nil {
 		fmt.Println(err)
-	} else {
-		_, err := sql_utils.GetConnection().Exec(string(sql))
-		if err != nil {
-			fmt.Println(err)
-		}
-		//fmt.Println(result)
 	}
 
 	return err
@@ -96,16 +79,12 @@ func CreateUserTable() (err error) {
 // ---------------------- Create Group Table ---------------------- //
 
 func CreateGroupsTable() (err error) {
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createGroupsTable.sql")
 
+	sql := caching.CacheEntries.CreateGroupTable.Script
+
+	_, err = sql_utils.GetConnection().Exec(string(sql))
 	if err != nil {
 		fmt.Println(err)
-	} else {
-		_, err := sql_utils.GetConnection().Exec(string(sql))
-		if err != nil {
-			fmt.Println(err)
-		}
-		//fmt.Println(result)
 	}
 
 	return err
@@ -114,16 +93,12 @@ func CreateGroupsTable() (err error) {
 // ---------------------- Create User to Group table ---------------------- //
 
 func CreateUserToGroupTable() (err error) {
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createUserToGroupTable.sql")
 
+	sql := caching.CacheEntries.CreateUserToGroupTable.Script
+
+	_, err = sql_utils.GetConnection().Exec(string(sql))
 	if err != nil {
 		fmt.Println(err)
-	} else {
-		_, err := sql_utils.GetConnection().Exec(string(sql))
-		if err != nil {
-			fmt.Println(err)
-		}
-		//fmt.Println(result)
 	}
 
 	return err

@@ -3,60 +3,9 @@ package sql_utils
 import (
 	"database/sql"
 	"fmt"
-	"io/ioutil"
-	"path"
 	"requests"
+	"sql_utils/caching"
 )
-
-const FilePath = "../sqlQueries/"
-
-type CacheEntry struct {
-	Path, Script string
-	Err          error
-}
-
-type Entries struct {
-	TableExists, CreateGame, AddUserToGroup, CreateBoard, CreateBoardTable, CreateCriteria *CacheEntry
-}
-
-var CacheEntries *Entries = nil
-
-func init() {
-	CacheEntries = &Entries{
-		TableExists:      provideFile("tableExists"),
-		CreateGame:       provideFile("createGame"),
-		AddUserToGroup:   provideFile("addUserToGroup"),
-		CreateBoard:      provideFile("createBoard"),
-		CreateBoardTable: provideFile("createBoardTable"),
-		CreateCriteria:   provideFile("createCriteriaTable"),
-	}
-}
-
-func provideFile(name string) *CacheEntry {
-	f := path.Join(FilePath, name+".sql")
-	return NewEntry(f)
-}
-
-func NewEntry(path string) (c *CacheEntry) {
-	script, err := ioutil.ReadFile(path)
-
-	if err != nil {
-		fmt.Println(err)
-		c = &CacheEntry{
-			Path: path,
-			Err:  nil,
-		}
-		return c
-	}
-
-	c = &CacheEntry{
-		Path:   path,
-		Script: string(script),
-		Err:    nil,
-	}
-
-	return c
-}
 
 func GetConnection() *sql.DB {
 	database, _ := sql.Open(
@@ -83,7 +32,7 @@ func ObjToString(ref string, o map[string]interface{}) string {
 
 func TableExists(dbName, tableName string) bool {
 
-	sql := CacheEntries.TableExists
+	sql := caching.CacheEntries.TableExists
 
 	if sql.Err != nil {
 		fmt.Println(sql.Err)

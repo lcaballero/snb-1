@@ -52,7 +52,7 @@ func main() {
 	if !hasGlobalGroup {
 		globalGroupUuid := uuid.New()
 		group_status, _ := snap_sql.CreateGroup(globalGroupUuid, "global_group", "group that contains every user", globalGroupUuid)
-		fmt.Println("Create Group: ", group_status.Msg)
+		fmt.Println("Create Group: ", group_status)
 	}
 
 	/* ------------------------- Create User ------------------------- */
@@ -62,7 +62,7 @@ func main() {
 
 	status, _ := snap_sql.CreateUser(usr, pw)
 
-	fmt.Println("Create User: ", status.Msg)
+	fmt.Println("Create User: ", status)
 
 	myUser, _ := snap_sql.ReadUserByEmail(usr)
 
@@ -74,7 +74,7 @@ func main() {
 		groupUuid := uuid.New()
 
 		group_status, _ := snap_sql.CreateGroup(groupUuid, breweryGroupName, "Breweries in Boulder", myUser[0].Id)
-		fmt.Println("Create Group: ", breweryGroupName, group_status.Msg)
+		fmt.Println("Create Group: ", breweryGroupName, group_status)
 	}
 
 	/* ------------------------- Create a game ------------------------- */

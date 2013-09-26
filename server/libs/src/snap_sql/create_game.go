@@ -2,8 +2,8 @@ package snap_sql
 
 import (
 	"fmt"
-	"io/ioutil"
 	"sql_utils"
+	"sql_utils/caching"
 	"sql_utils/codes"
 )
 
@@ -11,31 +11,26 @@ func CreateGame(gameUuid, groupId, name, description string) (codes.StatusCode, 
 
 	var status codes.StatusCode
 
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createGame.sql")
+	sql := caching.CacheEntries.CreateGame.Script
+
+	//gameUuid := uuid.New()
+
+	// ?? should we assume groupId is valid or should
+	// we run a db query to ensure it's valid?
+
+	// winning_board_id == null
+	// active is set to false to begin with until at least 25 criteria
+	// are associated with the board
+	_, err := sql_utils.GetConnection().Exec(
+		string(sql),
+		gameUuid, groupId, name, description, 1)
 
 	if err != nil {
 		fmt.Println(err)
-		status = codes.File_Read_Error
+		status = codes.Db_Error
 	} else {
-		//gameUuid := uuid.New()
-
-		// ?? should we assume groupId is valid or should
-		// we run a db query to ensure it's valid?
-
-		// winning_board_id == null
-		// active is set to false to begin with until at least 25 criteria
-		// are associated with the board
-		_, err := sql_utils.GetConnection().Exec(
-			string(sql),
-			gameUuid, groupId, name, description, 1)
-
-		if err != nil {
-			fmt.Println(err)
-			status = codes.Db_Error
-		} else {
-			status = codes.Success
-			return status, err
-		}
+		status = codes.Success
+		return status, err
 	}
 
 	return status, err

@@ -2,8 +2,8 @@ package snap_sql
 
 import (
 	"fmt"
-	"io/ioutil"
 	"sql_utils"
+	"sql_utils/caching"
 	"sql_utils/codes"
 	"uuid"
 )
@@ -18,25 +18,20 @@ func AddUserToGroup(userId, groupId string) (codes.StatusCode, error) {
 	// has_user, err := hasUserId(userId)
 
 	//if has_user && err == nil {
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "addUserToGroup.sql")
+	sql := caching.CacheEntries.AddUserToGroup.Script
+
+	// add user to the global group
+	rowUuid := uuid.New()
+	_, err := sql_utils.GetConnection().Exec(string(sql), rowUuid, groupId, userId)
 
 	if err != nil {
 		fmt.Println(err)
-		status = codes.Db_Error // .STATUS_CODES[sql_utils.DB_ERR]
+		status = codes.Db_Error
 	} else {
-
-		// add user to the global group
-		rowUuid := uuid.New()
-		_, err := sql_utils.GetConnection().Exec(string(sql), rowUuid, groupId, userId)
-
-		if err != nil {
-			fmt.Println(err)
-			status = codes.Db_Error
-		} else {
-			status = codes.Success
-			return status, err
-		}
+		status = codes.Success
+		return status, err
 	}
+
 	// } else {
 	// 	status = STATUS_CODES[USER_DOES_NOT_EXISTS]
 	// }

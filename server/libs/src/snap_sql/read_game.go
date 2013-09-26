@@ -4,8 +4,8 @@ import (
 	"data_classes"
 	"database/sql"
 	"fmt"
-	"io/ioutil"
 	"sql_utils"
+	"sql_utils/caching"
 	"time"
 	//enc "json_helpers"
 )
@@ -29,81 +29,58 @@ func HasGame(gameName string) (bool, error) {
 
 func ReadGameFromId(gameId string) ([]data_classes.GameData, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "readGameFromId.sql")
+	sql := caching.CacheEntries.ReadGameFromId.Script
+
+	rows, err := sql_utils.GetConnection().Query(string(sql), gameId)
 
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	} else {
-
-		rows, err := sql_utils.GetConnection().Query(string(sql), gameId)
-
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		} else {
-			return processGames(rows, err)
-		}
+		return processGames(rows, err)
 	}
 }
 
 func ReadGameFromName(gameName string) ([]data_classes.GameData, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "readGameFromName.sql")
+
+	sql := caching.CacheEntries.ReadGameFromName.Script
+
+	rows, err := sql_utils.GetConnection().Query(string(sql), gameName)
 
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	} else {
-
-		rows, err := sql_utils.GetConnection().Query(string(sql), gameName)
-
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		} else {
-			return processGames(rows, err)
-		}
+		return processGames(rows, err)
 	}
 }
 
 func ReadGameInGroupFromName(groupId, gameName string) ([]data_classes.GameData, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "readGameInGroupFromName.sql")
+	sql := caching.CacheEntries.ReadGameInGroupFromName.Script
+
+	rows, err := sql_utils.GetConnection().Query(string(sql), groupId, gameName)
 
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	} else {
-
-		rows, err := sql_utils.GetConnection().Query(string(sql), groupId, gameName)
-
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		} else {
-			return processGames(rows, err)
-		}
+		return processGames(rows, err)
 	}
 }
 
 func ReadAllGames(groupId string) ([]data_classes.GameData, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
-	sql, err := ioutil.ReadFile(sql_utils.FilePath + "readAllGamesInGroup.sql")
+	sql := caching.CacheEntries.ReadAllGamesInGroup.Script
+
+	rows, err := sql_utils.GetConnection().Query(string(sql), groupId)
 
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	} else {
-
-		rows, err := sql_utils.GetConnection().Query(string(sql), groupId)
-
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		} else {
-			return processGames(rows, err)
-		}
+		return processGames(rows, err)
 	}
 }
 
