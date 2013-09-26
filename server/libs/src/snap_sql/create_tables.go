@@ -40,7 +40,7 @@ func CreateCriteriaTable() {
 
 // ---------------------- Create Board Table ---------------------- //
 
-func CreateBoardTable() {
+func CreateBoardTable() (err error) {
 	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createBoardTable.sql")
 
 	if err != nil {
@@ -52,11 +52,13 @@ func CreateBoardTable() {
 			fmt.Println(err)
 		}
 	}
+
+	return err
 }
 
 // ---------------------- Create Game Table ---------------------- //
 
-func CreateGameTable() {
+func CreateGameTable() (err error) {
 
 	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createGameTable.sql")
 
@@ -69,10 +71,12 @@ func CreateGameTable() {
 		}
 		//fmt.Println(result)
 	}
+
+	return err
 }
 
 // ---------------------- Create User Table ---------------------- //
-func CreateUserTable() {
+func CreateUserTable() (err error) {
 
 	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createUserTable.sql")
 
@@ -85,11 +89,13 @@ func CreateUserTable() {
 		}
 		//fmt.Println(result)
 	}
+
+	return err
 }
 
 // ---------------------- Create Group Table ---------------------- //
 
-func CreateGroupsTable() {
+func CreateGroupsTable() (err error) {
 	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createGroupsTable.sql")
 
 	if err != nil {
@@ -101,11 +107,13 @@ func CreateGroupsTable() {
 		}
 		//fmt.Println(result)
 	}
+
+	return err
 }
 
 // ---------------------- Create User to Group table ---------------------- //
 
-func CreateUserToGroupTable() {
+func CreateUserToGroupTable() (err error) {
 	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createUserToGroupTable.sql")
 
 	if err != nil {
@@ -117,4 +125,6 @@ func CreateUserToGroupTable() {
 		}
 		//fmt.Println(result)
 	}
+
+	return err
 }

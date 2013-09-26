@@ -6,115 +6,36 @@ import (
 	"data_classes"
 	_ "github.com/bmizerany/pq"
 	enc "json_helpers"
-	"requests"
 	"snap_sql"
-	"sql_utils"
+	_ "sql_utils"
 	"uuid"
 	//"reflect"
 	//"sql_text"
 )
 
-// ---------------------- User Functions ---------------------- //
-
-func dropTable(tableName string) bool {
-
-	sql := "drop table if exists " + tableName
-
-	fmt.Println(sql)
-
-	result, err := sql_utils.GetConnection().Exec(string(sql))
-
-	if err != nil {
-		fmt.Println("querying err: ", err)
-		return false
-	}
-
-	fmt.Println("result: ", result)
-
-	return true
-}
-
-func tableExists(dbName, tableName string) bool {
-
-	sql := sql_utils.CacheEntries.TableExists
-
-	if sql.Err != nil {
-		fmt.Println(sql.Err)
-		return false
-	}
-
-	rows, err := sql_utils.GetConnection().Query(sql.Script, dbName, tableName)
-	if err != nil {
-		fmt.Println(err)
-		return false
-	} else {
-		m := requests.ToMapping(rows)
-		hasLen := len(m) > 0
-
-		if hasLen {
-			fmt.Println("Table Exists: ", tableName)
-		} else {
-			fmt.Println("Table Does NOT Exists: ", tableName)
-		}
-
-		return hasLen
-	}
-}
-
-/* ------------------------- Has Table methods ------------------------- */
-
-func hasUserTable() bool {
-	has_table := tableExists("snb", "_user")
-	return has_table
-}
-
-func hasGroupTable() bool {
-	has_table := tableExists("snb", "socialgroup")
-	return has_table
-}
-
-func hasUserToGroupTable() bool {
-	has_table := tableExists("snb", "usertogroup")
-	return has_table
-}
-
-func hasGameTable() bool {
-	return tableExists("snb", "game")
-}
-
-func hasBoardTable() bool {
-	return tableExists("snb", "board")
-}
-
-func hasCriteriaTable() bool {
-	return tableExists("snb", "criteria")
-}
-
-/* ------------------------- Main ------------------------- */
-
 func main() {
 
-	if !hasUserTable() {
+	if !snap_sql.HasUserTable() {
 		fmt.Println("Creating User Table...")
 		snap_sql.CreateUserTable()
 	}
 
-	if !hasGroupTable() {
+	if !snap_sql.HasGroupTable() {
 		fmt.Println("Create Group table...")
 		snap_sql.CreateGroupsTable()
 	}
 
-	if !hasUserToGroupTable() {
+	if !snap_sql.HasUserToGroupTable() {
 		fmt.Println("Create UserToGroup table...")
 		snap_sql.CreateUserToGroupTable()
 	}
 
-	if !hasGameTable() {
+	if !snap_sql.HasGameTable() {
 		fmt.Println("Create Game table...")
 		snap_sql.CreateGameTable()
 	}
 
-	if !hasBoardTable() {
+	if !snap_sql.HasBoardTable() {
 		fmt.Println("Create Board table...")
 		snap_sql.CreateBoardTable()
 	}
@@ -127,6 +48,7 @@ func main() {
 	/* ------------------------- Create Group ------------------------- */
 
 	hasGlobalGroup, _ := snap_sql.HasGroup("global_group")
+
 	if !hasGlobalGroup {
 		globalGroupUuid := uuid.New()
 		group_status, _ := snap_sql.CreateGroup(globalGroupUuid, "global_group", "group that contains every user", globalGroupUuid)
