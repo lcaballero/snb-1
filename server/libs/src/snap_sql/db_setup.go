@@ -28,6 +28,10 @@ func HasBoardTable() bool {
 	return sql_utils.TableExists("snb", "board")
 }
 
+func HasCriteriaTable() bool {
+	return sql_utils.TableExists("snb", "criteria")
+}
+
 func SetupTables() (err error) {
 
 	if err != nil && !HasUserTable() {

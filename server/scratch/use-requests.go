@@ -40,7 +40,7 @@ func main() {
 		snap_sql.CreateBoardTable()
 	}
 
-	if !hasCriteriaTable() {
+	if !snap_sql.HasCriteriaTable() {
 		fmt.Println("Create Criteria table...")
 		snap_sql.CreateCriteriaTable()
 	}
