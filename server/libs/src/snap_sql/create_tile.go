@@ -4,17 +4,18 @@ import (
 	"fmt"
 	"io/ioutil"
 	"sql_utils"
+	"sql_utils/codes"
 )
 
-func CreateTile(tileUuid, boardId, criteriaId string, position, active int) (sql_utils.StatusCode, error) {
+func CreateTile(tileUuid, boardId, criteriaId string, position, active int) (codes.StatusCode, error) {
 
-	var status sql_utils.StatusCode
+	var status codes.StatusCode
 
 	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createTile.sql")
 
 	if err != nil {
 		fmt.Println(err)
-		status = sql_utils.STATUS_CODES[sql_utils.FILE_READ_ERR]
+		status = codes.File_Read_Error
 	} else {
 		_, err := sql_utils.GetConnection().Exec(
 			string(sql),
@@ -22,9 +23,9 @@ func CreateTile(tileUuid, boardId, criteriaId string, position, active int) (sql
 
 		if err != nil {
 			fmt.Println(err)
-			status = sql_utils.STATUS_CODES[sql_utils.DB_ERR]
+			status = codes.Db_Error
 		} else {
-			status = sql_utils.STATUS_CODES[sql_utils.SUCCESS]
+			status = codes.Success
 			return status, err
 		}
 	}

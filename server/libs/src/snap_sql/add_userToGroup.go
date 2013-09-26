@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"sql_utils"
+	"sql_utils/codes"
 	"uuid"
 )
 
-func AddUserToGroup(userId, groupId string) (sql_utils.StatusCode, error) {
+func AddUserToGroup(userId, groupId string) (codes.StatusCode, error) {
 
-	var status sql_utils.StatusCode
+	var status codes.StatusCode
 	// has_group, err := hasGroup(groupId)
 
 	// if has_group {
@@ -21,7 +22,7 @@ func AddUserToGroup(userId, groupId string) (sql_utils.StatusCode, error) {
 
 	if err != nil {
 		fmt.Println(err)
-		status = sql_utils.STATUS_CODES[sql_utils.DB_ERR]
+		status = codes.Db_Error // .STATUS_CODES[sql_utils.DB_ERR]
 	} else {
 
 		// add user to the global group
@@ -30,9 +31,9 @@ func AddUserToGroup(userId, groupId string) (sql_utils.StatusCode, error) {
 
 		if err != nil {
 			fmt.Println(err)
-			status = sql_utils.STATUS_CODES[sql_utils.DB_ERR]
+			status = codes.Db_Error
 		} else {
-			status = sql_utils.STATUS_CODES[sql_utils.SUCCESS]
+			status = codes.Success
 			return status, err
 		}
 	}

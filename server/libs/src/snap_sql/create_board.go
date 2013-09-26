@@ -4,17 +4,18 @@ import (
 	"fmt"
 	"io/ioutil"
 	"sql_utils"
+	"sql_utils/codes"
 )
 
-func CreateBoard(boardUuid, gameId, userId, name string, state int) (sql_utils.StatusCode, error) {
+func CreateBoard(boardUuid, gameId, userId, name string, state int) (codes.StatusCode, error) {
 
-	var status sql_utils.StatusCode
+	var status codes.StatusCode
 
 	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createBoard.sql")
 
 	if err != nil {
 		fmt.Println(err)
-		status = sql_utils.STATUS_CODES[sql_utils.FILE_READ_ERR]
+		status = codes.File_Read_Error
 	} else {
 		//gameUuid := uuid.New()
 
@@ -27,9 +28,9 @@ func CreateBoard(boardUuid, gameId, userId, name string, state int) (sql_utils.S
 
 		if err != nil {
 			fmt.Println(err)
-			status = sql_utils.STATUS_CODES[sql_utils.DB_ERR]
+			status = codes.Db_Error
 		} else {
-			status = sql_utils.STATUS_CODES[sql_utils.SUCCESS]
+			status = codes.Success
 			return status, err
 		}
 	}

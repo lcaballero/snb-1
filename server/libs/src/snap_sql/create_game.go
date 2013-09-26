@@ -1,44 +1,43 @@
 package snap_sql
 
-
-import(
+import (
 	"fmt"
 	"io/ioutil"
 	"sql_utils"
+	"sql_utils/codes"
 )
 
-func CreateGame(gameUuid, groupId, name, description string) (sql_utils.StatusCode, error) {
+func CreateGame(gameUuid, groupId, name, description string) (codes.StatusCode, error) {
 
-	var status sql_utils.StatusCode;
+	var status codes.StatusCode
 
-	sql, err := ioutil.ReadFile(sql_utils.FilePath+"createGame.sql")
+	sql, err := ioutil.ReadFile(sql_utils.FilePath + "createGame.sql")
 
 	if err != nil {
 		fmt.Println(err)
-		status = sql_utils.STATUS_CODES[sql_utils.FILE_READ_ERR]
+		status = codes.File_Read_Error
 	} else {
 		//gameUuid := uuid.New()
 
-		// ?? should we assume groupId is valid or should 
+		// ?? should we assume groupId is valid or should
 		// we run a db query to ensure it's valid?
 
 		// winning_board_id == null
 		// active is set to false to begin with until at least 25 criteria
 		// are associated with the board
 		_, err := sql_utils.GetConnection().Exec(
-			string(sql), 
+			string(sql),
 			gameUuid, groupId, name, description, 1)
-		
+
 		if err != nil {
 			fmt.Println(err)
-			status = sql_utils.STATUS_CODES[sql_utils.DB_ERR]
+			status = codes.Db_Error
 		} else {
-			status = sql_utils.STATUS_CODES[sql_utils.SUCCESS]
+			status = codes.Success
 			return status, err
 		}
 	}
 
-
 	return status, err
-	
+
 }
