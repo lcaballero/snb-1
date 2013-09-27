@@ -12,7 +12,7 @@ func CreateTileTable() {
 
 	sql := caching.CacheEntries.CreateTileTable.Script
 
-	_, err := sql_utils.GetConnection().Exec(string(sql))
+	_, err := sql_utils.GetConnection().Exec(sql)
 
 	if err != nil {
 		fmt.Println(err)
@@ -25,7 +25,7 @@ func CreateCriteriaTable() {
 
 	sql := caching.CacheEntries.CreateCriteriaTable.Script
 
-	_, err := sql_utils.GetConnection().Exec(string(sql))
+	_, err := sql_utils.GetConnection().Exec(sql)
 
 	if err != nil {
 		fmt.Println(err)
@@ -38,7 +38,7 @@ func CreateBoardTable() (err error) {
 
 	sql := caching.CacheEntries.CreateBoardTable.Script
 
-	_, err = sql_utils.GetConnection().Exec(string(sql))
+	_, err = sql_utils.GetConnection().Exec(sql)
 
 	if err != nil {
 		fmt.Println(err)
@@ -53,7 +53,7 @@ func CreateGameTable() (err error) {
 
 	sql := caching.CacheEntries.CreateGameTable.Script
 
-	_, err = sql_utils.GetConnection().Exec(string(sql))
+	_, err = sql_utils.GetConnection().Exec(sql)
 
 	if err != nil {
 		fmt.Println(err)
@@ -67,7 +67,7 @@ func CreateUserTable() (err error) {
 
 	sql := caching.CacheEntries.CreateUserTable.Script
 
-	_, err = sql_utils.GetConnection().Exec(string(sql))
+	_, err = sql_utils.GetConnection().Exec(sql)
 
 	if err != nil {
 		fmt.Println(err)
@@ -82,7 +82,7 @@ func CreateGroupsTable() (err error) {
 
 	sql := caching.CacheEntries.CreateGroupTable.Script
 
-	_, err = sql_utils.GetConnection().Exec(string(sql))
+	_, err = sql_utils.GetConnection().Exec(sql)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -96,7 +96,7 @@ func CreateUserToGroupTable() (err error) {
 
 	sql := caching.CacheEntries.CreateUserToGroupTable.Script
 
-	_, err = sql_utils.GetConnection().Exec(string(sql))
+	_, err = sql_utils.GetConnection().Exec(sql)
 	if err != nil {
 		fmt.Println(err)
 	}

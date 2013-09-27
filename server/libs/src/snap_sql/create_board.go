@@ -19,8 +19,7 @@ func CreateBoard(boardUuid, gameId, userId, name string, state int) (codes.Statu
 	// we run a db query to ensure it's valid?
 
 	_, err := sql_utils.GetConnection().Exec(
-		string(sql),
-		boardUuid, gameId, userId, name, state)
+		sql, boardUuid, gameId, userId, name, state)
 
 	if err != nil {
 		fmt.Println(err)
