@@ -18,9 +18,7 @@ func CreateCriteria(criteriaUuid, description string) (codes.StatusCode, error) 
 	// ?? should we assume groupId is valid or should
 	// we run a db query to ensure it's valid?
 
-	_, err := sql_utils.GetConnection().Exec(
-		string(sql),
-		criteriaUuid, description, 1)
+	_, err := sql_utils.GetConnection().Exec(sql, criteriaUuid, description, 1)
 
 	if err != nil {
 		fmt.Println(err)

@@ -22,7 +22,7 @@ func AddUserToGroup(userId, groupId string) (codes.StatusCode, error) {
 
 	// add user to the global group
 	rowUuid := uuid.New()
-	_, err := sql_utils.GetConnection().Exec(string(sql), rowUuid, groupId, userId)
+	_, err := sql_utils.GetConnection().Exec(sql, rowUuid, groupId, userId)
 
 	if err != nil {
 		fmt.Println(err)

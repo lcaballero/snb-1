@@ -14,7 +14,7 @@ func ReadGameFromId(gameId string) ([]data_classes.GameData, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
 	sql := caching.CacheEntries.ReadGameFromId.Script
 
-	return processGames(sql_utils.GetConnection().Query(string(sql), gameId))
+	return processGames(sql_utils.GetConnection().Query(sql, gameId))
 }
 
 func ReadGameFromName(gameName string) ([]data_classes.GameData, error) {
@@ -22,7 +22,7 @@ func ReadGameFromName(gameName string) ([]data_classes.GameData, error) {
 
 	sql := caching.CacheEntries.ReadGameFromName.Script
 
-	return processGames(sql_utils.GetConnection().Query(string(sql), gameName))
+	return processGames(sql_utils.GetConnection().Query(sql, gameName))
 }
 
 func ReadGameInGroupFromName(groupId, gameName string) ([]data_classes.GameData, error) {
