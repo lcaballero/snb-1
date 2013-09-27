@@ -8,6 +8,8 @@ import (
 
 const FilePath = "../sqlQueries/"
 
+type PathProvider func(string) string
+
 type CacheEntry struct {
 	Path, Script string
 	Err          error
@@ -41,6 +43,7 @@ type Entries struct {
 }
 
 var CacheEntries *Entries = nil
+var SqlPathProvider PathProvider = nil
 
 func init() {
 	CacheEntries = &Entries{
@@ -72,7 +75,14 @@ func init() {
 }
 
 func provideFile(name string) *CacheEntry {
-	f := path.Join(FilePath, name+".sql")
+	f := ""
+
+	if SqlPathProvider == nil {
+		f = path.Join(FilePath, name+".sql")
+	} else {
+		f = SqlPathProvider(name)
+	}
+
 	return NewEntry(f)
 }
 
