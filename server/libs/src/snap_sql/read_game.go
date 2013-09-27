@@ -60,28 +60,14 @@ func ReadGameInGroupFromName(groupId, gameName string) ([]data_classes.GameData,
 	//sql := "SELECT * FROM _user WHERE email=$1"
 	sql := caching.CacheEntries.ReadGameInGroupFromName.Script
 
-	rows, err := sql_utils.GetConnection().Query(string(sql), groupId, gameName)
-
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	} else {
-		return processGames(rows, err)
-	}
+	return processGames(sql_utils.GetConnection().Query(sql, groupId, gameName))
 }
 
 func ReadAllGames(groupId string) ([]data_classes.GameData, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
 	sql := caching.CacheEntries.ReadAllGamesInGroup.Script
 
-	rows, err := sql_utils.GetConnection().Query(string(sql), groupId)
-
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	} else {
-		return processGames(rows, err)
-	}
+	return processGames(sql_utils.GetConnection().Query(sql, groupId))
 }
 
 func processGames(sqlRows *sql.Rows, err error) ([]data_classes.GameData, error) {
