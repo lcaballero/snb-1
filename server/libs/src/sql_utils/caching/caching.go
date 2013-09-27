@@ -83,7 +83,7 @@ func NewEntry(path string) (c *CacheEntry) {
 		fmt.Println(err)
 		c = &CacheEntry{
 			Path: path,
-			Err:  nil,
+			Err:  err,
 		}
 		return c
 	}

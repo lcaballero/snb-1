@@ -21,7 +21,7 @@ func CreateGroup(groupUuid, group_name, group_desc, group_owner string) (codes.S
 	} else {
 		sql := caching.CacheEntries.CreateGroup.Script
 
-		_, err := sql_utils.GetConnection().Exec(string(sql), groupUuid, group_name, group_desc, group_owner)
+		_, err := sql_utils.GetConnection().Exec(sql, groupUuid, group_name, group_desc, group_owner)
 
 		if err != nil {
 			fmt.Println(err)

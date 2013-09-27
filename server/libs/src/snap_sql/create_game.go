@@ -22,8 +22,7 @@ func CreateGame(gameUuid, groupId, name, description string) (codes.StatusCode, 
 	// active is set to false to begin with until at least 25 criteria
 	// are associated with the board
 	_, err := sql_utils.GetConnection().Exec(
-		string(sql),
-		gameUuid, groupId, name, description, 1)
+		sql, gameUuid, groupId, name, description, 1)
 
 	if err != nil {
 		fmt.Println(err)

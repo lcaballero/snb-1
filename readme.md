@@ -59,3 +59,6 @@ Git Packages:
 1. Postgres Sql Driver: gitchub.com/lib/pq
 1. Redis Sql: github.com/garyburd/redigo/redis
 
+go get github.com/bmizerany/pq
+go get github.com/nu7hatch/gouuid
+go get github.com/russross/blackfriday

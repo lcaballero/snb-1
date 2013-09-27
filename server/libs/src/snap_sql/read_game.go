@@ -10,35 +10,11 @@ import (
 	//enc "json_helpers"
 )
 
-// ---------------------- Read Group Functions ---------------------- //
-
-/*
-func HasGame(gameName string) (bool, error) {
-	games, err := ReadGame(gameName)
-
-	if err != nil {
-		fmt.Println(err)
-		return true, err // TODO: should this be true or false?
-	} else if len(games) > 0 {
-		return true, err
-	} else {
-		return false, err
-	}
-}
-*/
-
 func ReadGameFromId(gameId string) ([]data_classes.GameData, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
 	sql := caching.CacheEntries.ReadGameFromId.Script
 
-	rows, err := sql_utils.GetConnection().Query(string(sql), gameId)
-
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	} else {
-		return processGames(rows, err)
-	}
+	return processGames(sql_utils.GetConnection().Query(string(sql), gameId))
 }
 
 func ReadGameFromName(gameName string) ([]data_classes.GameData, error) {
@@ -46,14 +22,7 @@ func ReadGameFromName(gameName string) ([]data_classes.GameData, error) {
 
 	sql := caching.CacheEntries.ReadGameFromName.Script
 
-	rows, err := sql_utils.GetConnection().Query(string(sql), gameName)
-
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	} else {
-		return processGames(rows, err)
-	}
+	return processGames(sql_utils.GetConnection().Query(string(sql), gameName))
 }
 
 func ReadGameInGroupFromName(groupId, gameName string) ([]data_classes.GameData, error) {
