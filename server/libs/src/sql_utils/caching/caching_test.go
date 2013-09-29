@@ -1,12 +1,30 @@
 package caching
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"testing"
 )
 
 func Test_CacheEntries_Setup(t *testing.T) {
+
+	fmt.Println("os.Args[0]", os.Args[0])
+
+	for i, e := range os.Args {
+		fmt.Println(i, e)
+	}
+
+	var config string
+	flag.StringVar(&config, "config-file", "default", "Configuration file location.")
+	flag.Parse()
+
+	for i, e := range flag.Args() {
+		fmt.Println(i, e)
+	}
+
+	fmt.Println("config:", config)
+
 	fmt.Println("CWD: ", os.Args[0])
 	hasSql(t, CacheEntries.AddUserToGroup)
 }
