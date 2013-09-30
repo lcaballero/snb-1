@@ -8,28 +8,32 @@ import (
 
 // ---------------------- Create Tile Table ---------------------- //
 
-func CreateTileTable() {
+func CreateTileTable() (err error) {
 
 	sql := caching.CacheEntries.CreateTileTable.Script
 
-	_, err := sql_utils.GetConnection().Exec(sql)
+	_, err = sql_utils.GetConnection().Exec(sql)
 
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	return err
 }
 
 // ---------------------- Create Criteria Table ---------------------- //
 
-func CreateCriteriaTable() {
+func CreateCriteriaTable() (err error) {
 
 	sql := caching.CacheEntries.CreateCriteriaTable.Script
 
-	_, err := sql_utils.GetConnection().Exec(sql)
+	_, err = sql_utils.GetConnection().Exec(sql)
 
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	return err
 }
 
 // ---------------------- Create Board Table ---------------------- //
