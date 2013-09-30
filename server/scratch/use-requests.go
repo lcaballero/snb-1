@@ -8,6 +8,7 @@ import (
 	enc "json_helpers"
 	"snap_sql"
 	_ "sql_utils"
+	"sql_utils/caching"
 	"sql_utils/codes"
 	"strconv"
 	"uuid"
@@ -17,6 +18,7 @@ import (
 
 func main() {
 
+	caching.LoadSqlScripts()
 	snap_sql.SetupTables()
 
 	/* ------------------------- Create Group ------------------------- */
@@ -64,7 +66,7 @@ func main() {
 	if hasBreweryGroup {
 		breweryGroup, _ = snap_sql.ReadGroup(breweryGroupName)
 
-		createNewGame := false
+		createNewGame := true
 
 		if createNewGame {
 			// Create a game and assign it to breweryGroup
@@ -85,7 +87,7 @@ func main() {
 			breweryGroup[0].Id, "Boulder Breweries")
 		fmt.Println(enc.ToIndentedJson(readGameInGroupFromName, "", "  "))
 
-		createNewBoard := false
+		createNewBoard := true
 
 		if createNewBoard {
 			boardUuid := uuid.New()

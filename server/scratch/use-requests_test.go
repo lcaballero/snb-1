@@ -65,4 +65,13 @@ func Test_Setup_Db(t *testing.T) {
 	if !snap_sql.HasBoardTable() {
 		t.Error("Failed to create the Board Table.")
 	}
+
+	if !snap_sql.HasCriteriaTable() {
+		t.Error("Failed to create the Criteria Table.")
+	}
+
+	if !snap_sql.HasTileTable() {
+		t.Error("Failed to create the Tile Table.")
+	}
+
 }
