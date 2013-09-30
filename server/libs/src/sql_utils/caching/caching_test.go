@@ -1,32 +1,43 @@
 package caching
 
 import (
-	"flag"
-	"fmt"
-	"os"
 	"testing"
 )
 
 func Test_CacheEntries_Setup(t *testing.T) {
 
-	fmt.Println("os.Args[0]", os.Args[0])
-
-	for i, e := range os.Args {
-		fmt.Println(i, e)
+	SqlPathProvider = func(name string) string {
+		return "/Users/lucascaballero/Documents/Sites/snb-1/server/sqlQueries/" + name + ".sql"
 	}
 
-	var config string
-	flag.StringVar(&config, "config-file", "default", "Configuration file location.")
-	flag.Parse()
+	LoadSqlScripts()
 
-	for i, e := range flag.Args() {
-		fmt.Println(i, e)
-	}
-
-	fmt.Println("config:", config)
-
-	fmt.Println("CWD: ", os.Args[0])
 	hasSql(t, CacheEntries.AddUserToGroup)
+	hasSql(t, CacheEntries.CreateBoard)
+	hasSql(t, CacheEntries.CreateBoardTable)
+	hasSql(t, CacheEntries.CreateCriteria)
+	hasSql(t, CacheEntries.CreateCriteriaTable)
+	hasSql(t, CacheEntries.CreateGame)
+	hasSql(t, CacheEntries.CreateGameTable)
+	hasSql(t, CacheEntries.CreateGroup)
+	hasSql(t, CacheEntries.CreateGroupTable)
+	hasSql(t, CacheEntries.CreateTile)
+	hasSql(t, CacheEntries.CreateTileTable)
+	hasSql(t, CacheEntries.CreateUser)
+	hasSql(t, CacheEntries.CreateUserTable)
+	hasSql(t, CacheEntries.CreateUserToGroupTable)
+	hasSql(t, CacheEntries.DropTable)
+	hasSql(t, CacheEntries.ReadAllGamesInGroup)
+	hasSql(t, CacheEntries.ReadAllUsers)
+	hasSql(t, CacheEntries.ReadUsersBoards)
+	hasSql(t, CacheEntries.ReadBoardFromId)
+	hasSql(t, CacheEntries.ReadGameFromId)
+	hasSql(t, CacheEntries.ReadGameFromName)
+	hasSql(t, CacheEntries.ReadGameInGroupFromName)
+	hasSql(t, CacheEntries.ReadGroup)
+	hasSql(t, CacheEntries.ReadUserByEmail)
+	hasSql(t, CacheEntries.ReadUserById)
+	hasSql(t, CacheEntries.TableExists)
 }
 
 func hasSql(t *testing.T, c *CacheEntry) {

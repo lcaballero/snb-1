@@ -48,7 +48,7 @@ type Entries struct {
 var CacheEntries *Entries = nil
 var SqlPathProvider PathProvider = nil
 
-func init() {
+func LoadSqlScripts() {
 	CacheEntries = &Entries{
 		AddUserToGroup:          provideFile("addUserToGroup"),
 		CreateBoard:             provideFile("createBoard"),
