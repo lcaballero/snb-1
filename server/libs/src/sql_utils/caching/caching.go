@@ -1,7 +1,7 @@
 package caching
 
 import (
-	"fmt"
+	//	"fmt"
 	"io/ioutil"
 	"path"
 )
@@ -35,6 +35,7 @@ type Entries struct {
 	ReadAllUsers,
 	ReadUsersBoards,
 	ReadBoardFromId,
+	ReadCriteriaFromId,
 	ReadGameFromId,
 	ReadGameFromName,
 	ReadGameInGroupFromName,
@@ -68,6 +69,7 @@ func LoadSqlScripts() {
 		ReadAllUsers:            provideFile("readAllUsers"),
 		ReadUsersBoards:         provideFile("readAllUserBoards"),
 		ReadBoardFromId:         provideFile("readBoardFromId"),
+		ReadCriteriaFromId:      provideFile("readCriterial"),
 		ReadGameFromId:          provideFile("readGameFromId"),
 		ReadGameFromName:        provideFile("readGameFromName"),
 		ReadGameInGroupFromName: provideFile("readGameInGroupFromName"),
@@ -94,7 +96,6 @@ func NewEntry(path string) (c *CacheEntry) {
 	script, err := ioutil.ReadFile(path)
 
 	if err != nil {
-		fmt.Println(err)
 		c = &CacheEntry{
 			Path: path,
 			Err:  err,
