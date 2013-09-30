@@ -135,6 +135,8 @@ func main() {
 	userBoards, err := snap_sql.ReadUsersBoards(myUser[0].Id)
 
 	if err != nil {
+		fmt.Println("Read User Boards err: ", err)
+	} else {
 		fmt.Println()
 		fmt.Println("Read User Boards... ", myUser[0].Id)
 		fmt.Println(enc.ToIndentedJson(userBoards, "", "  "))
