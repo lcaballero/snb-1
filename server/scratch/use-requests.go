@@ -15,35 +15,7 @@ import (
 
 func main() {
 
-	if !snap_sql.HasUserTable() {
-		fmt.Println("Creating User Table...")
-		snap_sql.CreateUserTable()
-	}
-
-	if !snap_sql.HasGroupTable() {
-		fmt.Println("Create Group table...")
-		snap_sql.CreateGroupsTable()
-	}
-
-	if !snap_sql.HasUserToGroupTable() {
-		fmt.Println("Create UserToGroup table...")
-		snap_sql.CreateUserToGroupTable()
-	}
-
-	if !snap_sql.HasGameTable() {
-		fmt.Println("Create Game table...")
-		snap_sql.CreateGameTable()
-	}
-
-	if !snap_sql.HasBoardTable() {
-		fmt.Println("Create Board table...")
-		snap_sql.CreateBoardTable()
-	}
-
-	if !snap_sql.HasCriteriaTable() {
-		fmt.Println("Create Criteria table...")
-		snap_sql.CreateCriteriaTable()
-	}
+	snap_sql.SetupTables()
 
 	/* ------------------------- Create Group ------------------------- */
 
