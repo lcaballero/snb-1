@@ -1,4 +1,4 @@
 INSERT INTO criteria
-	(id, description, active, date_added)
+	(id, description, state, active, date_added)
 VALUES
-	($1, $2, $3, now());
+	($1, $2, $3, $4, now());
