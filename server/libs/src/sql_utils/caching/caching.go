@@ -58,7 +58,7 @@ func init() {
 		CreateGame:              provideFile("createGame"),
 		CreateGameTable:         provideFile("createGameTable"),
 		CreateGroup:             provideFile("createGroup"),
-		CreateGroupTable:        provideFile("createGroupTable"),
+		CreateGroupTable:        provideFile("createGroupsTable"),
 		CreateTile:              provideFile("createTile"),
 		CreateTileTable:         provideFile("createTileTable"),
 		CreateUser:              provideFile("createUser"),

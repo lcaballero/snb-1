@@ -1,4 +1,4 @@
-CREATE TABLE criteria
+CREATE TABLE tile
 (
 	id uuid NOT NULL,
 	board_id uuid NOT NULL,

@@ -7,6 +7,7 @@ CREATE TABLE Game
 	description text NOT NULL,
 	sponsor_id uuid,
 	state int,
+	active int,
 	date_added timestamp without time zone,
 	CONSTRAINT game_pkey PRIMARY KEY (id)
 );

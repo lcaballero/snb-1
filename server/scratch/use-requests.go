@@ -8,6 +8,8 @@ import (
 	enc "json_helpers"
 	"snap_sql"
 	_ "sql_utils"
+	"sql_utils/codes"
+	"strconv"
 	"uuid"
 	//"reflect"
 	//"sql_text"
@@ -53,6 +55,8 @@ func main() {
 		globalGroupUuid := uuid.New()
 		group_status, _ := snap_sql.CreateGroup(globalGroupUuid, "global_group", "group that contains every user", globalGroupUuid)
 		fmt.Println("Create Group: ", group_status)
+	} else {
+		fmt.Println("Has Group: ", "global_group")
 	}
 
 	/* ------------------------- Create User ------------------------- */
@@ -75,6 +79,8 @@ func main() {
 
 		group_status, _ := snap_sql.CreateGroup(groupUuid, breweryGroupName, "Breweries in Boulder", myUser[0].Id)
 		fmt.Println("Create Group: ", breweryGroupName, group_status)
+	} else {
+		fmt.Println("Has Group: ", breweryGroupName)
 	}
 
 	/* ------------------------- Create a game ------------------------- */
@@ -86,7 +92,7 @@ func main() {
 	if hasBreweryGroup {
 		breweryGroup, _ = snap_sql.ReadGroup(breweryGroupName)
 
-		createNewGame := false
+		createNewGame := true
 
 		if createNewGame {
 			// Create a game and assign it to breweryGroup
@@ -107,7 +113,7 @@ func main() {
 			breweryGroup[0].Id, "Boulder Breweries")
 		fmt.Println(enc.ToIndentedJson(readGameInGroupFromName, "", "  "))
 
-		createNewBoard := false
+		createNewBoard := true
 
 		if createNewBoard {
 			boardUuid := uuid.New()
@@ -120,14 +126,19 @@ func main() {
 				boardName,
 				1)
 
-			// for i := 0; i < 25; i++ {
-			// 	criteriaUuid := uuid.New()
+			for i := 0; i < 25; i++ {
+				criteriaUuid := uuid.New()
 
-			// 	_, _ := snap_sql.CreateCriteria(
-			// 		criteriaUuid,
-			// 		"crit_" + i
-			// 	)
-			// }
+				crit_status, _ := snap_sql.CreateCriteria(
+					criteriaUuid,
+					"crit_"+strconv.Itoa(i),
+				)
+
+				if crit_status == codes.Success {
+				}
+				//crit_status.String()
+			}
+
 			fmt.Println("Create Board: ", boardName, board_status)
 		}
 	}
