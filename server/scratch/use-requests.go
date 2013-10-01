@@ -66,7 +66,7 @@ func main() {
 	if hasBreweryGroup {
 		breweryGroup, _ = snap_sql.ReadGroup(breweryGroupName)
 
-		createNewGame := true
+		createNewGame := false
 
 		if createNewGame {
 			// Create a game and assign it to breweryGroup
@@ -87,7 +87,9 @@ func main() {
 			breweryGroup[0].Id, "Boulder Breweries")
 		fmt.Println(enc.ToIndentedJson(readGameInGroupFromName, "", "  "))
 
-		createNewBoard := true
+		/* ------------------------- Create a board ------------------------- */
+
+		createNewBoard := false
 
 		if createNewBoard {
 			boardUuid := uuid.New()
@@ -104,14 +106,19 @@ func main() {
 		}
 	}
 
+	/* ------------------------- Create Criteria ------------------------- */
+
 	for i := 0; i < 25; i++ {
 		criteriaUuid := uuid.New()
 
-		crit_status, _ := snap_sql.CreateCriteria(
+		crit_status, err := snap_sql.CreateCriteria(
 			criteriaUuid,
 			"crit_"+strconv.Itoa(i),
 		)
 
+		if err != nil {
+			fmt.Println(err)
+		}
 		if crit_status == codes.Success {
 		}
 		//crit_status.String()

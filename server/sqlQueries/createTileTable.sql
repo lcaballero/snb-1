@@ -6,5 +6,5 @@ CREATE TABLE tile
 	position INT,
 	active INT,
 	date_added timestamp without time zone,
-	CONSTRAINT criteria_pkey PRIMARY KEY (id)
+	CONSTRAINT tile_pkey PRIMARY KEY (id)
 )

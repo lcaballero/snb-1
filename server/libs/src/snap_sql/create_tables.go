@@ -25,6 +25,7 @@ func CreateTileTable() (err error) {
 
 func CreateCriteriaTable() (err error) {
 
+	fmt.Println("test")
 	sql := caching.CacheEntries.CreateCriteriaTable.Script
 
 	_, err = sql_utils.GetConnection().Exec(sql)
