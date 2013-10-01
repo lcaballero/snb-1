@@ -54,6 +54,8 @@ func processBoard(sqlRows *sql.Rows, err error) ([]data_classes.BoardData, error
 				UserId:    v["user_id"].(string),
 				GameId:    v["game_id"].(string),
 				Name:      v["name"].(string),
+				State:     v["state"].(int),
+				Active:    v["active"].(int),
 				DateAdded: v["date_added"].(time.Time),
 			}
 

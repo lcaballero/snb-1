@@ -5,6 +5,7 @@ CREATE TABLE board
 	user_id uuid NOT NULL,
 	name text,
 	date_added timestamp without time zone,
-	active int,
+	state INTEGER,
+	active INTEGER,
 	CONSTRAINT board_pkey PRIMARY KEY (id)
 );

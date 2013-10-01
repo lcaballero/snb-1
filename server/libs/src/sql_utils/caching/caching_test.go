@@ -33,6 +33,8 @@ func Test_CacheEntries_Setup(t *testing.T) {
 	hasSql(t, CacheEntries.ReadBoardFromId)
 	hasSql(t, CacheEntries.ReadGameFromId)
 	hasSql(t, CacheEntries.ReadGameFromName)
+	hasSql(t, CacheEntries.ReadTile)
+	hasSql(t, CacheEntries.ReadBoardTiles)
 	hasSql(t, CacheEntries.ReadGameInGroupFromName)
 	hasSql(t, CacheEntries.ReadGroup)
 	hasSql(t, CacheEntries.ReadUserByEmail)
