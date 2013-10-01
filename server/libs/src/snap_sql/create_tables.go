@@ -85,8 +85,9 @@ func CreateUserTable() (err error) {
 func CreateGroupsTable() (err error) {
 
 	sql := caching.CacheEntries.CreateGroupTable.Script
-	fmt.Println("CreateGroupsTable", sql)
+
 	_, err = sql_utils.GetConnection().Exec(sql)
+
 	if err != nil {
 		fmt.Println("CreateGroupsTable", err)
 	}
@@ -101,6 +102,7 @@ func CreateUserToGroupTable() (err error) {
 	sql := caching.CacheEntries.CreateUserToGroupTable.Script
 
 	_, err = sql_utils.GetConnection().Exec(sql)
+
 	if err != nil {
 		fmt.Println(err)
 	}

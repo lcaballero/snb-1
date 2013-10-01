@@ -8,8 +8,14 @@ import (
 	"uuid"
 )
 
+func providePath(s string) string {
+	return ""
+}
+
 func Test_DoesFindRandomTable(t *testing.T) {
+
 	table := uuid.New()
+
 	has_table := sql_utils.TableExists("snb", table)
 
 	if has_table {
@@ -44,6 +50,7 @@ func Test_CreateUserTable(t *testing.T) {
 }
 
 func Test_Setup_Db(t *testing.T) {
+
 	snap_sql.SetupTables()
 
 	if !snap_sql.HasUserTable() {

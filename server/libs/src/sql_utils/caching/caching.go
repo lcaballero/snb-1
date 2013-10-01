@@ -3,10 +3,14 @@ package caching
 import (
 	//	"fmt"
 	"io/ioutil"
+	"os"
 	"path"
+	"strings"
 )
 
-const FilePath = "../sqlQueries/"
+const DefaultFilePath = "../sqlQueries/"
+
+var internalFilePath string = DefaultFilePath
 
 type PathProvider func(string) string
 
@@ -48,6 +52,28 @@ type Entries struct {
 var CacheEntries *Entries = nil
 var SqlPathProvider PathProvider = nil
 
+func init() {
+	val := FindFlag("--config-file=", os.Args)
+	if val != "" {
+		internalFilePath = val
+		LoadSqlScripts()
+	}
+}
+
+func FindFlag(flag string, args []string) string {
+
+	val := ""
+
+	for _, e := range args {
+		hasPrefix := strings.HasPrefix(e, flag)
+		if hasPrefix {
+			val = e[len(flag):]
+		}
+	}
+
+	return val
+}
+
 func LoadSqlScripts() {
 	CacheEntries = &Entries{
 		AddUserToGroup:          provideFile("addUserToGroup"),
@@ -81,10 +107,11 @@ func LoadSqlScripts() {
 }
 
 func provideFile(name string) *CacheEntry {
+
 	f := ""
 
 	if SqlPathProvider == nil {
-		f = path.Join(FilePath, name+".sql")
+		f = path.Join(internalFilePath, name+".sql")
 	} else {
 		f = SqlPathProvider(name)
 	}
@@ -93,6 +120,7 @@ func provideFile(name string) *CacheEntry {
 }
 
 func NewEntry(path string) (c *CacheEntry) {
+
 	script, err := ioutil.ReadFile(path)
 
 	if err != nil {
