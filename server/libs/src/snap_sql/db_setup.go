@@ -68,13 +68,15 @@ func SetupTables() (err error) {
 		err = CreateCriteriaTable()
 	}
 
+	fmt.Println("Setting up Tile.")
+
 	if err != nil && !HasTileTable() {
 		fmt.Println("Creating Tile Table...")
 		err = CreateTileTable()
 	}
 
-	if err == nil {
-		fmt.Println(err)
+	if err != nil {
+		fmt.Println("Error setting up tables: ", err)
 	}
 
 	return nil

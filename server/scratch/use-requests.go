@@ -57,6 +57,8 @@ func main() {
 		fmt.Println("Has Group: ", breweryGroupName)
 	}
 
+	fmt.Println("Here 3")
+
 	/* ------------------------- Create a game ------------------------- */
 
 	// read the group and find its Id

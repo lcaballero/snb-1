@@ -21,6 +21,7 @@ func CreateCriteria(criteriaUuid, description string) (codes.StatusCode, error) 
 	_, err := sql_utils.GetConnection().Exec(sql, criteriaUuid, description, 1, 1)
 
 	if err != nil {
+		fmt.Println("Creating Criteria Error")
 		fmt.Println(err)
 		status = codes.Db_Error
 	} else {

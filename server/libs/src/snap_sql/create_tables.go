@@ -15,7 +15,7 @@ func CreateTileTable() (err error) {
 	_, err = sql_utils.GetConnection().Exec(sql)
 
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Creating Tile Table Error:", err)
 	}
 
 	return err
@@ -30,7 +30,7 @@ func CreateCriteriaTable() (err error) {
 	_, err = sql_utils.GetConnection().Exec(sql)
 
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Creating Criteria Table:", err)
 	}
 
 	return err
