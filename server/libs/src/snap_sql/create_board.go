@@ -30,5 +30,4 @@ func CreateBoard(boardUuid, gameId, userId, name string, state int) (codes.Statu
 	}
 
 	return status, err
-
 }
