@@ -57,8 +57,6 @@ func main() {
 		fmt.Println("Has Group: ", breweryGroupName)
 	}
 
-	fmt.Println("Here 3")
-
 	/* ------------------------- Create a game ------------------------- */
 
 	// read the group and find its Id
@@ -68,7 +66,7 @@ func main() {
 	if hasBreweryGroup {
 		breweryGroup, _ = snap_sql.ReadGroup(breweryGroupName)
 
-		createNewGame := false
+		createNewGame := true
 
 		if createNewGame {
 			// Create a game and assign it to breweryGroup
@@ -91,7 +89,7 @@ func main() {
 
 		/* ------------------------- Create a board ------------------------- */
 
-		createNewBoard := false
+		createNewBoard := true
 
 		if createNewBoard {
 			boardUuid := uuid.New()

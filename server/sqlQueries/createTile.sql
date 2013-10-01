@@ -1,4 +1,4 @@
 INSERT INTO tile
-	(id, board_id, criteria_id, position, active, date_added)
+	(id, board_id, criteria_id, position, state, active, date_added)
 VALUES
-	($1, $2, $3, $4, $5, now());
+	($1, $2, $3, $4, $5, $6, now());
