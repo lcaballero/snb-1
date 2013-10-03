@@ -10,6 +10,6 @@ type BoardData struct {
 	Anchor
 
 	Id, UserId, GameId, Name string
-	State, Active            int
+	State, Active            int64
 	DateAdded                time.Time
 }

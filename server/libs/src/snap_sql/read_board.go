@@ -11,9 +11,9 @@ import (
 )
 
 // ---------------------- Read Group Functions ---------------------- //
-/*
-func HasBoard(userId, gameId, name string) (bool, error) {
-	board, err := ReadBoard(userId, gameId, name)
+
+func HasBoard(id string) (bool, error) {
+	board, err := ReadBoard(id)
 
 	if err != nil {
 		fmt.Println(err)
@@ -24,7 +24,7 @@ func HasBoard(userId, gameId, name string) (bool, error) {
 		return false, err
 	}
 }
-*/
+
 func ReadBoard(id string) ([]data_classes.BoardData, error) {
 	//sql := "SELECT * FROM board WHERE id=$1"
 	sql := caching.CacheEntries.ReadBoardFromId.Script
@@ -54,8 +54,8 @@ func processBoard(sqlRows *sql.Rows, err error) ([]data_classes.BoardData, error
 				UserId:    v["user_id"].(string),
 				GameId:    v["game_id"].(string),
 				Name:      v["name"].(string),
-				State:     v["state"].(int),
-				Active:    v["active"].(int),
+				State:     v["state"].(int64),
+				Active:    v["active"].(int64),
 				DateAdded: v["date_added"].(time.Time),
 			}
 

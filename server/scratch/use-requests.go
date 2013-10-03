@@ -66,7 +66,7 @@ func main() {
 	if hasBreweryGroup {
 		breweryGroup, _ = snap_sql.ReadGroup(breweryGroupName)
 
-		createNewGame := true
+		createNewGame := false
 
 		if createNewGame {
 			// Create a game and assign it to breweryGroup
@@ -89,7 +89,7 @@ func main() {
 
 		/* ------------------------- Create a board ------------------------- */
 
-		createNewBoard := true
+		createNewBoard := false
 
 		if createNewBoard {
 			boardUuid := uuid.New()

@@ -8,6 +8,21 @@ import (
 
 // ---------------------- Create Tile Table ---------------------- //
 
+func CreateGameToCriteriaTable() (err error) {
+
+	sql := caching.CacheEntries.CreateGameToCriteriaTable.Script
+
+	_, err = sql_utils.GetConnection().Exec(sql)
+
+	if err != nil {
+		fmt.Println("Creating Tile Table Error:", err)
+	}
+
+	return err
+}
+
+// ---------------------- Create Tile Table ---------------------- //
+
 func CreateTileTable() (err error) {
 
 	sql := caching.CacheEntries.CreateTileTable.Script

@@ -36,6 +36,10 @@ func HasTileTable() bool {
 	return sql_utils.TableExists("snb", "tile")
 }
 
+func HasGameToCriteriaTable() bool {
+	return sql_utils.TableExists("snb", "gametocriteria")
+}
+
 func SetupTables() (err error) {
 
 	if err == nil && !HasUserTable() {
@@ -68,11 +72,14 @@ func SetupTables() (err error) {
 		err = CreateCriteriaTable()
 	}
 
-	fmt.Println("Setting up Tile.")
-
 	if err == nil && !HasTileTable() {
 		fmt.Println("Creating Tile Table...")
 		err = CreateTileTable()
+	}
+
+	if err == nil && !HasGameToCriteriaTable() {
+		fmt.Println("Creating GameToCriteria Table...")
+		err = CreateGameToCriteriaTable()
 	}
 
 	if err != nil {
