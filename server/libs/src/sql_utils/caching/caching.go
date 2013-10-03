@@ -33,6 +33,7 @@ type CacheEntry struct {
 
 type Entries struct {
 	AddUserToGroup,
+	AddCriteriaToGame,
 	CreateBoard,
 	CreateBoardTable,
 	CreateCriteria,
@@ -67,6 +68,7 @@ type Entries struct {
 func LoadSqlScripts() {
 	CacheEntries = &Entries{
 		AddUserToGroup:            provideFile("addUserToGroup"),
+		AddCriteriaToGame:         provideFile("addCriteriaToGame"),
 		CreateBoard:               provideFile("createBoard"),
 		CreateBoardTable:          provideFile("createBoardTable"),
 		CreateCriteria:            provideFile("createCriteria"),
