@@ -1,0 +1,1 @@
+go test ref.go ref_test.go
