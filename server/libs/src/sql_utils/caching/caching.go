@@ -3,10 +3,8 @@ package caching
 import (
 	//	"fmt"
 	"io/ioutil"
-	"os"
 	"path"
 	"rt_config"
-	"strings"
 )
 
 const DefaultFilePath = "../sqlQueries/"
@@ -21,8 +19,10 @@ type PathProvider func(string) string
 
 func init() {
 	conf := rt_config.LoadFromCommandLine()
-	SqlPathProvider = func(name) string {
-		return path.Join(conf.SqlScripts, name+".sql")
+	env := conf.Dev
+
+	SqlPathProvider = func(name string) string {
+		return path.Join(env.SqlScripts, name+".sql")
 	}
 }
 

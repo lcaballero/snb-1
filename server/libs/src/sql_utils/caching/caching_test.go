@@ -6,10 +6,6 @@ import (
 
 func Test_CacheEntries_Setup(t *testing.T) {
 
-	SqlPathProvider = func(name string) string {
-		return "/Users/lucascaballero/Documents/Sites/snb-1/server/sqlQueries/" + name + ".sql"
-	}
-
 	LoadSqlScripts()
 
 	hasSql(t, CacheEntries.AddUserToGroup)
