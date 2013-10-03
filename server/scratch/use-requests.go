@@ -85,8 +85,33 @@ func main() {
 		fmt.Println("Read Game in group from Name: ...")
 		readGameInGroupFromName, _ := snap_sql.ReadGameInGroupFromName(
 			breweryGroup[0].Id, "Boulder Breweries")
-		fmt.Println(enc.ToIndentedJson(readGameInGroupFromName, "", "  "))
+		//fmt.Println(enc.ToIndentedJson(readGameInGroupFromName, "", "  "))
 
+		/* ------------------------- Create Criteria ------------------------- */
+
+		for i := 0; i < 25; i++ {
+			criteriaUuid := uuid.New()
+
+			crit_status, err := snap_sql.CreateCriteria(
+				criteriaUuid,
+				"crit_"+strconv.Itoa(i),
+			)
+
+			/* ------------------------- Add Criteria to Game ------------------------- */
+
+			if err != nil {
+				fmt.Println(err)
+			}
+			if crit_status == codes.Success {
+			}
+
+			critToGameUuid := uuid.New()
+			crit_to_game, err := snap_sql.AddCriteriaToGame(
+				critToGameUuid, readGameInGroupFromName[0].Id, criteriaUuid, 1, 1)
+
+			fmt.Println("criteria to game: ", crit_to_game)
+			//crit_status.String()
+		}
 		/* ------------------------- Create a board ------------------------- */
 
 		createNewBoard := false
@@ -106,32 +131,15 @@ func main() {
 		}
 	}
 
-	/* ------------------------- Create Criteria ------------------------- */
+	fmt.Println()
 
-	for i := 0; i < 25; i++ {
-		criteriaUuid := uuid.New()
-
-		crit_status, err := snap_sql.CreateCriteria(
-			criteriaUuid,
-			"crit_"+strconv.Itoa(i),
-		)
-
-		if err != nil {
-			fmt.Println(err)
-		}
-		if crit_status == codes.Success {
-		}
-		//crit_status.String()
-	}
-
-	userBoards, err := snap_sql.ReadUsersBoards(myUser[0].Id)
+	_, err := snap_sql.ReadUsersBoards(myUser[0].Id)
 
 	if err != nil {
 		fmt.Println("Read User Boards err: ", err)
 	} else {
-		fmt.Println()
 		fmt.Println("Read User Boards... ", myUser[0].Id)
-		fmt.Println(enc.ToIndentedJson(userBoards, "", "  "))
+		//fmt.Println(enc.ToIndentedJson(userBoards, "", "  "))
 	}
 
 	/*
