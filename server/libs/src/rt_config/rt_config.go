@@ -11,6 +11,7 @@ import (
 )
 
 type EnvironmentConfig struct {
+	ConfigFile     string
 	Dev, Acc, Prod RuntimeConfig
 }
 
@@ -120,6 +121,7 @@ func LoadConfig(path string) *EnvironmentConfig {
 
 	val := &EnvironmentConfig{}
 	err = json.Unmarshal(bytes, val)
+	val.ConfigFile = path
 
 	if err != nil {
 		fmt.Println(err)

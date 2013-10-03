@@ -1,7 +1,7 @@
 package caching
 
 import (
-	//	"fmt"
+	"fmt"
 	"io/ioutil"
 	"path"
 	"rt_config"
@@ -21,8 +21,11 @@ func init() {
 	conf := rt_config.LoadFromCommandLine()
 	env := conf.Dev
 
+	fmt.Println("Config file:", conf.ConfigFile)
+	dir := path.Dir(conf.ConfigFile)
+
 	SqlPathProvider = func(name string) string {
-		return path.Join(env.SqlScripts, name+".sql")
+		return path.Join(dir, env.SqlScripts, name+".sql")
 	}
 }
 
