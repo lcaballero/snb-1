@@ -25,6 +25,5 @@ func AddCriteriaToGame(uuid, game_id, criteria_id string, state, active int) (co
 		return status, err
 	}
 
-	fmt.Println(err)
 	return status, err
 }

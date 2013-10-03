@@ -16,9 +16,12 @@ import (
 	//"sql_text"
 )
 
+func init() {
+	caching.LoadSqlScripts()
+}
+
 func main() {
 
-	caching.LoadSqlScripts()
 	snap_sql.SetupTables()
 
 	/* ------------------------- Create Group ------------------------- */

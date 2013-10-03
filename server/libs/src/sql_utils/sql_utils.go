@@ -7,11 +7,42 @@ import (
 	"sql_utils/caching"
 )
 
-func GetConnection() *sql.DB {
-	database, _ := sql.Open(
-		"postgres",
-		"user=lucascaballero dbname=snb password=Livebig6## sslmode=disable")
-	return database
+type ConnectionParameters struct {
+	DataBaseName string
+	ServerName   string
+	UserName     string
+	Password     string
+	Mode         string
+}
+
+func (p *ConnectionParameters) String() string {
+	return "user=lucascaballero dbname=snb password=Livebig6## sslmode=disable"
+}
+
+type Conn struct {
+	db     *sql.DB
+	params *ConnectionParameters
+}
+
+func (c *Conn) Query(query string, args ...interface{}) (rows *sql.Rows, err error) {
+	rows, err = c.db.Query(query, args...)
+	c.db.Close()
+	return rows, err
+}
+
+func (c *Conn) Exec(query string, args ...interface{}) (result sql.Result, err error) {
+	result, err = c.db.Exec(query, args...)
+	c.db.Close()
+	return result, err
+}
+
+func GetConnection() *Conn {
+	params := &ConnectionParameters{}
+	database, _ := sql.Open("postgres", params.String())
+	return &Conn{
+		db:     database,
+		params: params,
+	}
 }
 
 func ToSqlMap(rows *sql.Rows) []map[string]interface{} {

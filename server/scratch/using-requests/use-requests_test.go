@@ -4,9 +4,14 @@ import (
 	"fmt"
 	"snap_sql"
 	"sql_utils"
+	"sql_utils/caching"
 	"testing"
 	"uuid"
 )
+
+func init() {
+	caching.LoadSqlScripts()
+}
 
 func providePath(s string) string {
 	return ""
@@ -36,6 +41,7 @@ func Test_HasTable(t *testing.T) {
 }
 
 func Test_CreateUserTable(t *testing.T) {
+
 	has_table := sql_utils.TableExists("snb", "_user")
 
 	if !has_table {
