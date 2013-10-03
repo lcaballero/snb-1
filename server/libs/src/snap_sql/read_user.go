@@ -68,8 +68,8 @@ func processUserProfiles(sqlRows *sql.Rows, err error) ([]data_classes.UserProfi
 
 		for i, v := range mappedRows {
 			u := data_classes.UserProfile{
-				Id: v["id"].(string),
-				Email: v["email"].(string),
+				Id:        v["id"].(string),
+				Email:     v["email"].(string),
 				DateAdded: v["date_added"].(time.Time),
 			}
 

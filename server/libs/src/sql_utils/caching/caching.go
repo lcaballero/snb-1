@@ -5,14 +5,26 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"rt_config"
 	"strings"
 )
 
 const DefaultFilePath = "../sqlQueries/"
 
-var internalFilePath string = DefaultFilePath
+var (
+	internalFilePath string       = DefaultFilePath
+	CacheEntries     *Entries     = nil
+	SqlPathProvider  PathProvider = nil
+)
 
 type PathProvider func(string) string
+
+func init() {
+	conf := rt_config.LoadFromCommandLine()
+	SqlPathProvider = func(name) string {
+		return path.Join(conf.SqlScripts, name+".sql")
+	}
+}
 
 type CacheEntry struct {
 	Path, Script string
@@ -50,31 +62,6 @@ type Entries struct {
 	ReadUserByEmail,
 	ReadUserById,
 	TableExists *CacheEntry
-}
-
-var CacheEntries *Entries = nil
-var SqlPathProvider PathProvider = nil
-
-func init() {
-	val := FindFlag("--config-file=", os.Args)
-	if val != "" {
-		internalFilePath = val
-		LoadSqlScripts()
-	}
-}
-
-func FindFlag(flag string, args []string) string {
-
-	val := ""
-
-	for _, e := range args {
-		hasPrefix := strings.HasPrefix(e, flag)
-		if hasPrefix {
-			val = e[len(flag):]
-		}
-	}
-
-	return val
 }
 
 func LoadSqlScripts() {
