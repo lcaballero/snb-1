@@ -20,26 +20,15 @@ func init() {
 	caching.LoadSqlScripts()
 }
 
-func main() {
+const (
+	usr                = "d333"
+	pw                 = "ro"
+	global_group_name  = "global_group"
+	global_group_desc  = "group that contains every user"
+	brewery_group_name = "Breweries"
+)
 
-	snap_sql.SetupTables()
-
-	/* ------------------------- Create Group ------------------------- */
-
-	hasGlobalGroup, _ := snap_sql.HasGroup("global_group")
-
-	if !hasGlobalGroup {
-		globalGroupUuid := uuid.New()
-		group_status, _ := snap_sql.CreateGroup(globalGroupUuid, "global_group", "group that contains every user", globalGroupUuid)
-		fmt.Println("Create Group: ", group_status)
-	} else {
-		fmt.Println("Has Group: ", "global_group")
-	}
-
-	/* ------------------------- Create User ------------------------- */
-
-	usr := "d333"
-	pw := "ro"
+func createUser() []*data_classes.UserProfile {
 
 	status, _ := snap_sql.CreateUser(usr, pw)
 
@@ -47,27 +36,52 @@ func main() {
 
 	myUser, _ := snap_sql.ReadUserByEmail(usr)
 
-	/* ------------------------- Create a Group ------------------------- */
+	return myUser
+}
 
-	breweryGroupName := "Breweries"
-	hasBreweryGroup, _ := snap_sql.HasGroup(breweryGroupName)
+func createGlobalGroup() {
+
+	hasGlobalGroup, _ := snap_sql.HasGroup("global_group")
+
+	if !hasGlobalGroup {
+
+		globalGroupUuid := uuid.New()
+		group_status, _ := snap_sql.CreateGroup(
+			globalGroupUuid,
+			global_group_name,
+			global_group_desc,
+			globalGroupUuid)
+
+		fmt.Println("Create Group: ", group_status)
+
+	} else {
+
+		fmt.Println("Has Group: ", "global_group")
+	}
+}
+
+func createBreweriesGroup(userId string) {
+
+	hasBreweryGroup, _ := snap_sql.HasGroup(brewery_group_name)
 	if !hasBreweryGroup {
 		groupUuid := uuid.New()
 
-		group_status, _ := snap_sql.CreateGroup(groupUuid, breweryGroupName, "Breweries in Boulder", myUser[0].Id)
-		fmt.Println("Create Group: ", breweryGroupName, group_status)
+		group_status, _ := snap_sql.CreateGroup(groupUuid, brewery_group_name, "Breweries in Boulder", userId)
+		fmt.Println("Create Group: ", brewery_group_name, group_status)
 	} else {
-		fmt.Println("Has Group: ", breweryGroupName)
+		fmt.Println("Has Group: ", brewery_group_name)
 	}
+}
 
+func createGame(user *data_classes.UserProfile) {
 	/* ------------------------- Create a game ------------------------- */
 
 	// read the group and find its Id
-	hasBreweryGroup, _ = snap_sql.HasGroup(breweryGroupName)
+	hasBreweryGroup, _ := snap_sql.HasGroup(brewery_group_name)
 	var breweryGroup []data_classes.GroupData
 
 	if hasBreweryGroup {
-		breweryGroup, _ = snap_sql.ReadGroup(breweryGroupName)
+		breweryGroup, _ = snap_sql.ReadGroup(brewery_group_name)
 
 		createNewGame := false
 
@@ -126,64 +140,38 @@ func main() {
 			board_status, _ := snap_sql.CreateBoard(
 				boardUuid,
 				readGameInGroupFromName[0].Id,
-				myUser[0].Id,
+				user.Id,
 				boardName,
 				1)
 
 			fmt.Println("Create Board: ", boardName, board_status)
 		}
 	}
+}
 
+func showUserBoard(user *data_classes.UserProfile) {
 	fmt.Println()
 
-	_, err := snap_sql.ReadUsersBoards(myUser[0].Id)
+	_, err := snap_sql.ReadUsersBoards(user.Id)
 
 	if err != nil {
 		fmt.Println("Read User Boards err: ", err)
 	} else {
-		fmt.Println("Read User Boards... ", myUser[0].Id)
+		fmt.Println("Read User Boards... ", user.Id)
 		//fmt.Println(enc.ToIndentedJson(userBoards, "", "  "))
 	}
+}
 
-	/*
-		fmt.Println()
-		fmt.Println("Read Game from Name: ...")
-		readGameFromName, _ := snap_sql.ReadGameFromName("Boulder Breweries")
-		fmt.Println(enc.ToIndentedJson(readGameFromName, "", "  "))
-	*/
-	// read all games in a group
-	/*
-		fmt.Println("Read all games in group: ...")
-		allGameInGroup, _ := snap_sql.ReadAllGames(breweryGroup[0].Id)
+func main() {
 
-		for i := 0; i < len(allGameInGroup); i++ {
-			fmt.Println(enc.ToIndentedJson(allGameInGroup[i], "", "  "))
-		}
-	*/
+	snap_sql.SetupTables()
 
-	/* ------------------------- Read User By Email ------------------------- */
+	createGlobalGroup()
 
-	//userByEmail, err := readUserByEmail("Ryan")
-	/*
-		fmt.Println()
+	users := createUser()
+	user := users[0]
 
-		for i := 0; i < len(userByEmail); i++ {
-			fmt.Println(enc.ToIndentedJson(userByEmail[i].PrintAll(), "", "  "));
-		}
-	*/
-
-	/* ------------------------- Read All Users ------------------------- */
-	// allUsers, err := snap_sql.ReadAllUsers()
-
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-
-	// fmt.Println()
-	// fmt.Println()
-
-	// for i := 0; i < len(allUsers); i++ {
-	// 	fmt.Println(enc.ToIndentedJson(allUsers[i].PrintAll(), "", "  "));
-	// }
-
+	createBreweriesGroup(user.Id)
+	createGame(user)
+	showUserBoard(user)
 }

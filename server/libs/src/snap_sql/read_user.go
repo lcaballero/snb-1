@@ -4,58 +4,65 @@ import (
 	"data_classes"
 	"database/sql"
 	"fmt"
+	rf "sql_reflection"
 	"sql_utils"
 	"sql_utils/caching"
-	"time"
 )
 
 // ---------------------- Read User Functions ---------------------- //
 
-func ReadAllUsers() ([]data_classes.UserProfile, error) {
+func ReadAllUsers() ([]*data_classes.UserProfile, error) {
 
 	rows, err := sql_utils.GetConnection().Query(caching.CacheEntries.ReadAllUsers.Script)
 
 	return processUserProfiles(rows, err)
 }
 
-func ReadUserById(userId string) ([]data_classes.UserProfile, error) {
+func ReadUserById(userId string) ([]*data_classes.UserProfile, error) {
 
 	rows, err := sql_utils.GetConnection().Query(caching.CacheEntries.ReadUserById.Script, userId)
 
 	return processUserProfiles(rows, err)
 }
 
-func ReadUserByEmail(email string) ([]data_classes.UserProfile, error) {
+func ReadUserByEmail(email string) ([]*data_classes.UserProfile, error) {
 
 	rows, err := sql_utils.GetConnection().Query(caching.CacheEntries.ReadUserByEmail.Script, email)
 
 	return processUserProfiles(rows, err)
 }
 
-func processUserProfiles(sqlRows *sql.Rows, err error) ([]data_classes.UserProfile, error) {
+func processUserProfiles(sqlRows *sql.Rows, err error) ([]*data_classes.UserProfile, error) {
 
 	if err != nil {
+
 		fmt.Println(err)
 		return nil, err
+
 	} else {
 
 		mappedRows := sql_utils.ToSqlMap(sqlRows)
 
-		profiles := make([]data_classes.UserProfile, len(mappedRows))
+		profiles := loadFromMaps(mappedRows)
 
-		for i, v := range mappedRows {
-			u := data_classes.UserProfile{
-				Id:        v["id"].(string),
-				Email:     v["email"].(string),
-				DateAdded: v["date_added"].(time.Time),
-			}
-
-			profiles[i] = u
-		}
-
-		//fmt.Println("email[0]:", profiles[0].GetProp("date_added"))
 		return profiles, nil
 	}
+}
+
+func loadFromMaps(dps []map[string]interface{}) []*data_classes.UserProfile {
+
+	count := len(dps)
+	users := make([]*data_classes.UserProfile, count)
+	ptrs := make([]interface{}, count)
+
+	for i := 0; i < count; i++ {
+		users[i] = &data_classes.UserProfile{}
+		ptrs[i] = users[i]
+	}
+
+	rf.FromMaps(ptrs, dps)
+
+	return users
 }
 
 func HasUser(userName string) (bool, error) {
@@ -83,3 +90,29 @@ func HasUserId(userId string) (bool, error) {
 		return false, err
 	}
 }
+
+// func processUserProfiles(sqlRows *sql.Rows, err error) ([]data_classes.UserProfile, error) {
+
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return nil, err
+// 	} else {
+
+// 		mappedRows := sql_utils.ToSqlMap(sqlRows)
+
+// 		profiles := make([]data_classes.UserProfile, len(mappedRows))
+
+// 		for i, v := range mappedRows {
+// 			u := data_classes.UserProfile{
+// 				Id:        v["id"].(string),
+// 				Email:     v["email"].(string),
+// 				DateAdded: v["date_added"].(time.Time),
+// 			}
+
+// 			profiles[i] = u
+// 		}
+
+// 		//fmt.Println("email[0]:", profiles[0].GetProp("date_added"))
+// 		return profiles, nil
+// 	}
+// }
