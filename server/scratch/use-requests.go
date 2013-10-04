@@ -63,6 +63,8 @@ func main() {
 	hasBreweryGroup, _ = snap_sql.HasGroup(breweryGroupName)
 	var breweryGroup []data_classes.GroupData
 
+	myGameName := "Boulder Breweries 2"
+
 	if hasBreweryGroup {
 		breweryGroup, _ = snap_sql.ReadGroup(breweryGroupName)
 
@@ -72,7 +74,7 @@ func main() {
 			// Create a game and assign it to breweryGroup
 			gameUuid := uuid.New()
 			createGame_status, _ := snap_sql.CreateGame(
-				gameUuid, breweryGroup[0].Id, "Boulder Breweries", "Have a brew with a brewer")
+				gameUuid, breweryGroup[0].Id, myGameName, "Have a brew with a brewer")
 
 			fmt.Println("Create Game: ", "Boulder Breweries", createGame_status)
 
@@ -84,7 +86,7 @@ func main() {
 		fmt.Println()
 		fmt.Println("Read Game in group from Name: ...")
 		readGameInGroupFromName, _ := snap_sql.ReadGameInGroupFromName(
-			breweryGroup[0].Id, "Boulder Breweries")
+			breweryGroup[0].Id, myGameName)
 		//fmt.Println(enc.ToIndentedJson(readGameInGroupFromName, "", "  "))
 
 		/* ------------------------- Create Criteria ------------------------- */
@@ -109,8 +111,11 @@ func main() {
 			crit_to_game, err := snap_sql.AddCriteriaToGame(
 				critToGameUuid, readGameInGroupFromName[0].Id, criteriaUuid, 1, 1)
 
+			fmt.Println(critToGameUuid, readGameInGroupFromName[0].Id, criteriaUuid, 1, 1)
+			if err != nil {
+				fmt.Println("crit to game ERROR: ", err)
+			}
 			fmt.Println("criteria to game: ", crit_to_game)
-			//crit_status.String()
 		}
 		/* ------------------------- Create a board ------------------------- */
 
