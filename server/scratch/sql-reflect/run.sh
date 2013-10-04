@@ -1,4 +1,4 @@
 ./clean.sh
 ./build.sh
 
-./ref.exe
+./ref.exe --config-file=../../../config.js

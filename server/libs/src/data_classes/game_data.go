@@ -7,8 +7,6 @@ import (
 /* ---------------------- Game Data ---------------------- */
 
 type GameData struct {
-	Anchor
-
 	Id, GroupId, WinningBoardId, Name, Description string
 	State                                          int64
 	DateAdded                                      time.Time
