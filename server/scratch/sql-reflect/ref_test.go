@@ -4,6 +4,28 @@ import (
 	"testing"
 )
 
+type Base struct {
+	Id        string
+	Status    int
+	UpdatedOn string
+	UpdatedBy string
+}
+
+type Struct struct {
+	Base
+	Name, Email string
+	Age         int
+}
+
+func Test_Compare_Structs(t *testing.T) {
+	a := &Struct{Name: "Lucas"}
+	b := &Struct{Name: "Lucas"}
+
+	if *a != *b {
+		t.Error("a != b")
+	}
+}
+
 func Test_Captialize_Normal(t *testing.T) {
 
 	m := map[string]string{

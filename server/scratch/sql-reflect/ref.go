@@ -1,38 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"reflect"
 	"sql_utils/caching"
 	"strings"
 )
 
-type Base struct {
-	Id        string
-	Status    int
-	UpdatedOn string
-	UpdatedBy string
-}
-
-type Struct struct {
-	Base
-	Name, Email string
-	Age         int
-}
-
 func main() {
 	caching.LoadSqlScripts()
-}
-
-func compareStructs() {
-	a := &Struct{Name: "Lucas"}
-	b := &Struct{Name: "Lucas"}
-
-	if *a == *b {
-		fmt.Println("a == b")
-	} else {
-		fmt.Println("a != b")
-	}
 }
 
 func Set(target interface{}, field string, val interface{}) {

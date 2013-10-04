@@ -32,7 +32,9 @@ func Test_Can_Read_Users(t *testing.T) {
 
 	u := users[0]
 
-	if u.Email != email_1 {
+	hasFoundUser := u.Email == email_1 && u.Password == pass_1
+
+	if !hasFoundUser {
 		t.Error("Didn't load the right email -- or could find the 1 user.", "Found email: ", "'"+u.Email+"'", users[0])
 	}
 }
