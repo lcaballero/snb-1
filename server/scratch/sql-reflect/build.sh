@@ -1,1 +1,1 @@
-go build -o ref.exe ref.go
+go build -o ref.exe ref.go read-users.go

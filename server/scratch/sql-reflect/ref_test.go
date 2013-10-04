@@ -4,6 +4,58 @@ import (
 	"testing"
 )
 
+func Test_Captialize_Normal(t *testing.T) {
+
+	m := map[string]string{
+		"date": "Date",
+		"":     "",
+		"d":    "D",
+		"123d": "123d",
+		"  ":   "  ",
+	}
+
+	for k, v := range m {
+		c := Capitalize(k)
+		if c != v {
+			t.Error(
+				"Not capitalized: ", k,
+				" result: ", c,
+				" should be: ", v)
+		}
+	}
+}
+
+func Test_Column_To_Field(t *testing.T) {
+	m := map[string]string{
+		"date_added":                    "DateAdded",
+		"_user":                         "User",
+		"updated_on":                    "UpdatedOn",
+		"updated_by":                    "UpdatedBy",
+		"_field_with_many_underscores_": "FieldWithManyUnderscores",
+	}
+
+	for k, v := range m {
+		field := ColunnToFieldName(k)
+		if field != v {
+			t.Error("Field doesn't match: ", k, ":", field)
+		}
+	}
+}
+
+func Test_Fields(t *testing.T) {
+	s := Struct{}
+	fields := Fields(s)
+
+	names := []string{
+		"Id", "Name", "Email", "Age",
+		"Status", "UpdatedOn", "UpdatedBy",
+	}
+
+	if len(fields) == len(names) {
+		t.Error("The number of fields aren't equal.")
+	}
+}
+
 func Test_Set(t *testing.T) {
 
 	s := &Struct{Name: "Ryan"}
@@ -40,7 +92,7 @@ func Test_Null_To_Set(t *testing.T) {
 	Set(nil, "Bad_Name", "Bad_Value")
 }
 
-func provide() interface{} {
+func NewStruct() *Struct {
 	return &Struct{}
 }
 
@@ -53,14 +105,13 @@ func Test_From_Map(t *testing.T) {
 		},
 	}
 
-	m := DataPoints{
+	m := map[string]interface{}{
 		"Name": a.Name,
 		"Id":   a.Id,
 	}
 
-	rv := FromMap(provide, m)
-
-	item := rv.(*Struct)
+	item := NewStruct()
+	FromMap(item, m)
 
 	hasMapped := item.Name == a.Name && item.Id == a.Id
 
@@ -81,23 +132,26 @@ func Test_From_Maps(t *testing.T) {
 		Base: Base{Id: "id-1"},
 	}
 
-	m := []DataPoints{
-		DataPoints{"Name": a.Name, "Id": a.Id},
-		DataPoints{"Name": b.Name, "Id": b.Id},
+	m := []map[string]interface{}{
+		map[string]interface{}{"Name": a.Name, "Id": a.Id},
+		map[string]interface{}{"Name": b.Name, "Id": b.Id},
 	}
 
-	vals := make([]*Struct, 0)
+	count := len(m)
+	structs := make([]*Struct, count)
+	ptrs := make([]interface{}, count)
 
-	saver := func(a Any) {
-		vals = append(vals, a.(*Struct))
+	for i := 0; i < count; i++ {
+		structs[i] = &Struct{}
+		ptrs[i] = structs[i]
 	}
 
-	FromMaps(provide, saver, m)
+	FromMaps(ptrs, m)
 
-	x := find(a.Id, vals)
-	y := find(b.Id, vals)
+	x := find(a.Id, structs)
+	y := find(b.Id, structs)
 
-	if len(vals) != len(m) {
+	if len(structs) != len(m) {
 		t.Error("The resulting data count doesn't match the data provided.")
 	}
 

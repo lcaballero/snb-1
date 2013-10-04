@@ -7,8 +7,6 @@ import (
 /* ---------------------- User Profile ---------------------- */
 
 type UserProfile struct {
-	Anchor
-
 	Email, Id string
 	DateAdded time.Time
 }
