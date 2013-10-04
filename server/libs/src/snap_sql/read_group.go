@@ -26,24 +26,21 @@ func HasGroup(groupName string) (bool, error) {
 }
 
 func ReadGroup(group_name string) ([]data_classes.GroupData, error) {
-	//sql := "SELECT * FROM _user WHERE email=$1"
 
 	sql := caching.CacheEntries.ReadGroup.Script
 
-	rows, err := sql_utils.GetConnection().Query(string(sql), group_name)
+	rows, err := sql_utils.GetConnection().Query(sql, group_name)
 
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	} else {
-		return processGroup(rows, err)
-	}
+	return processGroup(rows, err)
 }
 
 func processGroup(sqlRows *sql.Rows, err error) ([]data_classes.GroupData, error) {
+
 	if err != nil {
+
 		fmt.Println(err)
 		return nil, err
+
 	} else {
 
 		mappedRows := sql_utils.ToSqlMap(sqlRows)

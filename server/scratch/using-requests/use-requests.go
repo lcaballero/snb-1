@@ -9,7 +9,7 @@ import (
 	"snap_sql"
 	_ "sql_utils"
 	"sql_utils/caching"
-	"sql_utils/codes"
+	//	"sql_utils/codes"
 	"strconv"
 	"uuid"
 	//"reflect"
@@ -18,6 +18,7 @@ import (
 
 func init() {
 	caching.LoadSqlScripts()
+	snap_sql.DropAllTables()
 }
 
 const (
@@ -26,6 +27,9 @@ const (
 	global_group_name  = "global_group"
 	global_group_desc  = "group that contains every user"
 	brewery_group_name = "Breweries"
+	brewery_group_desc = "Breweries in Boulder"
+	game_name          = "Boulder Breweries"
+	game_desc          = "Have a brew with a brewer"
 )
 
 func createUser() []*data_classes.UserProfile {
@@ -41,7 +45,7 @@ func createUser() []*data_classes.UserProfile {
 
 func createGlobalGroup() {
 
-	hasGlobalGroup, _ := snap_sql.HasGroup("global_group")
+	hasGlobalGroup, _ := snap_sql.HasGroup(global_group_name)
 
 	if !hasGlobalGroup {
 
@@ -56,96 +60,111 @@ func createGlobalGroup() {
 
 	} else {
 
-		fmt.Println("Has Group: ", "global_group")
+		fmt.Println("Has Group: ", global_group_name)
 	}
 }
 
 func createBreweriesGroup(userId string) {
 
 	hasBreweryGroup, _ := snap_sql.HasGroup(brewery_group_name)
-	if !hasBreweryGroup {
-		groupUuid := uuid.New()
 
-		group_status, _ := snap_sql.CreateGroup(groupUuid, brewery_group_name, "Breweries in Boulder", userId)
+	if !hasBreweryGroup {
+
+		groupUuid := uuid.New()
+		group_status, _ := snap_sql.CreateGroup(
+			groupUuid,
+			brewery_group_name,
+			brewery_group_desc,
+			userId)
+
 		fmt.Println("Create Group: ", brewery_group_name, group_status)
+
 	} else {
+
 		fmt.Println("Has Group: ", brewery_group_name)
 	}
 }
 
-func createGame(user *data_classes.UserProfile) {
-	/* ------------------------- Create a game ------------------------- */
+func createGame(group data_classes.GroupData) {
 
-	// read the group and find its Id
+	gameUuid := uuid.New()
+
+	createGame_status, _ := snap_sql.CreateGame(
+		gameUuid,
+		group.Id,
+		game_name,
+		game_desc)
+
+	fmt.Println("Create Game: ", game_name, createGame_status)
+	fmt.Println("Read Game from Id: ...")
+
+	readGameFromId, _ := snap_sql.ReadGameFromId(gameUuid)
+
+	fmt.Println(enc.ToIndentedJson(readGameFromId, "", "  "))
+}
+
+func createCriteria(group data_classes.GameData) {
+
+	for i := 0; i < 25; i++ {
+		criteriaUuid := uuid.New()
+
+		crit_status, err := snap_sql.CreateCriteria(
+			criteriaUuid,
+			"crit_"+strconv.Itoa(i),
+		)
+
+		/* ------------------------- Add Criteria to Game ------------------------- */
+
+		if err != nil {
+			fmt.Println(err, crit_status)
+		}
+
+		critToGameUuid := uuid.New()
+
+		crit_to_game, err := snap_sql.AddCriteriaToGame(
+			critToGameUuid,
+			group.Id,
+			criteriaUuid,
+			1,
+			1)
+
+		fmt.Println("criteria to game: ", crit_to_game)
+	}
+}
+
+func createBoard(user *data_classes.UserProfile, game data_classes.GameData) {
+	boardUuid := uuid.New()
+	boardName := "I drink too much"
+
+	board_status, _ := snap_sql.CreateBoard(
+		boardUuid,
+		game.Id,
+		user.Id,
+		boardName,
+		1)
+
+	fmt.Println("Create Board: ", boardName, board_status)
+}
+
+func createFullGame(user *data_classes.UserProfile) {
+
 	hasBreweryGroup, _ := snap_sql.HasGroup(brewery_group_name)
-	var breweryGroup []data_classes.GroupData
 
 	if hasBreweryGroup {
-		breweryGroup, _ = snap_sql.ReadGroup(brewery_group_name)
 
-		createNewGame := false
+		breweryGroup, _ := snap_sql.ReadGroup(brewery_group_name)
 
-		if createNewGame {
-			// Create a game and assign it to breweryGroup
-			gameUuid := uuid.New()
-			createGame_status, _ := snap_sql.CreateGame(
-				gameUuid, breweryGroup[0].Id, "Boulder Breweries", "Have a brew with a brewer")
-
-			fmt.Println("Create Game: ", "Boulder Breweries", createGame_status)
-
-			fmt.Println("Read Game from Id: ...")
-			readGameFromId, _ := snap_sql.ReadGameFromId(gameUuid)
-			fmt.Println(enc.ToIndentedJson(readGameFromId, "", "  "))
-		}
+		createGame(breweryGroup[0])
 
 		fmt.Println()
 		fmt.Println("Read Game in group from Name: ...")
-		readGameInGroupFromName, _ := snap_sql.ReadGameInGroupFromName(
-			breweryGroup[0].Id, "Boulder Breweries")
-		//fmt.Println(enc.ToIndentedJson(readGameInGroupFromName, "", "  "))
 
-		/* ------------------------- Create Criteria ------------------------- */
+		game, _ := snap_sql.ReadGameInGroupFromName(
+			breweryGroup[0].Id,
+			game_name)
 
-		for i := 0; i < 25; i++ {
-			criteriaUuid := uuid.New()
-
-			crit_status, err := snap_sql.CreateCriteria(
-				criteriaUuid,
-				"crit_"+strconv.Itoa(i),
-			)
-
-			/* ------------------------- Add Criteria to Game ------------------------- */
-
-			if err != nil {
-				fmt.Println(err)
-			}
-			if crit_status == codes.Success {
-			}
-
-			critToGameUuid := uuid.New()
-			crit_to_game, err := snap_sql.AddCriteriaToGame(
-				critToGameUuid, readGameInGroupFromName[0].Id, criteriaUuid, 1, 1)
-
-			fmt.Println("criteria to game: ", crit_to_game)
-			//crit_status.String()
-		}
-		/* ------------------------- Create a board ------------------------- */
-
-		createNewBoard := false
-
-		if createNewBoard {
-			boardUuid := uuid.New()
-			boardName := "I drink too much"
-
-			board_status, _ := snap_sql.CreateBoard(
-				boardUuid,
-				readGameInGroupFromName[0].Id,
-				user.Id,
-				boardName,
-				1)
-
-			fmt.Println("Create Board: ", boardName, board_status)
-		}
+		createCriteria(game[0])
+		createBoard(user, game[0])
 	}
 }
 
@@ -158,7 +177,6 @@ func showUserBoard(user *data_classes.UserProfile) {
 		fmt.Println("Read User Boards err: ", err)
 	} else {
 		fmt.Println("Read User Boards... ", user.Id)
-		//fmt.Println(enc.ToIndentedJson(userBoards, "", "  "))
 	}
 }
 
@@ -172,6 +190,6 @@ func main() {
 	user := users[0]
 
 	createBreweriesGroup(user.Id)
-	createGame(user)
+	createFullGame(user)
 	showUserBoard(user)
 }

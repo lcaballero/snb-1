@@ -5,39 +5,62 @@ import (
 	"sql_utils"
 )
 
+const (
+	SNB_DB              = "snb"
+	UserTable           = "_user"
+	SocialGroupTable    = "socialgroup"
+	UserToGroupTable    = "usertogroup"
+	GameTable           = "game"
+	BoardTable          = "board"
+	CriteriaTable       = "criteria"
+	TileTable           = "tile"
+	GameToCriteriaTable = "gametocriteria"
+)
+
+func DropAllTables() {
+	sql_utils.DropTable(UserTable)
+	sql_utils.DropTable(SocialGroupTable)
+	sql_utils.DropTable(UserToGroupTable)
+	sql_utils.DropTable(GameTable)
+	sql_utils.DropTable(BoardTable)
+	sql_utils.DropTable(CriteriaTable)
+	sql_utils.DropTable(TileTable)
+	sql_utils.DropTable(GameToCriteriaTable)
+}
+
 func HasUserTable() bool {
-	has_table := sql_utils.TableExists("snb", "_user")
+	has_table := sql_utils.TableExists(SNB_DB, UserTable)
 	return has_table
 }
 
 func HasGroupTable() bool {
-	has_table := sql_utils.TableExists("snb", "socialgroup")
+	has_table := sql_utils.TableExists(SNB_DB, SocialGroupTable)
 	return has_table
 }
 
 func HasUserToGroupTable() bool {
-	has_table := sql_utils.TableExists("snb", "usertogroup")
+	has_table := sql_utils.TableExists(SNB_DB, UserToGroupTable)
 	return has_table
 }
 
 func HasGameTable() bool {
-	return sql_utils.TableExists("snb", "game")
+	return sql_utils.TableExists(SNB_DB, GameTable)
 }
 
 func HasBoardTable() bool {
-	return sql_utils.TableExists("snb", "board")
+	return sql_utils.TableExists(SNB_DB, BoardTable)
 }
 
 func HasCriteriaTable() bool {
-	return sql_utils.TableExists("snb", "criteria")
+	return sql_utils.TableExists(SNB_DB, CriteriaTable)
 }
 
 func HasTileTable() bool {
-	return sql_utils.TableExists("snb", "tile")
+	return sql_utils.TableExists(SNB_DB, TileTable)
 }
 
 func HasGameToCriteriaTable() bool {
-	return sql_utils.TableExists("snb", "gametocriteria")
+	return sql_utils.TableExists(SNB_DB, GameToCriteriaTable)
 }
 
 func SetupTables() (err error) {
