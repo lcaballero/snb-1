@@ -11,6 +11,7 @@ type CommandFlags struct {
 	SqlScripts string
 }
 
+// ConfigFileExists checks
 func (cf *CommandFlags) ConfigFileExists() bool {
 	return exists(cf.ConfigFile)
 }
@@ -36,4 +37,11 @@ func (cf *CommandFlags) LoadConfig() *EnvironmentConfig {
 	}
 
 	return val
+}
+
+func (cf *CommandFlags) CurrentConfiguration() *EnvironmentConfig {
+	if config == nil {
+		config = cf.LoadConfig()
+	}
+	return config
 }

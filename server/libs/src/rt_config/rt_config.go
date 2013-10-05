@@ -3,27 +3,13 @@ package rt_config
 import (
 	"fmt"
 	enc "json_helpers"
-	"os"
 	"path"
 	"path/filepath"
-	"strings"
 )
 
 var (
 	config *EnvironmentConfig = nil
 )
-
-const (
-	default_config_name = "config.js"
-	default_config_root = "./"
-	flag_config_file    = "--config-file"
-	flag_sql_scripts    = "--sql-scripts"
-)
-
-type flags struct {
-	configFile string
-	sqlScripts string
-}
 
 type EnvironmentConfig struct {
 	ConfigFile string
@@ -96,50 +82,6 @@ func findConfigFile(file string) (string, bool) {
 
 func (r *RuntimeConfig) String() string {
 	return enc.ToIndentedJson(r, "", "   ")
-}
-
-func newFlags() *flags {
-	return &flags{
-		configFile: flag_config_file,
-		sqlScripts: flag_sql_scripts,
-	}
-}
-
-func (f *flags) createCommandFlags() *CommandFlags {
-
-	cf := &CommandFlags{}
-
-	cf.ConfigFile, _ = FindFlag(f.configFile, os.Args)
-	cf.SqlScripts, _ = FindFlag(f.sqlScripts, os.Args)
-
-	return cf
-}
-
-func FindFlag(flag string, args []string) (string, bool) {
-
-	val := ""
-	hasPrefix := false
-
-	if !strings.HasSuffix(flag, "=") {
-		flag = flag + "="
-	}
-
-	for _, e := range args {
-		hasPrefix = strings.HasPrefix(e, flag)
-		if hasPrefix {
-			val = e[len(flag):]
-			break
-		}
-	}
-
-	return val, hasPrefix
-}
-
-func (cf *CommandFlags) CurrentConfiguration() *EnvironmentConfig {
-	if config == nil {
-		config = cf.LoadConfig()
-	}
-	return config
 }
 
 func (env *EnvironmentConfig) String() string {
