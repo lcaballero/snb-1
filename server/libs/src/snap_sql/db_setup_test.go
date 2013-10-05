@@ -1,7 +1,6 @@
 package snap_sql
 
 import (
-	"fmt"
 	"sql_utils"
 	"testing"
 	"uuid"
@@ -20,10 +19,9 @@ func Test_DoesFindRandomTable(t *testing.T) {
 
 func Test_HasTable(t *testing.T) {
 
-	dropped := sql_utils.DropTable("_user")
-	has_table := HasUserTable()
+	sql_utils.DropTable(UserTable)
 
-	fmt.Println("dropped: ", dropped)
+	has_table := HasUserTable()
 
 	if has_table {
 		t.Error("Shouldn't have a _user table")
@@ -38,10 +36,10 @@ func Test_CreateUserTable(t *testing.T) {
 		CreateUserTable()
 	}
 
-	has_table = sql_utils.TableExists("snb", "_user")
+	has_table = sql_utils.TableExists(SNB_DB, UserTable)
 
 	if !has_table {
-		t.Error("Should have created the _user table, but haven't")
+		t.Error("Should have created the _user table, but hasn't")
 	}
 }
 
@@ -49,17 +47,21 @@ func Test_Dropped_All_Tables(t *testing.T) {
 
 	DropAllTables()
 
-	hasTables := HasUserTable() ||
-		HasGroupTable() ||
-		HasUserToGroupTable() ||
-		HasGameTable() ||
-		HasBoardTable() ||
-		HasCriteriaTable() ||
-		HasTileTable() ||
-		HasGameToCriteriaTable()
+	created := map[string]bool{
+		UserTable:           HasUserTable(),
+		SocialGroupTable:    HasGroupTable(),
+		UserToGroupTable:    HasUserToGroupTable(),
+		GameTable:           HasGameTable(),
+		BoardTable:          HasBoardTable(),
+		CriteriaTable:       HasCriteriaTable(),
+		TileTable:           HasTileTable(),
+		GameToCriteriaTable: HasGameToCriteriaTable(),
+	}
 
-	if hasTables {
-		t.Error("All tables should be dropped, but are not.")
+	for table, hasTable := range created {
+		if hasTable {
+			t.Error("Didn't drop table: ", table)
+		}
 	}
 }
 
