@@ -1,9 +1,7 @@
 package rt_config
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	enc "json_helpers"
 	"os"
 	"path"
@@ -88,7 +86,7 @@ func findConfigFile(file string) (string, bool) {
 
 		found = exists(abs)
 
-		if dir == "/" {
+		if dir == "/" || dir == "" {
 			break
 		}
 	}
@@ -147,23 +145,4 @@ func (cf *CommandFlags) CurrentConfiguration() *EnvironmentConfig {
 func (env *EnvironmentConfig) String() string {
 	js := enc.ToIndentedJson(env, "", "   ")
 	return js
-}
-
-func (cf *CommandFlags) LoadConfig() *EnvironmentConfig {
-
-	bytes, err := ioutil.ReadFile(cf.ConfigFile)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	val := &EnvironmentConfig{}
-	err = json.Unmarshal(bytes, val)
-	val.ConfigFile = cf.ConfigFile
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	return val
 }
