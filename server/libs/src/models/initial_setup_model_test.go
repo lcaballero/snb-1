@@ -13,3 +13,8 @@ func Test_Nothing(t *testing.T) {
 		t.Error("The cache lookup was not found.")
 	}
 }
+
+func Test_Initialization(t *testing.T) {
+	model := &InitialModel{}
+	model.Initialize()
+}
