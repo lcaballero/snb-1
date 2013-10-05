@@ -41,11 +41,6 @@ type RuntimeConfig struct {
 	DbServerPort     string
 }
 
-type CommandFlags struct {
-	ConfigFile string
-	SqlScripts string
-}
-
 func Config() *EnvironmentConfig {
 
 	if config != nil {
@@ -57,15 +52,11 @@ func Config() *EnvironmentConfig {
 	return config
 }
 
-func (cf *CommandFlags) exists() bool {
-	return exists(cf.ConfigFile)
-}
-
 func loadFromCommandLine() *EnvironmentConfig {
 
 	cf := newFlags().createCommandFlags()
 
-	configFileExists := cf.exists()
+	configFileExists := cf.ConfigFileExists()
 
 	// Didn't find the config file path from the command line
 	// so try the file by climbing the directory tree looking
@@ -81,12 +72,6 @@ func loadFromCommandLine() *EnvironmentConfig {
 	fmt.Println("Configuration doesn't exist: ", cf)
 
 	return &EnvironmentConfig{}
-}
-
-func exists(file string) bool {
-	_, err := os.Stat(file)
-	exists := file != "" && !os.IsNotExist(err)
-	return exists
 }
 
 func findConfigFile(file string) (string, bool) {
