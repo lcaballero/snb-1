@@ -1,10 +1,17 @@
 package snap_sql
 
 import (
+	//"log"
 	"sql_utils"
 	"testing"
 	"uuid"
 )
+
+// var log *log.Logger = nil
+
+// func init() {
+// 	log = log.New()
+// }
 
 func Test_DoesFindRandomTable(t *testing.T) {
 
@@ -17,16 +24,16 @@ func Test_DoesFindRandomTable(t *testing.T) {
 	}
 }
 
-func Test_HasTable(t *testing.T) {
+// func Test_HasTable(t *testing.T) {
 
-	sql_utils.DropTable(UserTable)
+// 	sql_utils.DropTable(UserTable)
 
-	has_table := HasUserTable()
+// 	has_table := HasUserTable()
 
-	if has_table {
-		t.Error("Shouldn't have a _user table")
-	}
-}
+// 	if has_table {
+// 		t.Error("Shouldn't have a _user table")
+// 	}
+//}
 
 func Test_CreateUserTable(t *testing.T) {
 

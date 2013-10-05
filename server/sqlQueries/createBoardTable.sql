@@ -1,4 +1,4 @@
-CREATE TABLE board
+CREATE TABLE IF NOT EXISTS board
 (
 	id uuid NOT NULL,
 	game_id uuid NOT NULL,

@@ -1,4 +1,4 @@
-CREATE TABLE tile
+CREATE TABLE IF NOT EXISTS tile
 (
 	id uuid NOT NULL,
 	board_id uuid NOT NULL,

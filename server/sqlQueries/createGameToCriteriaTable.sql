@@ -1,4 +1,4 @@
-CREATE TABLE gametocriteria
+CREATE TABLE IF NOT EXISTS gametocriteria
 (
 	id uuid NOT NULL,
 	game_id uuid NOT NULL,

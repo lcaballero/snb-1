@@ -79,14 +79,37 @@ func TableExists(dbName, tableName string) bool {
 	}
 }
 
-func DropTable(tableName string) bool {
+// func DropTable(tableName string) bool {
 
-	sql := "drop table if exists " + tableName + " cascade;"
+// 	sql := "drop table if exists " + tableName + " cascade;"
+
+// 	result, err := GetConnection().Exec(sql)
+
+// 	if err != nil {
+// 		fmt.Println("querying err: ", err)
+// 		return false
+// 	}
+
+// 	rows, err1 := result.RowsAffected()
+
+// 	if err1 != nil {
+// 		fmt.Println("Error when requesting RowsAffected: ", err1)
+// 	} else {
+// 		fmt.Println("Dropping: "+tableName+", RowsAffected: ", rows)
+// 	}
+
+// 	return true
+// }
+
+func DropAllTables(schema string) bool {
+
+	sql := "drop schema " + schema + " cascade;"
+	sql = sql + "create schema " + schema + ";"
 
 	result, err := GetConnection().Exec(sql)
 
 	if err != nil {
-		fmt.Println("querying err: ", err)
+		fmt.Println("Error dropping schemas: ", schema)
 		return false
 	}
 
@@ -95,7 +118,7 @@ func DropTable(tableName string) bool {
 	if err1 != nil {
 		fmt.Println("Error when requesting RowsAffected: ", err1)
 	} else {
-		fmt.Println("Dropping: "+tableName+", RowsAffected: ", rows)
+		fmt.Println("Dropping: "+schema+", RowsAffected: ", rows)
 	}
 
 	return true

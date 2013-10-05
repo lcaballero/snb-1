@@ -1,4 +1,4 @@
-CREATE TABLE criteria
+CREATE TABLE IF NOT EXISTS criteria
 (
 	id uuid NOT NULL,
 	description text,

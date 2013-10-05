@@ -1,4 +1,4 @@
-CREATE TABLE SocialGroup
+CREATE TABLE IF NOT EXISTS SocialGroup
 (
 	id uuid NOT NULL,
 	group_name character varying(40) NOT NULL,

@@ -6,7 +6,8 @@ import (
 )
 
 const (
-	SNB_DB = "snb"
+	SNB_DB       = "snb"
+	PublicSchema = "public"
 
 	// These are the names of the tables as they appear in the database
 	UserTable           = "_user"
@@ -31,12 +32,7 @@ var AllTables []string = []string{
 }
 
 func DropAllTables() {
-	for _, table := range AllTables {
-		ok := sql_utils.DropTable(table)
-		if !ok {
-			fmt.Println("Wasn't able to drop table: ", table)
-		}
-	}
+	sql_utils.DropAllTables(PublicSchema)
 }
 
 func HasUserTable() bool {

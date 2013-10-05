@@ -1,4 +1,4 @@
-CREATE TABLE UserToGroup
+CREATE TABLE IF NOT EXISTS UserToGroup
 (
 	id uuid NOT NULL,
 	group_id uuid NOT NULL,

@@ -1,4 +1,4 @@
-CREATE TABLE _User (
+CREATE TABLE IF NOT EXISTS _User (
 	id uuid NOT NULL,
 	email varchar(255),
 	password text NOT NULL,
