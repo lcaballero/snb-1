@@ -60,7 +60,11 @@ type Entries struct {
 
 func Cache() *Entries {
 
-	return &Entries{
+	if entries != nil {
+		return entries
+	}
+
+	entries = &Entries{
 		AddUserToGroup:            provideFile("addUserToGroup"),
 		AddCriteriaToGame:         provideFile("addCriteriaToGame"),
 		CreateBoard:               provideFile("createBoard"),
@@ -93,11 +97,13 @@ func Cache() *Entries {
 		ReadUserById:              provideFile("readUserById"),
 		TableExists:               provideFile("tableExists"),
 	}
+
+	return entries
 }
 
 func init() {
 
-	conf := rt_config.LoadFromCommandLine()
+	conf := rt_config.Config()
 	env := conf.Dev
 
 	fmt.Println("Config file:", conf.ConfigFile)

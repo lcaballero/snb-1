@@ -2,10 +2,14 @@ package models
 
 import (
 	"fmt"
+	"sql_utils/caching"
 	"testing"
 )
 
 func Test_Nothing(t *testing.T) {
 	fmt.Println("here")
-	t.Error("Failing")
+
+	if caching.Cache() == nil {
+		t.Error("The cache lookup was not found.")
+	}
 }

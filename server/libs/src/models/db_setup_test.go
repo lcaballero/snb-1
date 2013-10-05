@@ -4,15 +4,9 @@ import (
 	"fmt"
 	"snap_sql"
 	"sql_utils"
-	"sql_utils/caching"
 	"testing"
 	"uuid"
 )
-
-func init() {
-	fmt.Println("Loading Sql Scripts")
-	caching.LoadSqlScripts()
-}
 
 func Test_DoesFindRandomTable(t *testing.T) {
 

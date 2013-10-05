@@ -7,7 +7,6 @@ import (
 	enc "json_helpers"
 	"snap_sql"
 	_ "sql_utils"
-	"sql_utils/caching"
 	"strconv"
 	"uuid"
 )
@@ -177,7 +176,6 @@ func showUserBoard(user *data_classes.UserProfile) {
 
 func (m *InitialModel) Initialize() {
 
-	caching.LoadSqlScripts()
 	snap_sql.DropAllTables()
 	snap_sql.SetupTables()
 

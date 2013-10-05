@@ -11,9 +11,27 @@ import (
 	"strings"
 )
 
+var (
+	config *EnvironmentConfig = nil
+)
+
+const (
+	default_config_name = "config.js"
+	default_config_root = "./"
+	flag_config_file    = "--config-file"
+	flag_sql_scripts    = "--sql-scripts"
+)
+
+type flags struct {
+	configFile string
+	sqlScripts string
+}
+
 type EnvironmentConfig struct {
-	ConfigFile     string
-	Dev, Acc, Prod RuntimeConfig
+	ConfigFile string
+	Dev        RuntimeConfig
+	Acc        RuntimeConfig
+	Prod       RuntimeConfig
 }
 
 type RuntimeConfig struct {
@@ -23,77 +41,55 @@ type RuntimeConfig struct {
 	DbServerPort     string
 }
 
-type ConfigFileProvider func() string
-
 type CommandFlags struct {
 	ConfigFile string
 	SqlScripts string
 }
 
-var config *EnvironmentConfig = nil
-var PathProvider ConfigFileProvider = defaultFileProvider
+func Config() *EnvironmentConfig {
 
-const (
-	default_config_name = "config.js"
-	default_config_root = "./"
-	flag_config_file    = "--config-file"
-	flag_sql_scripts    = "--sql-scripts"
-)
+	if config != nil {
+		return config
+	}
 
-func LoadFromCommandLine() *EnvironmentConfig {
+	config = loadFromCommandLine()
 
-	cf := readFlags()
+	return config
+}
 
-	pwd, e := os.Getwd()
+func (cf *CommandFlags) exists() bool {
+	return exists(cf.ConfigFile)
+}
 
-	fmt.Println("pwd: ", pwd, e)
-	fmt.Println("cf.ConfigFile ", cf.ConfigFile)
+func loadFromCommandLine() *EnvironmentConfig {
 
-	_, err := os.Stat(cf.ConfigFile)
+	cf := newFlags().createCommandFlags()
 
-	configFileExists := cf.ConfigFile != "" && !os.IsNotExist(err)
+	configFileExists := cf.exists()
+
+	// Didn't find the config file path from the command line
+	// so try the file by climbing the directory tree looking
+	// for the config file.
+	if !configFileExists {
+		cf.ConfigFile, configFileExists = findConfigFile(default_config_name)
+	}
 
 	if configFileExists {
-
-		PathProvider = func() string { return cf.ConfigFile }
-		return CurrentConfiguration()
-
-	} else {
-
-		fmt.Println("Configuration doesn't exist: ", cf.ConfigFile)
-		fmt.Println(enc.ToIndentedJson(cf, " ", "   "))
+		return cf.CurrentConfiguration()
 	}
+
+	fmt.Println("Configuration doesn't exist: ", cf)
 
 	return &EnvironmentConfig{}
 }
 
-func FindFlag(flag string, args []string) (string, bool) {
-
-	val := ""
-	hasPrefix := false
-
-	if !strings.HasSuffix(flag, "=") {
-		flag = flag + "="
-	}
-
-	for _, e := range args {
-		hasPrefix = strings.HasPrefix(e, flag)
-		if hasPrefix {
-			val = e[len(flag):]
-			break
-		}
-	}
-
-	return val, hasPrefix
+func exists(file string) bool {
+	_, err := os.Stat(file)
+	exists := file != "" && !os.IsNotExist(err)
+	return exists
 }
 
-func FindConfigFile(file string) (string, bool) {
-
-	exists := func(file string) bool {
-		_, err := os.Stat(file)
-		exists := file != "" && !os.IsNotExist(err)
-		return exists
-	}
+func findConfigFile(file string) (string, bool) {
 
 	abs, _ := filepath.Abs(file)
 	dir := path.Dir(abs)
@@ -119,37 +115,58 @@ func (r *RuntimeConfig) String() string {
 	return enc.ToIndentedJson(r, "", "   ")
 }
 
-func readFlags() *CommandFlags {
+func newFlags() *flags {
+	return &flags{
+		configFile: flag_config_file,
+		sqlScripts: flag_sql_scripts,
+	}
+}
+
+func (f *flags) createCommandFlags() *CommandFlags {
 
 	cf := &CommandFlags{}
 
-	cf.ConfigFile, _ = FindFlag(flag_config_file, os.Args)
-	cf.SqlScripts, _ = FindFlag(flag_sql_scripts, os.Args)
+	cf.ConfigFile, _ = FindFlag(f.configFile, os.Args)
+	cf.SqlScripts, _ = FindFlag(f.sqlScripts, os.Args)
 
 	return cf
 }
 
-func CurrentConfiguration() *EnvironmentConfig {
+func FindFlag(flag string, args []string) (string, bool) {
+
+	val := ""
+	hasPrefix := false
+
+	if !strings.HasSuffix(flag, "=") {
+		flag = flag + "="
+	}
+
+	for _, e := range args {
+		hasPrefix = strings.HasPrefix(e, flag)
+		if hasPrefix {
+			val = e[len(flag):]
+			break
+		}
+	}
+
+	return val, hasPrefix
+}
+
+func (cf *CommandFlags) CurrentConfiguration() *EnvironmentConfig {
 	if config == nil {
-		config = LoadConfig(PathProvider())
+		config = cf.LoadConfig()
 	}
 	return config
 }
 
-func defaultFileProvider() string {
-	return path.Join(default_config_root, default_config_name)
+func (env *EnvironmentConfig) String() string {
+	js := enc.ToIndentedJson(env, "", "   ")
+	return js
 }
 
-func DumpConfigFile() {
+func (cf *CommandFlags) LoadConfig() *EnvironmentConfig {
 
-	cf := CurrentConfiguration()
-	js := enc.ToIndentedJson(cf, "", "   ")
-
-	fmt.Println(js)
-}
-
-func LoadConfig(path string) *EnvironmentConfig {
-	bytes, err := ioutil.ReadFile(path)
+	bytes, err := ioutil.ReadFile(cf.ConfigFile)
 
 	if err != nil {
 		fmt.Println(err)
@@ -157,7 +174,7 @@ func LoadConfig(path string) *EnvironmentConfig {
 
 	val := &EnvironmentConfig{}
 	err = json.Unmarshal(bytes, val)
-	val.ConfigFile = path
+	val.ConfigFile = cf.ConfigFile
 
 	if err != nil {
 		fmt.Println(err)
