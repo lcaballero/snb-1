@@ -1,4 +1,4 @@
-package main
+package models
 
 import (
 	"fmt"
@@ -10,18 +10,15 @@ import (
 )
 
 func init() {
+	fmt.Println("Loading Sql Scripts")
 	caching.LoadSqlScripts()
-}
-
-func providePath(s string) string {
-	return ""
 }
 
 func Test_DoesFindRandomTable(t *testing.T) {
 
 	table := uuid.New()
 
-	has_table := sql_utils.TableExists("snb", table)
+	has_table := sql_utils.TableExists(snap_sql.SNB_DB, table)
 
 	if has_table {
 		t.Error("Shouldn't have a " + table + " table")
@@ -59,14 +56,7 @@ func Test_Dropped_All_Tables(t *testing.T) {
 
 	snap_sql.DropAllTables()
 
-	hasTables := snap_sql.HasUserTable() ||
-		snap_sql.HasGroupTable() ||
-		snap_sql.HasUserToGroupTable() ||
-		snap_sql.HasGameTable() ||
-		snap_sql.HasBoardTable() ||
-		snap_sql.HasCriteriaTable() ||
-		snap_sql.HasTileTable() ||
-		snap_sql.HasGameToCriteriaTable()
+	hasTables := snap_sql.HasUserTable() || snap_sql.HasGroupTable() || snap_sql.HasUserToGroupTable() || snap_sql.HasGameTable() || snap_sql.HasBoardTable() || snap_sql.HasCriteriaTable() || snap_sql.HasTileTable() || snap_sql.HasGameToCriteriaTable()
 
 	if hasTables {
 		t.Error("All tables should be dropped, but are not.")

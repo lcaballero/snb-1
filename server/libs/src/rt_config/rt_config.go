@@ -43,17 +43,24 @@ func LoadFromCommandLine() *EnvironmentConfig {
 
 	cf := readFlags()
 
+	pwd, e := os.Getwd()
+
+	fmt.Println("pwd: ", pwd, e)
+	fmt.Println("cf.ConfigFile ", cf.ConfigFile)
+
 	_, err := os.Stat(cf.ConfigFile)
 
 	configFileExists := cf.ConfigFile != "" && !os.IsNotExist(err)
 
 	if configFileExists {
-		PathProvider = func() string {
-			return cf.ConfigFile
-		}
+
+		PathProvider = func() string { return cf.ConfigFile }
 		return CurrentConfiguration()
+
 	} else {
+
 		fmt.Println("Configuration doesn't exist: ", cf.ConfigFile)
+		fmt.Println(enc.ToIndentedJson(cf, " ", "   "))
 	}
 
 	return &EnvironmentConfig{}
@@ -77,6 +84,34 @@ func FindFlag(flag string, args []string) (string, bool) {
 	}
 
 	return val, hasPrefix
+}
+
+func FindConfigFile(file string) (string, bool) {
+
+	exists := func(file string) bool {
+		_, err := os.Stat(file)
+		exists := file != "" && !os.IsNotExist(err)
+		return exists
+	}
+
+	abs, _ := filepath.Abs(file)
+	dir := path.Dir(abs)
+	found := exists(abs)
+
+	for !found {
+
+		parent := dir + "/../"
+		dir = path.Clean(parent)
+		abs = path.Join(dir, file)
+
+		found = exists(abs)
+
+		if dir == "/" {
+			break
+		}
+	}
+
+	return abs, found
 }
 
 func (r *RuntimeConfig) String() string {

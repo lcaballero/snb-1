@@ -17,7 +17,8 @@ func HasGroup(groupName string) (bool, error) {
 
 	if err != nil {
 		fmt.Println(err)
-		return true, err // TODO: should this be true or false?
+		// TODO: should this be true or false?
+		return false, err
 	} else if len(groups) > 0 {
 		return true, err
 	} else {
