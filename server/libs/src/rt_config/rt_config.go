@@ -38,7 +38,7 @@ func Config() *EnvironmentConfig {
 		return config
 	}
 
-	config = newFlags().readCommandFlags().LoadEnvironmentConfig()
+	config = newSearchFlags().readFlagValues().LoadEnvironmentConfig()
 
 	return config
 }

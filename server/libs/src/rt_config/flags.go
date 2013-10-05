@@ -17,7 +17,7 @@ type flags struct {
 	sqlScripts string
 }
 
-func (f *flags) readCommandFlags() *CommandFlags {
+func (f *flags) readFlagValues() *CommandFlags {
 
 	cf := &CommandFlags{}
 
@@ -27,7 +27,7 @@ func (f *flags) readCommandFlags() *CommandFlags {
 	return cf
 }
 
-func newFlags() *flags {
+func newSearchFlags() *flags {
 	return &flags{
 		configFile: flag_config_file,
 		sqlScripts: flag_sql_scripts,
