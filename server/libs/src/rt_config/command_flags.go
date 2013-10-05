@@ -45,3 +45,21 @@ func (cf *CommandFlags) CurrentConfiguration() *EnvironmentConfig {
 	}
 	return config
 }
+
+func (cf *CommandFlags) LoadEnvironmentConfig() *EnvironmentConfig {
+
+	// Didn't find the config file path from the command line
+	// so try the file by climbing the directory tree looking
+	// for the config file.
+	if !cf.ConfigFileExists() {
+		cf.ConfigFile = findConfigFile(default_config_name)
+	}
+
+	if cf.ConfigFileExists() {
+		return cf.CurrentConfiguration()
+	}
+
+	fmt.Println("Configuration doesn't exist: ", cf)
+
+	return &EnvironmentConfig{}
+}

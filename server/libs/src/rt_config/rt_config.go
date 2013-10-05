@@ -1,7 +1,6 @@
 package rt_config
 
 import (
-	"fmt"
 	enc "json_helpers"
 	"path"
 	"path/filepath"
@@ -11,6 +10,8 @@ var (
 	config *EnvironmentConfig = nil
 )
 
+// EnvironmentConfig holds the configuration variables for each of the
+// environments as found in config.js
 type EnvironmentConfig struct {
 	ConfigFile string
 	Dev        RuntimeConfig
@@ -18,6 +19,10 @@ type EnvironmentConfig struct {
 	Prod       RuntimeConfig
 }
 
+// Contains parameters to pieces of the application, and is loaded via the
+// EnvironmentConfig at runtime either by a command line flag or via a
+// directory tree search for the file 'config.js' which lives in the root
+// of the application directory.
 type RuntimeConfig struct {
 	ConnectionString string
 	SqlScripts       string
@@ -25,40 +30,20 @@ type RuntimeConfig struct {
 	DbServerPort     string
 }
 
+// Access to the singleton of EnvironmentConfig which provides the
+// RuntimConfig for the environment of choice.
 func Config() *EnvironmentConfig {
 
 	if config != nil {
 		return config
 	}
 
-	config = loadFromCommandLine()
+	config = newFlags().readCommandFlags().LoadEnvironmentConfig()
 
 	return config
 }
 
-func loadFromCommandLine() *EnvironmentConfig {
-
-	cf := newFlags().createCommandFlags()
-
-	configFileExists := cf.ConfigFileExists()
-
-	// Didn't find the config file path from the command line
-	// so try the file by climbing the directory tree looking
-	// for the config file.
-	if !configFileExists {
-		cf.ConfigFile, configFileExists = findConfigFile(default_config_name)
-	}
-
-	if configFileExists {
-		return cf.CurrentConfiguration()
-	}
-
-	fmt.Println("Configuration doesn't exist: ", cf)
-
-	return &EnvironmentConfig{}
-}
-
-func findConfigFile(file string) (string, bool) {
+func findConfigFile(file string) string {
 
 	abs, _ := filepath.Abs(file)
 	dir := path.Dir(abs)
@@ -77,7 +62,7 @@ func findConfigFile(file string) (string, bool) {
 		}
 	}
 
-	return abs, found
+	return abs
 }
 
 func (r *RuntimeConfig) String() string {

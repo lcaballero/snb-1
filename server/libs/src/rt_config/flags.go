@@ -17,7 +17,7 @@ type flags struct {
 	sqlScripts string
 }
 
-func (f *flags) createCommandFlags() *CommandFlags {
+func (f *flags) readCommandFlags() *CommandFlags {
 
 	cf := &CommandFlags{}
 
