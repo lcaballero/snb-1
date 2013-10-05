@@ -1,8 +1,7 @@
-package models
+package snap_sql
 
 import (
 	"fmt"
-	"snap_sql"
 	"sql_utils"
 	"testing"
 	"uuid"
@@ -12,7 +11,7 @@ func Test_DoesFindRandomTable(t *testing.T) {
 
 	table := uuid.New()
 
-	has_table := sql_utils.TableExists(snap_sql.SNB_DB, table)
+	has_table := sql_utils.TableExists(SNB_DB, table)
 
 	if has_table {
 		t.Error("Shouldn't have a " + table + " table")
@@ -22,7 +21,7 @@ func Test_DoesFindRandomTable(t *testing.T) {
 func Test_HasTable(t *testing.T) {
 
 	dropped := sql_utils.DropTable("_user")
-	has_table := snap_sql.HasUserTable()
+	has_table := HasUserTable()
 
 	fmt.Println("dropped: ", dropped)
 
@@ -33,10 +32,10 @@ func Test_HasTable(t *testing.T) {
 
 func Test_CreateUserTable(t *testing.T) {
 
-	has_table := snap_sql.HasUserTable()
+	has_table := HasUserTable()
 
 	if !has_table {
-		snap_sql.CreateUserTable()
+		CreateUserTable()
 	}
 
 	has_table = sql_utils.TableExists("snb", "_user")
@@ -48,16 +47,16 @@ func Test_CreateUserTable(t *testing.T) {
 
 func Test_Dropped_All_Tables(t *testing.T) {
 
-	snap_sql.DropAllTables()
+	DropAllTables()
 
-	hasTables := snap_sql.HasUserTable() ||
-		snap_sql.HasGroupTable() ||
-		snap_sql.HasUserToGroupTable() ||
-		snap_sql.HasGameTable() ||
-		snap_sql.HasBoardTable() ||
-		snap_sql.HasCriteriaTable() ||
-		snap_sql.HasTileTable() ||
-		snap_sql.HasGameToCriteriaTable()
+	hasTables := HasUserTable() ||
+		HasGroupTable() ||
+		HasUserToGroupTable() ||
+		HasGameTable() ||
+		HasBoardTable() ||
+		HasCriteriaTable() ||
+		HasTileTable() ||
+		HasGameToCriteriaTable()
 
 	if hasTables {
 		t.Error("All tables should be dropped, but are not.")
@@ -66,37 +65,37 @@ func Test_Dropped_All_Tables(t *testing.T) {
 
 func Test_Setup_Db(t *testing.T) {
 
-	snap_sql.SetupTables()
+	SetupTables()
 
-	if !snap_sql.HasUserTable() {
+	if !HasUserTable() {
 		t.Error("Failed to create user table.")
 	}
 
-	if !snap_sql.HasGroupTable() {
+	if !HasGroupTable() {
 		t.Error("Failed to create group table.")
 	}
 
-	if !snap_sql.HasUserToGroupTable() {
+	if !HasUserToGroupTable() {
 		t.Error("Failed to create a User to Group table")
 	}
 
-	if !snap_sql.HasGameTable() {
+	if !HasGameTable() {
 		t.Error("Failed to create a Game table.")
 	}
 
-	if !snap_sql.HasBoardTable() {
+	if !HasBoardTable() {
 		t.Error("Failed to create the Board Table.")
 	}
 
-	if !snap_sql.HasCriteriaTable() {
+	if !HasCriteriaTable() {
 		t.Error("Failed to create the Criteria Table.")
 	}
 
-	if !snap_sql.HasTileTable() {
+	if !HasTileTable() {
 		t.Error("Failed to create the Tile Table.")
 	}
 
-	if !snap_sql.HasGameToCriteriaTable() {
+	if !HasGameToCriteriaTable() {
 		t.Error("Failed to create the GameToCriteria Table.")
 	}
 }
