@@ -7,27 +7,17 @@ import (
 	"rt_config"
 )
 
-const DefaultFilePath = "../sqlQueries/"
+const (
+	DefaultFilePath = "../sqlQueries/"
+)
 
 var (
 	internalFilePath string       = DefaultFilePath
-	CacheEntries     *Entries     = nil
+	entries          *Entries     = nil
 	SqlPathProvider  PathProvider = nil
 )
 
 type PathProvider func(string) string
-
-func init() {
-	conf := rt_config.LoadFromCommandLine()
-	env := conf.Dev
-
-	fmt.Println("Config file:", conf.ConfigFile)
-	dir := path.Dir(conf.ConfigFile)
-
-	SqlPathProvider = func(name string) string {
-		return path.Join(dir, env.SqlScripts, name+".sql")
-	}
-}
 
 type CacheEntry struct {
 	Path, Script string
@@ -68,8 +58,9 @@ type Entries struct {
 	TableExists *CacheEntry
 }
 
-func LoadSqlScripts() {
-	CacheEntries = &Entries{
+func Cache() *Entries {
+
+	return &Entries{
 		AddUserToGroup:            provideFile("addUserToGroup"),
 		AddCriteriaToGame:         provideFile("addCriteriaToGame"),
 		CreateBoard:               provideFile("createBoard"),
@@ -101,6 +92,19 @@ func LoadSqlScripts() {
 		ReadUserByEmail:           provideFile("readUserByEmail"),
 		ReadUserById:              provideFile("readUserById"),
 		TableExists:               provideFile("tableExists"),
+	}
+}
+
+func init() {
+
+	conf := rt_config.LoadFromCommandLine()
+	env := conf.Dev
+
+	fmt.Println("Config file:", conf.ConfigFile)
+	dir := path.Dir(conf.ConfigFile)
+
+	SqlPathProvider = func(name string) string {
+		return path.Join(dir, env.SqlScripts, name+".sql")
 	}
 }
 

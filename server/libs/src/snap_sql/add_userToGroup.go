@@ -18,7 +18,7 @@ func AddUserToGroup(userId, groupId string) (codes.StatusCode, error) {
 	// has_user, err := hasUserId(userId)
 
 	//if has_user && err == nil {
-	sql := caching.CacheEntries.AddUserToGroup.Script
+	sql := caching.Cache().AddUserToGroup.Script
 
 	// add user to the global group
 	rowUuid := uuid.New()

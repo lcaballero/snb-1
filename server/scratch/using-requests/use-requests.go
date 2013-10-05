@@ -1,23 +1,17 @@
 package main
 
 import (
-	"fmt"
-	//"builtin"
 	"data_classes"
+	"fmt"
 	_ "github.com/bmizerany/pq"
 	enc "json_helpers"
 	"snap_sql"
 	_ "sql_utils"
-	"sql_utils/caching"
-	//	"sql_utils/codes"
 	"strconv"
 	"uuid"
-	//"reflect"
-	//"sql_text"
 )
 
 func init() {
-	caching.LoadSqlScripts()
 	snap_sql.DropAllTables()
 }
 

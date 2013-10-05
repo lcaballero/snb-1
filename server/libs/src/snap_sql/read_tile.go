@@ -11,14 +11,16 @@ import (
 )
 
 func ReadTile(id string) ([]data_classes.TileData, error) {
-	//sql := "SELECT * FROM board WHERE id=$1"
-	sql := caching.CacheEntries.ReadTile.Script
+
+	sql := caching.Cache().ReadTile.Script
 
 	return processTile(sql_utils.GetConnection().Query(sql, id))
 }
 
 func ReadBoardTiles(boardId string) ([]data_classes.TileData, error) {
-	sql := caching.CacheEntries.ReadBoardTiles.Script
+
+	sql := caching.Cache().ReadBoardTiles.Script
+
 	return processTile(sql_utils.GetConnection().Query(sql, boardId))
 }
 

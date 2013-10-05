@@ -11,7 +11,7 @@ func CreateCriteria(criteriaUuid, description string) (codes.StatusCode, error) 
 
 	var status codes.StatusCode
 
-	sql := caching.CacheEntries.CreateCriteria.Script
+	sql := caching.Cache().CreateCriteria.Script
 
 	//gameUuid := uuid.New()
 

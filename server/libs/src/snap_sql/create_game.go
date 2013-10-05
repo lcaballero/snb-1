@@ -11,7 +11,7 @@ func CreateGame(gameUuid, groupId, name, description string) (codes.StatusCode, 
 
 	var status codes.StatusCode
 
-	sql := caching.CacheEntries.CreateGame.Script
+	sql := caching.Cache().CreateGame.Script
 
 	//gameUuid := uuid.New()
 

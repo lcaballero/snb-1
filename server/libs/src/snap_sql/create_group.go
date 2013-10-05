@@ -19,7 +19,7 @@ func CreateGroup(groupUuid, group_name, group_desc, group_owner string) (codes.S
 	} else if has_group {
 		status = codes.Group_Exists
 	} else {
-		sql := caching.CacheEntries.CreateGroup.Script
+		sql := caching.Cache().CreateGroup.Script
 
 		_, err := sql_utils.GetConnection().Exec(sql, groupUuid, group_name, group_desc, group_owner)
 

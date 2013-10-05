@@ -28,7 +28,7 @@ func HasGroup(groupName string) (bool, error) {
 
 func ReadGroup(group_name string) ([]data_classes.GroupData, error) {
 
-	sql := caching.CacheEntries.ReadGroup.Script
+	sql := caching.Cache().ReadGroup.Script
 
 	rows, err := sql_utils.GetConnection().Query(sql, group_name)
 

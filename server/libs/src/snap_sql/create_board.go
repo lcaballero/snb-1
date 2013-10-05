@@ -11,7 +11,7 @@ func CreateBoard(boardUuid, gameId, userId, name string, state int) (codes.Statu
 
 	var status codes.StatusCode
 
-	sql := caching.CacheEntries.CreateBoard.Script
+	sql := caching.Cache().CreateBoard.Script
 
 	//gameUuid := uuid.New()
 

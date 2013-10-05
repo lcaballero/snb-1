@@ -27,14 +27,14 @@ func HasBoard(id string) (bool, error) {
 
 func ReadBoard(id string) ([]data_classes.BoardData, error) {
 	//sql := "SELECT * FROM board WHERE id=$1"
-	sql := caching.CacheEntries.ReadBoardFromId.Script
+	sql := caching.Cache().ReadBoardFromId.Script
 
 	return processBoard(sql_utils.GetConnection().Query(sql, id))
 }
 
 func ReadUsersBoards(userId string) ([]data_classes.BoardData, error) {
 	// sql := SELECT * FROM board WHERE user_id = $1
-	sql := caching.CacheEntries.ReadUsersBoards.Script
+	sql := caching.Cache().ReadUsersBoards.Script
 	return processBoard(sql_utils.GetConnection().Query(sql, userId))
 }
 

@@ -12,7 +12,7 @@ func AddCriteriaToGame(uuid, game_id, criteria_id string, state, active int) (co
 
 	var status codes.StatusCode
 
-	sql := caching.CacheEntries.AddCriteriaToGame.Script
+	sql := caching.Cache().AddCriteriaToGame.Script
 
 	//rowUuid := uuid.New()
 	_, err := sql_utils.GetConnection().Exec(sql, uuid, game_id, criteria_id, state, active)

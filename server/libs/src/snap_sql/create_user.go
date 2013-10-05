@@ -21,7 +21,7 @@ func CreateUser(email, password string) (codes.StatusCode, error) {
 		status = codes.User_Exists
 	} else {
 
-		sql := caching.CacheEntries.CreateUser.Script
+		sql := caching.Cache().CreateUser.Script
 
 		userUuid := uuid.New()
 		_, err := sql_utils.GetConnection().Exec(string(sql), userUuid, email, password)

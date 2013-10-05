@@ -175,7 +175,7 @@ func showUserBoard(user *data_classes.UserProfile) {
 	}
 }
 
-func (m *InitialModel) Run() {
+func (m *InitialModel) Initialize() {
 
 	caching.LoadSqlScripts()
 	snap_sql.DropAllTables()

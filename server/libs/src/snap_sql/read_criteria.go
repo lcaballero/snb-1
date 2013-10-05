@@ -12,7 +12,7 @@ import (
 
 func ReadCriteria(id string) ([]data_classes.CriteriaData, error) {
 	//sql := "SELECT * FROM board WHERE id=$1"
-	sql := caching.CacheEntries.ReadCriteriaFromId.Script
+	sql := caching.Cache().ReadCriteriaFromId.Script
 
 	return processCriteria(sql_utils.GetConnection().Query(sql, id))
 }

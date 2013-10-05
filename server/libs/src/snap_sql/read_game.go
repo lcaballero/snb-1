@@ -12,7 +12,7 @@ import (
 
 func ReadGameFromId(gameId string) ([]data_classes.GameData, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
-	sql := caching.CacheEntries.ReadGameFromId.Script
+	sql := caching.Cache().ReadGameFromId.Script
 
 	return processGames(sql_utils.GetConnection().Query(sql, gameId))
 }
@@ -20,21 +20,21 @@ func ReadGameFromId(gameId string) ([]data_classes.GameData, error) {
 func ReadGameFromName(gameName string) ([]data_classes.GameData, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
 
-	sql := caching.CacheEntries.ReadGameFromName.Script
+	sql := caching.Cache().ReadGameFromName.Script
 
 	return processGames(sql_utils.GetConnection().Query(sql, gameName))
 }
 
 func ReadGameInGroupFromName(groupId, gameName string) ([]data_classes.GameData, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
-	sql := caching.CacheEntries.ReadGameInGroupFromName.Script
+	sql := caching.Cache().ReadGameInGroupFromName.Script
 
 	return processGames(sql_utils.GetConnection().Query(sql, groupId, gameName))
 }
 
 func ReadAllGames(groupId string) ([]data_classes.GameData, error) {
 	//sql := "SELECT * FROM _user WHERE email=$1"
-	sql := caching.CacheEntries.ReadAllGamesInGroup.Script
+	sql := caching.Cache().ReadAllGamesInGroup.Script
 
 	return processGames(sql_utils.GetConnection().Query(sql, groupId))
 }

@@ -10,7 +10,7 @@ import (
 
 func CreateGameToCriteriaTable() (err error) {
 
-	sql := caching.CacheEntries.CreateGameToCriteriaTable.Script
+	sql := caching.Cache().CreateGameToCriteriaTable.Script
 
 	_, err = sql_utils.GetConnection().Exec(sql)
 
@@ -25,7 +25,7 @@ func CreateGameToCriteriaTable() (err error) {
 
 func CreateTileTable() (err error) {
 
-	sql := caching.CacheEntries.CreateTileTable.Script
+	sql := caching.Cache().CreateTileTable.Script
 
 	_, err = sql_utils.GetConnection().Exec(sql)
 
@@ -40,7 +40,7 @@ func CreateTileTable() (err error) {
 
 func CreateCriteriaTable() (err error) {
 
-	sql := caching.CacheEntries.CreateCriteriaTable.Script
+	sql := caching.Cache().CreateCriteriaTable.Script
 
 	_, err = sql_utils.GetConnection().Exec(sql)
 
@@ -55,7 +55,7 @@ func CreateCriteriaTable() (err error) {
 
 func CreateBoardTable() (err error) {
 
-	sql := caching.CacheEntries.CreateBoardTable.Script
+	sql := caching.Cache().CreateBoardTable.Script
 
 	_, err = sql_utils.GetConnection().Exec(sql)
 
@@ -70,7 +70,7 @@ func CreateBoardTable() (err error) {
 
 func CreateGameTable() (err error) {
 
-	sql := caching.CacheEntries.CreateGameTable.Script
+	sql := caching.Cache().CreateGameTable.Script
 
 	_, err = sql_utils.GetConnection().Exec(sql)
 
@@ -84,7 +84,7 @@ func CreateGameTable() (err error) {
 // ---------------------- Create User Table ---------------------- //
 func CreateUserTable() (err error) {
 
-	sql := caching.CacheEntries.CreateUserTable.Script
+	sql := caching.Cache().CreateUserTable.Script
 
 	_, err = sql_utils.GetConnection().Exec(sql)
 
@@ -99,7 +99,7 @@ func CreateUserTable() (err error) {
 
 func CreateGroupsTable() (err error) {
 
-	sql := caching.CacheEntries.CreateGroupTable.Script
+	sql := caching.Cache().CreateGroupTable.Script
 
 	_, err = sql_utils.GetConnection().Exec(sql)
 
@@ -114,7 +114,7 @@ func CreateGroupsTable() (err error) {
 
 func CreateUserToGroupTable() (err error) {
 
-	sql := caching.CacheEntries.CreateUserToGroupTable.Script
+	sql := caching.Cache().CreateUserToGroupTable.Script
 
 	_, err = sql_utils.GetConnection().Exec(sql)
 

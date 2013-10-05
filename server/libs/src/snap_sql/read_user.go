@@ -13,21 +13,21 @@ import (
 
 func ReadAllUsers() ([]*data_classes.UserProfile, error) {
 
-	rows, err := sql_utils.GetConnection().Query(caching.CacheEntries.ReadAllUsers.Script)
+	rows, err := sql_utils.GetConnection().Query(caching.Cache().ReadAllUsers.Script)
 
 	return processUserProfiles(rows, err)
 }
 
 func ReadUserById(userId string) ([]*data_classes.UserProfile, error) {
 
-	rows, err := sql_utils.GetConnection().Query(caching.CacheEntries.ReadUserById.Script, userId)
+	rows, err := sql_utils.GetConnection().Query(caching.Cache().ReadUserById.Script, userId)
 
 	return processUserProfiles(rows, err)
 }
 
 func ReadUserByEmail(email string) ([]*data_classes.UserProfile, error) {
 
-	rows, err := sql_utils.GetConnection().Query(caching.CacheEntries.ReadUserByEmail.Script, email)
+	rows, err := sql_utils.GetConnection().Query(caching.Cache().ReadUserByEmail.Script, email)
 
 	return processUserProfiles(rows, err)
 }

@@ -63,7 +63,7 @@ func ObjToString(ref string, o map[string]interface{}) string {
 
 func TableExists(dbName, tableName string) bool {
 
-	sql := caching.CacheEntries.TableExists
+	sql := caching.Cache().TableExists
 
 	if sql.Err != nil {
 		fmt.Println(sql.Err)

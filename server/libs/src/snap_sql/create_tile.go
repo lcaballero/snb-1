@@ -11,7 +11,7 @@ func CreateTile(tileUuid, boardId, criteriaId string, position, active int) (cod
 
 	var status codes.StatusCode
 
-	sql := caching.CacheEntries.CreateTile.Script
+	sql := caching.Cache().CreateTile.Script
 
 	_, err := sql_utils.GetConnection().Exec(
 		string(sql),
