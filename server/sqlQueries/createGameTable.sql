@@ -1,4 +1,4 @@
-CREATE TABLE Game
+CREATE TABLE IF NOT EXISTS Game
 (
 	id uuid NOT NULL,
 	group_id uuid NOT NULL,

@@ -6,7 +6,9 @@ import (
 	"sql_utils/caching"
 )
 
-// ---------------------- Create Tile Table ---------------------- //
+func TableExists(name string) bool {
+	return sql_utils.TableExists(SNB_DB, name)
+}
 
 func CreateGameToCriteriaTable() (err error) {
 
@@ -21,8 +23,6 @@ func CreateGameToCriteriaTable() (err error) {
 	return err
 }
 
-// ---------------------- Create Tile Table ---------------------- //
-
 func CreateTileTable() (err error) {
 
 	sql := caching.Cache().CreateTileTable.Script
@@ -35,8 +35,6 @@ func CreateTileTable() (err error) {
 
 	return err
 }
-
-// ---------------------- Create Criteria Table ---------------------- //
 
 func CreateCriteriaTable() (err error) {
 
@@ -51,8 +49,6 @@ func CreateCriteriaTable() (err error) {
 	return err
 }
 
-// ---------------------- Create Board Table ---------------------- //
-
 func CreateBoardTable() (err error) {
 
 	sql := caching.Cache().CreateBoardTable.Script
@@ -65,8 +61,6 @@ func CreateBoardTable() (err error) {
 
 	return err
 }
-
-// ---------------------- Create Game Table ---------------------- //
 
 func CreateGameTable() (err error) {
 
@@ -81,7 +75,6 @@ func CreateGameTable() (err error) {
 	return err
 }
 
-// ---------------------- Create User Table ---------------------- //
 func CreateUserTable() (err error) {
 
 	sql := caching.Cache().CreateUserTable.Script
@@ -95,8 +88,6 @@ func CreateUserTable() (err error) {
 	return err
 }
 
-// ---------------------- Create Group Table ---------------------- //
-
 func CreateGroupsTable() (err error) {
 
 	sql := caching.Cache().CreateGroupTable.Script
@@ -109,8 +100,6 @@ func CreateGroupsTable() (err error) {
 
 	return err
 }
-
-// ---------------------- Create User to Group table ---------------------- //
 
 func CreateUserToGroupTable() (err error) {
 

@@ -63,45 +63,63 @@ func ObjToString(ref string, o map[string]interface{}) string {
 
 func TableExists(dbName, tableName string) bool {
 
-	sql := caching.Cache().TableExists
+	sql := caching.Cache().TableExists.Script
 
-	if sql.Err != nil {
-		fmt.Println(sql.Err)
-		return false
-	}
+	rows, err := GetConnection().Query(sql, dbName, tableName)
 
-	rows, err := GetConnection().Query(sql.Script, dbName, tableName)
 	if err != nil {
+
 		fmt.Println(err)
 		return false
+
 	} else {
+
 		m := requests.ToMapping(rows)
-		hasLen := len(m) > 0
-
-		if hasLen {
-			fmt.Println("Table Exists: ", tableName)
-		} else {
-			fmt.Println("Table Does NOT Exists: ", tableName)
-		}
-
-		return hasLen
+		return len(m) > 0
 	}
 }
 
-func DropTable(tableName string) bool {
+// func DropTable(tableName string) bool {
 
-	sql := "drop table if exists " + tableName
+// 	sql := "drop table if exists " + tableName + " cascade;"
 
-	fmt.Println(sql)
+// 	result, err := GetConnection().Exec(sql)
 
-	result, err := GetConnection().Exec(string(sql))
+// 	if err != nil {
+// 		fmt.Println("querying err: ", err)
+// 		return false
+// 	}
+
+// 	rows, err1 := result.RowsAffected()
+
+// 	if err1 != nil {
+// 		fmt.Println("Error when requesting RowsAffected: ", err1)
+// 	} else {
+// 		fmt.Println("Dropping: "+tableName+", RowsAffected: ", rows)
+// 	}
+
+// 	return true
+// }
+
+func DropAllTables(schema string) bool {
+
+	sql := "drop schema " + schema + " cascade;"
+	sql = sql + "create schema " + schema + ";"
+
+	result, err := GetConnection().Exec(sql)
 
 	if err != nil {
-		fmt.Println("querying err: ", err)
+		fmt.Println("Error dropping schemas: ", schema)
 		return false
 	}
 
-	fmt.Println("result: ", result)
+	rows, err1 := result.RowsAffected()
+
+	if err1 != nil {
+		fmt.Println("Error when requesting RowsAffected: ", err1)
+	} else {
+		fmt.Println("Dropping: "+schema+", RowsAffected: ", rows)
+	}
 
 	return true
 }
