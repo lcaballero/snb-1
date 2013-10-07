@@ -22,6 +22,11 @@ func (p *ConnectionParameters) String() string {
 type Conn struct {
 	db     *sql.DB
 	params *ConnectionParameters
+	err    *error
+}
+
+func (c *Conn) HasError() bool {
+	return c.err != nil
 }
 
 func (c *Conn) Query(query string, args ...interface{}) (rows *sql.Rows, err error) {
@@ -103,7 +108,7 @@ func TableExists(dbName, tableName string) bool {
 
 func DropAllTables(schema string) bool {
 
-	sql := "drop schema " + schema + " cascade;"
+	sql := "drop schema if exists " + schema + " cascade;"
 	sql = sql + "create schema " + schema + ";"
 
 	result, err := GetConnection().Exec(sql)

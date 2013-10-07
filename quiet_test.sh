@@ -11,14 +11,14 @@ GOPATH=$PWD/server/libs/
 # Actual 'build' command that we want to run
 # go build -a -o web-server.exe server/server.go
 
-go test -i \
+go test -i -parallel=1 \
 	./server/libs/src/rt_config \
 	./server/libs/src/snap_sql \
 	./server/libs/src/models \
 	./server/libs/src/sql_utils \
 	./server/libs/src/sql_utils/caching
 
-go test \
+go test -parallel=1 \
 	./server/libs/src/rt_config \
 	./server/libs/src/snap_sql \
 	./server/libs/src/models \

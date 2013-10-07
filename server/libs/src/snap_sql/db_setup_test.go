@@ -1,19 +1,24 @@
 package snap_sql
 
 import (
-	//"log"
+	logging "log"
+	"os"
 	"sql_utils"
 	"testing"
 	"uuid"
 )
 
-// var log *log.Logger = nil
+var log *logging.Logger = nil
 
-// func init() {
-// 	log = log.New()
-// }
+func init() {
+	log = logging.New(os.Stdout, "", logging.Lshortfile)
+
+	log.Println("Init-ing the log.")
+}
 
 func Test_DoesFindRandomTable(t *testing.T) {
+
+	log.Println("Test_DoesFindRandomTable.")
 
 	table := uuid.New()
 
@@ -65,10 +70,16 @@ func Test_Dropped_All_Tables(t *testing.T) {
 		GameToCriteriaTable: HasGameToCriteriaTable(),
 	}
 
+	msg := ""
+
 	for table, hasTable := range created {
 		if hasTable {
-			t.Error("Didn't drop table: ", table)
+			msg = msg + "\nDidn't drop table: " + table
 		}
+	}
+
+	if msg != "" {
+		t.Error(msg)
 	}
 }
 
