@@ -36,6 +36,7 @@ func Test_CacheEntries_Setup(t *testing.T) {
 	hasSql(t, Cache().TableExists)
 	hasSql(t, Cache().CreateGameToCriteriaTable)
 	hasSql(t, Cache().AddCriteriaToGame)
+	hasSql(t, Cache().ReadInitialBoardCriteria)
 }
 
 func hasSql(t *testing.T, c *CacheEntry) {

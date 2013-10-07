@@ -4,10 +4,10 @@ import (
 	"time"
 )
 
-/* ---------------------- Board Data ---------------------- */
+/* ---------------------- Criteria Data ---------------------- */
 
 type CriteriaData struct {
-	Id, UserId, GameId, Name string
-	State, Active            int
-	DateAdded                time.Time
+	Id, Description string
+	State, Active   int64
+	DateAdded       time.Time
 }

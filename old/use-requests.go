@@ -111,7 +111,6 @@ func main() {
 			crit_to_game, err := snap_sql.AddCriteriaToGame(
 				critToGameUuid, readGameInGroupFromName[0].Id, criteriaUuid, 1, 1)
 
-			fmt.Println(critToGameUuid, readGameInGroupFromName[0].Id, criteriaUuid, 1, 1)
 			if err != nil {
 				fmt.Println("crit to game ERROR: ", err)
 			}
