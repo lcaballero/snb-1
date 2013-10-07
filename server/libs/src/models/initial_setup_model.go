@@ -95,7 +95,7 @@ func createGame(group data_classes.GroupData) {
 	fmt.Println(enc.ToIndentedJson(readGameFromId, "", "  "))
 }
 
-func createCriteria(group data_classes.GameData) {
+func createCriteria(game data_classes.GameData) {
 
 	for i := 0; i < 25; i++ {
 
@@ -112,14 +112,16 @@ func createCriteria(group data_classes.GameData) {
 
 		critToGameUuid := uuid.New()
 
-		crit_to_game, err := snap_sql.AddCriteriaToGame(
+		_, err = snap_sql.AddCriteriaToGame(
 			critToGameUuid,
-			group.Id,
+			game.Id,
 			criteriaUuid,
 			1,
 			1)
 
-		fmt.Println("criteria to game: ", crit_to_game)
+		if err != nil {
+		}
+		//fmt.Println("criteria to game: ", crit_to_game)
 	}
 }
 
@@ -136,6 +138,32 @@ func createBoard(user *data_classes.UserProfile, game data_classes.GameData) {
 		1)
 
 	fmt.Println("Create Board: ", boardName, board_status)
+
+	initBoardCriteria(user.Id, game.Id)
+}
+
+func initBoardCriteria(boardId, gameId string) {
+
+	// Grab 25 random criteria from that belong to the supplied
+	// game id.
+	boardCriteria, _ := snap_sql.ReadInitialBoardCriteria(gameId)
+
+	//fmt.Println("initBoardCriteria: ", boardCriteria)
+
+	// create new tiles for each criteria then add the tiles to the
+	// supplied board id
+	for i := 0; i < len(boardCriteria); i++ {
+		tileId := uuid.New()
+		_, err := snap_sql.CreateTile(
+			tileId, boardId, boardCriteria[i].Id, i, 1, 1)
+
+		if err != nil {
+			fmt.Println("ERROR: initBoardCriteria -> ", err)
+		}
+
+		//fmt.Println("tile", tile)
+	}
+
 }
 
 func createFullGame(user *data_classes.UserProfile) {

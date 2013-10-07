@@ -55,6 +55,7 @@ type Entries struct {
 	ReadTile,
 	ReadUserByEmail,
 	ReadUserById,
+	ReadInitialBoardCriteria,
 	TableExists *CacheEntry
 }
 
@@ -95,6 +96,7 @@ func Cache() *Entries {
 		ReadTile:                  provideFile("ReadTile"),
 		ReadUserByEmail:           provideFile("readUserByEmail"),
 		ReadUserById:              provideFile("readUserById"),
+		ReadInitialBoardCriteria:  provideFile("ReadInitialBoardCriteria"),
 		TableExists:               provideFile("tableExists"),
 	}
 

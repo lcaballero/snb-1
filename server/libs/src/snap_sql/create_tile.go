@@ -7,7 +7,7 @@ import (
 	"sql_utils/codes"
 )
 
-func CreateTile(tileUuid, boardId, criteriaId string, position, active int) (codes.StatusCode, error) {
+func CreateTile(tileUuid, boardId, criteriaId string, position, state, active int) (codes.StatusCode, error) {
 
 	var status codes.StatusCode
 
@@ -15,7 +15,7 @@ func CreateTile(tileUuid, boardId, criteriaId string, position, active int) (cod
 
 	_, err := sql_utils.GetConnection().Exec(
 		string(sql),
-		tileUuid, boardId, criteriaId, position, 1)
+		tileUuid, boardId, criteriaId, position, state, active)
 
 	if err != nil {
 		fmt.Println(err)

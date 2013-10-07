@@ -17,6 +17,12 @@ func ReadCriteria(id string) ([]data_classes.CriteriaData, error) {
 	return processCriteria(sql_utils.GetConnection().Query(sql, id))
 }
 
+func ReadInitialBoardCriteria(gameId string) ([]data_classes.CriteriaData, error) {
+	sql := caching.Cache().ReadInitialBoardCriteria.Script
+
+	return processCriteria(sql_utils.GetConnection().Query(sql, gameId))
+}
+
 /*
 func ReadBoardCriteria(boardId string) ([]data_classes.BoardData, error) {
 	// sql := SELECT * FROM board WHERE user_id = $1
@@ -36,11 +42,11 @@ func processCriteria(sqlRows *sql.Rows, err error) ([]data_classes.CriteriaData,
 
 		for i, v := range mappedRows {
 			u := data_classes.CriteriaData{
-				Id:        v["id"].(string),
-				UserId:    v["user_id"].(string),
-				GameId:    v["game_id"].(string),
-				Name:      v["name"].(string),
-				DateAdded: v["date_added"].(time.Time),
+				Id:          v["id"].(string),
+				Description: v["description"].(string),
+				State:       v["state"].(int64),
+				Active:      v["active"].(int64),
+				DateAdded:   v["date_added"].(time.Time),
 			}
 
 			crit[i] = u
