@@ -108,8 +108,16 @@ func TableExists(dbName, tableName string) bool {
 
 func DropAllTables(schema string) bool {
 
-	sql := "drop schema if exists " + schema + " cascade;"
-	sql = sql + "create schema " + schema + ";"
+	// sql := "drop schema if exists " + schema + " cascade;"
+	// sql = sql + "create schema " + schema + ";"
+
+	sql := "DROP TABLE IF EXISTS board;"
+	sql = sql + "DROP TABLE IF EXISTS criteria;"
+	sql = sql + "DROP TABLE IF EXISTS game;"
+	sql = sql + "DROP TABLE IF EXISTS gametocriteria;"
+	sql = sql + "DROP TABLE IF EXISTS socialgroup;"
+	sql = sql + "DROP TABLE IF EXISTS tile;"
+	sql = sql + "DROP TABLE IF EXISTS usertogroup;"
 
 	result, err := GetConnection().Exec(sql)
 

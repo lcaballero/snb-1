@@ -20,6 +20,7 @@ const (
 	brewery_group_desc = "Breweries in Boulder"
 	game_name          = "Boulder Breweries"
 	game_desc          = "Have a brew with a brewer"
+	board_name         = "I drink too much"
 )
 
 type InitialModel struct{}
@@ -139,7 +140,7 @@ func createBoard(user *data_classes.UserProfile, game data_classes.GameData) {
 
 	fmt.Println("Create Board: ", boardName, board_status)
 
-	initBoardCriteria(user.Id, game.Id)
+	initBoardCriteria(boardUuid, game.Id)
 }
 
 func initBoardCriteria(boardId, gameId string) {
@@ -190,7 +191,7 @@ func createFullGame(user *data_classes.UserProfile) {
 
 func showUserBoard(user *data_classes.UserProfile) {
 
-	_, err := snap_sql.ReadUsersBoards(user.Id)
+	boards, err := snap_sql.ReadUsersBoards(user.Id)
 
 	if err != nil {
 
@@ -198,7 +199,13 @@ func showUserBoard(user *data_classes.UserProfile) {
 
 	} else {
 
-		fmt.Println("Read User Boards... ", user.Id)
+		fmt.Println("User ID... ", user.Id)
+	}
+
+	if boards != nil && len(boards) > 0 {
+		//fmt.Println("Board ID... ", boards[0].Id)
+		_, _ = snap_sql.ReadBoardTiles(boards[0].Id)
+		//fmt.Println("BoardTiles: ", tiles)
 	}
 }
 
