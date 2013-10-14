@@ -1,0 +1,1 @@
+UPDATE socialgroup SET active = $1 WHERE id = $2;

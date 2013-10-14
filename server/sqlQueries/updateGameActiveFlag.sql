@@ -1,0 +1,1 @@
+UPDATE game SET active = $1 WHERE id = $2;
