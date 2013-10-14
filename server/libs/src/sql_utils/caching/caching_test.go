@@ -37,6 +37,17 @@ func Test_CacheEntries_Setup(t *testing.T) {
 	hasSql(t, Cache().CreateGameToCriteriaTable)
 	hasSql(t, Cache().AddCriteriaToGame)
 	hasSql(t, Cache().ReadInitialBoardCriteria)
+	hasSql(t, Cache().UpdateBoard)
+	hasSql(t, Cache().UpdateBoardState)
+	hasSql(t, Cache().UpdateTileState)
+	hasSql(t, Cache().UpdateGameState)
+	hasSql(t, Cache().UpdateGroupState)
+	hasSql(t, Cache().UpdateCriteriaState)
+	hasSql(t, Cache().UpdateBoardActiveFlag)
+	hasSql(t, Cache().UpdateTileActiveFlag)
+	hasSql(t, Cache().UpdateGameActiveFlag)
+	hasSql(t, Cache().UpdateGroupActiveFlag)
+	hasSql(t, Cache().UpdateCriteriaActiveFlag)
 }
 
 func hasSql(t *testing.T, c *CacheEntry) {

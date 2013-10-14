@@ -56,6 +56,17 @@ type Entries struct {
 	ReadUserByEmail,
 	ReadUserById,
 	ReadInitialBoardCriteria,
+	UpdateBoard,
+	UpdateBoardState,
+	UpdateTileState,
+	UpdateGameState,
+	UpdateGroupState,
+	UpdateCriteriaState,
+	UpdateBoardActiveFlag,
+	UpdateTileActiveFlag,
+	UpdateGameActiveFlag,
+	UpdateGroupActiveFlag,
+	UpdateCriteriaActiveFlag,
 	TableExists *CacheEntry
 }
 
@@ -97,6 +108,17 @@ func Cache() *Entries {
 		ReadUserByEmail:           provideFile("readUserByEmail"),
 		ReadUserById:              provideFile("readUserById"),
 		ReadInitialBoardCriteria:  provideFile("ReadInitialBoardCriteria"),
+		UpdateBoard:               provideFile("updateBoard"),
+		UpdateBoardState:          provideFile("updateBoardState"),
+		UpdateTileState:           provideFile("updateTileState"),
+		UpdateGameState:           provideFile("updateGameState"),
+		UpdateGroupState:          provideFile("updateGroupState"),
+		UpdateCriteriaState:       provideFile("updateCriteriaState"),
+		UpdateBoardActiveFlag:     provideFile("updateBoardActiveFlag"),
+		UpdateTileActiveFlag:      provideFile("updateTileActiveFlag"),
+		UpdateGameActiveFlag:      provideFile("updateGameActiveFlag"),
+		UpdateGroupActiveFlag:     provideFile("updateGroupActiveFlag"),
+		UpdateCriteriaActiveFlag:  provideFile("updateCriteriaActiveFlag"),
 		TableExists:               provideFile("tableExists"),
 	}
 

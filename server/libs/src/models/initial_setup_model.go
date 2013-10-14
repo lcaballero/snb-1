@@ -141,6 +141,19 @@ func createBoard(user *data_classes.UserProfile, game data_classes.GameData) {
 	fmt.Println("Create Board: ", boardName, board_status)
 
 	initBoardCriteria(boardUuid, game.Id)
+
+	updateBoardName(boardUuid, "New board name")
+	updateBoardState(boardUuid, 2)
+}
+
+func updateBoardName(boardId, name string) {
+	fmt.Println("Update board name to: ", name)
+	_, _ = snap_sql.UpdateBoard(boardId, name)
+}
+
+func updateBoardState(boardId string, state int) {
+	fmt.Println("Update board state to: ", state)
+	_, _ = snap_sql.UpdateBoardState(boardId, state)
 }
 
 func initBoardCriteria(boardId, gameId string) {
